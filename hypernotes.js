@@ -40,7 +40,14 @@ function initSearch() {
         clearHighlights('search-highlight');
         
         const searchTerm = searchInput.value.trim().toLowerCase();
-        if (!searchTerm) return;
+        if (!searchTerm) {
+            matches = [];
+            currentMatch = -1;
+            return;
+        }
+        
+        // Store search term in localStorage
+        localStorage.setItem('searchTerm', searchTerm);
         
         matches = [];
         currentMatch = -1;
@@ -49,7 +56,8 @@ function initSearch() {
         const textNodes = getTextNodes(document.body);
         
         // Search for matches in text nodes
-        textNodes.forEach(node => {
+        for (let i = 0; i < textNodes.length; i++) {
+            const node = textNodes[i];
             const text = node.nodeValue.toLowerCase();
             let startIndex = 0;
             let index;
@@ -62,7 +70,9 @@ function initSearch() {
                 });
                 startIndex = index + 1;
             }
-        });
+        }
+        
+        console.log(`Found ${matches.length} matches for "${searchTerm}"`);
         
         // Highlight first match if any
         if (matches.length > 0) {
@@ -73,34 +83,51 @@ function initSearch() {
     
     // Function to highlight a specific match
     function highlightMatch(matchIndex) {
-        if (matchIndex < 0 || matchIndex >= matches.length) return;
+        if (matches.length === 0) return;
+        
+        // Ensure matchIndex is valid and wraps around
+        if (matchIndex < 0) matchIndex = matches.length - 1;
+        if (matchIndex >= matches.length) matchIndex = 0;
+        
+        currentMatch = matchIndex;
+        
+        // Clear previous highlights
+        clearHighlights('search-highlight');
         
         const match = matches[matchIndex];
         
-        // Split text node at match boundaries
-        const beforeNode = document.createTextNode(match.node.nodeValue.substring(0, match.index));
-        const matchNode = document.createTextNode(match.node.nodeValue.substring(match.index, match.index + match.length));
-        const afterNode = document.createTextNode(match.node.nodeValue.substring(match.index + match.length));
-        
-        // Create highlight span
-        const highlightSpan = document.createElement('span');
-        highlightSpan.className = 'search-highlight';
-        highlightSpan.style.backgroundColor = '#ffff00';
-        highlightSpan.style.color = '#000000';
-        highlightSpan.appendChild(matchNode);
-        
-        // Replace original node with new nodes
-        const parentNode = match.node.parentNode;
-        parentNode.insertBefore(beforeNode, match.node);
-        parentNode.insertBefore(highlightSpan, match.node);
-        parentNode.insertBefore(afterNode, match.node);
-        parentNode.removeChild(match.node);
-        
-        // Scroll to match
-        highlightSpan.scrollIntoView({
-            behavior: 'smooth',
-            block: 'center'
-        });
+        try {
+            // Split text node at match boundaries
+            const beforeNode = document.createTextNode(match.node.nodeValue.substring(0, match.index));
+            const matchNode = document.createTextNode(match.node.nodeValue.substring(match.index, match.index + match.length));
+            const afterNode = document.createTextNode(match.node.nodeValue.substring(match.index + match.length));
+            
+            // Create highlight span
+            const highlightSpan = document.createElement('span');
+            highlightSpan.className = 'search-highlight';
+            highlightSpan.style.backgroundColor = '#ffff00';
+            highlightSpan.style.color = '#000000';
+            highlightSpan.appendChild(matchNode);
+            
+            // Replace original node with new nodes
+            const parentNode = match.node.parentNode;
+            parentNode.insertBefore(beforeNode, match.node);
+            parentNode.insertBefore(highlightSpan, match.node);
+            parentNode.insertBefore(afterNode, match.node);
+            parentNode.removeChild(match.node);
+            
+            // Scroll to match
+            highlightSpan.scrollIntoView({
+                behavior: 'smooth',
+                block: 'center'
+            });
+            
+            console.log(`Showing match ${currentMatch + 1} of ${matches.length}`);
+        } catch (error) {
+            console.error('Error highlighting search match:', error);
+            // If there's an error, try to recover by performing the search again
+            setTimeout(performSearch, 0);
+        }
     }
     
     // Function to clear all highlights
@@ -121,18 +148,12 @@ function initSearch() {
     
     searchNext.addEventListener('click', function() {
         if (matches.length === 0) return;
-        
-        clearHighlights('search-highlight');
-        currentMatch = (currentMatch + 1) % matches.length;
-        highlightMatch(currentMatch);
+        highlightMatch(currentMatch + 1); // Will handle wraparound internally
     });
     
     searchPrev.addEventListener('click', function() {
         if (matches.length === 0) return;
-        
-        clearHighlights('search-highlight');
-        currentMatch = (currentMatch - 1 + matches.length) % matches.length;
-        highlightMatch(currentMatch);
+        highlightMatch(currentMatch - 1); // Will handle wraparound internally
     });
     
     // Handle Enter key for search
@@ -147,6 +168,13 @@ function initSearch() {
             }
         }
     });
+    
+    // Load search term from localStorage if available
+    const savedSearchTerm = localStorage.getItem('searchTerm');
+    if (savedSearchTerm) {
+        searchInput.value = savedSearchTerm;
+        setTimeout(performSearch, 100); // Slight delay to ensure DOM is ready
+    }
 }
 
 /**
@@ -156,59 +184,108 @@ function initHighlighting() {
     const highlightYellow = document.getElementById('highlight-yellow');
     const highlightGreen = document.getElementById('highlight-green');
     
-    let activeHighlightClass = null;
-    
-    // Function to handle text selection highlighting
-    function handleTextSelection() {
-        const selection = window.getSelection();
-        if (!selection.rangeCount) return;
+    // Function to highlight all occurrences of a term
+    function highlightAllOccurrences(term, className) {
+        if (!term) {
+            clearHighlights(className);
+            return;
+        }
         
-        const range = selection.getRangeAt(0);
-        if (range.collapsed) return;
+        // Clear previous highlights of this class
+        clearHighlights(className);
         
-        try {
-            // Create highlight span
-            const highlightSpan = document.createElement('span');
-            highlightSpan.className = activeHighlightClass;
-            highlightSpan.dataset.flagged = 'true';
+        // Get all text nodes in the document body
+        const textNodes = getTextNodes(document.body);
+        let highlightCount = 0;
+        
+        // Search for matches in text nodes
+        for (let i = 0; i < textNodes.length; i++) {
+            let node = textNodes[i];
+            const originalNodeValue = node.nodeValue;
+            const text = originalNodeValue.toLowerCase();
+            const searchTerm = term.toLowerCase();
+            let startIndex = 0;
+            let index;
             
-            // Handle complex selections that might span multiple elements
-            const contents = range.extractContents();
-            highlightSpan.appendChild(contents);
-            range.insertNode(highlightSpan);
-            
-            // Clear selection
-            selection.removeAllRanges();
-            
-            // Update flagged sections dropdown
-            updateFlaggedSections();
-        } catch (error) {
-            console.error('Error highlighting text:', error);
+            // Find all occurrences in this text node
+            while ((index = text.indexOf(searchTerm, startIndex)) > -1) {
+                highlightCount++;
+                
+                // Split text node at match boundaries
+                const beforeNode = document.createTextNode(originalNodeValue.substring(0, index));
+                const matchNode = document.createTextNode(originalNodeValue.substring(index, index + searchTerm.length));
+                const afterNode = document.createTextNode(originalNodeValue.substring(index + searchTerm.length));
+                
+                // Create highlight span
+                const highlightSpan = document.createElement('span');
+                highlightSpan.className = className;
+                highlightSpan.dataset.flagged = 'true';
+                highlightSpan.appendChild(matchNode);
+                
+                // Replace original node with new nodes
+                const parentNode = node.parentNode;
+                parentNode.insertBefore(beforeNode, node);
+                parentNode.insertBefore(highlightSpan, node);
+                parentNode.insertBefore(afterNode, node);
+                parentNode.removeChild(node);
+                
+                // Update node reference to continue search
+                node = afterNode;
+                startIndex = 0;
+                break; // Break and process next text node to avoid infinite loop
+            }
+        }
+        
+        console.log(`Highlighted ${highlightCount} occurrences of "${term}" with class ${className}`);
+        
+        // Update flagged sections dropdown
+        updateFlaggedSections();
+        
+        // Normalize text nodes to fix any issues
+        document.body.normalize();
+        
+        // Re-run the highlighting to catch any missed occurrences
+        // This is needed because the DOM structure changes during highlighting
+        if (highlightCount > 0) {
+            setTimeout(() => highlightAllOccurrences(term, className), 0);
         }
     }
     
-    // Event listeners for highlight checkboxes
-    highlightYellow.addEventListener('change', function() {
-        if (this.checked) {
-            highlightGreen.checked = false;
-            activeHighlightClass = 'highlight-yellow';
-            document.addEventListener('mouseup', handleTextSelection);
-        } else {
-            activeHighlightClass = null;
-            document.removeEventListener('mouseup', handleTextSelection);
+    // Store highlight terms between page loads
+    function storeHighlightTerms() {
+        localStorage.setItem('highlightYellowTerm', highlightYellow.value);
+        localStorage.setItem('highlightGreenTerm', highlightGreen.value);
+    }
+    
+    // Load highlight terms from storage
+    function loadHighlightTerms() {
+        const yellowTerm = localStorage.getItem('highlightYellowTerm');
+        const greenTerm = localStorage.getItem('highlightGreenTerm');
+        
+        if (yellowTerm) {
+            highlightYellow.value = yellowTerm;
+            highlightAllOccurrences(yellowTerm, 'highlight-yellow');
         }
+        
+        if (greenTerm) {
+            highlightGreen.value = greenTerm;
+            highlightAllOccurrences(greenTerm, 'highlight-green');
+        }
+    }
+    
+    // Event listeners for highlight text fields
+    highlightYellow.addEventListener('input', function() {
+        highlightAllOccurrences(this.value, 'highlight-yellow');
+        storeHighlightTerms();
     });
     
-    highlightGreen.addEventListener('change', function() {
-        if (this.checked) {
-            highlightYellow.checked = false;
-            activeHighlightClass = 'highlight-green';
-            document.addEventListener('mouseup', handleTextSelection);
-        } else {
-            activeHighlightClass = null;
-            document.removeEventListener('mouseup', handleTextSelection);
-        }
+    highlightGreen.addEventListener('input', function() {
+        highlightAllOccurrences(this.value, 'highlight-green');
+        storeHighlightTerms();
     });
+    
+    // Load highlight terms on initialization
+    setTimeout(loadHighlightTerms, 100); // Slight delay to ensure DOM is ready
 }
 
 /**
