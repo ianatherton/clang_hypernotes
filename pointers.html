@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pointers - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Pointers in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="pointer-basics">
+            <h2>Pointer Basics</h2>
+            <p><strong>Pointers</strong> are variables that store <strong>memory addresses</strong>. They are one of the most powerful features of C, allowing <strong>direct memory manipulation</strong> and efficient data handling.</p>
+            
+            <h3>Declaring Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* ptr;      <span class="comment">// Pointer to an integer</span>
+<span class="datatype">char</span>* str;      <span class="comment">// Pointer to a character</span>
+<span class="datatype">float</span>* fPtr;    <span class="comment">// Pointer to a float</span>
+<span class="datatype">void</span>* vPtr;     <span class="comment">// Void pointer (can point to any data type)</span></pre>
+            </div>
+            
+            <div class="note">
+                <p>The <strong>asterisk (*)</strong> is used to declare a pointer. The placement of the asterisk can be next to the data type or next to the variable name, but the former is more common in modern code.</p>
+            </div>
+            
+            <h3>Address-of Operator (&)</h3>
+            <p>The address-of operator (&) returns the memory address of a variable.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> num = <span class="number">10</span>;
+<span class="datatype">int</span>* ptr = &num;  <span class="comment">// ptr now holds the address of num</span>
+
+<span class="function">printf</span>(<span class="string">"Value of num: %d\n"</span>, num);
+<span class="function">printf</span>(<span class="string">"Address of num: %p\n"</span>, &num);
+<span class="function">printf</span>(<span class="string">"Value of ptr: %p\n"</span>, ptr);  <span class="comment">// Same as address of num</span></pre>
+            </div>
+            
+            <h3>Dereferencing Operator (*)</h3>
+            <p>The dereferencing operator (*) accesses the value stored at the address held by a pointer.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> num = <span class="number">10</span>;
+<span class="datatype">int</span>* ptr = &num;
+
+<span class="function">printf</span>(<span class="string">"Value of num: %d\n"</span>, num);
+<span class="function">printf</span>(<span class="string">"Value pointed to by ptr: %d\n"</span>, *ptr);  <span class="comment">// 10</span>
+
+*ptr = <span class="number">20</span>;  <span class="comment">// Modify the value of num through ptr</span>
+<span class="function">printf</span>(<span class="string">"New value of num: %d\n"</span>, num);  <span class="comment">// 20</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Always initialize pointers before using them. Uninitialized pointers contain garbage values and can cause undefined behavior when dereferenced.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="pointer-arithmetic">
+            <h2>Pointer Arithmetic</h2>
+            <p>C allows arithmetic operations on pointers, which is useful for array manipulation and memory traversal.</p>
+            
+            <h3>Incrementing and Decrementing Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> arr[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+<span class="datatype">int</span>* ptr = arr;  <span class="comment">// Points to the first element of arr</span>
+
+<span class="function">printf</span>(<span class="string">"*ptr = %d\n"</span>, *ptr);       <span class="comment">// 10</span>
+ptr++;                         <span class="comment">// Move to the next integer</span>
+<span class="function">printf</span>(<span class="string">"*ptr = %d\n"</span>, *ptr);       <span class="comment">// 20</span>
+ptr += <span class="number">2</span>;                      <span class="comment">// Move forward by 2 integers</span>
+<span class="function">printf</span>(<span class="string">"*ptr = %d\n"</span>, *ptr);       <span class="comment">// 40</span>
+ptr--;                         <span class="comment">// Move back by 1 integer</span>
+<span class="function">printf</span>(<span class="string">"*ptr = %d\n"</span>, *ptr);       <span class="comment">// 30</span></pre>
+            </div>
+            
+            <div class="note">
+                <p>When a pointer is incremented or decremented, it moves by the size of the data type it points to. For example, if <code>ptr</code> is an <code>int*</code> and <code>sizeof(int)</code> is 4 bytes, then <code>ptr++</code> adds 4 to the address value.</p>
+            </div>
+            
+            <h3>Pointer Subtraction</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> arr[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+<span class="datatype">int</span>* p1 = &arr[<span class="number">1</span>];  <span class="comment">// Points to the second element</span>
+<span class="datatype">int</span>* p2 = &arr[<span class="number">4</span>];  <span class="comment">// Points to the fifth element</span>
+
+<span class="function">printf</span>(<span class="string">"p2 - p1 = %td\n"</span>, p2 - p1);  <span class="comment">// 3 (difference in elements, not bytes)</span></pre>
+            </div>
+            
+            <h3>Comparing Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> arr[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+<span class="datatype">int</span>* p1 = &arr[<span class="number">1</span>];
+<span class="datatype">int</span>* p2 = &arr[<span class="number">3</span>];
+
+<span class="keyword">if</span> (p1 < p2) {
+    <span class="function">printf</span>(<span class="string">"p1 points to an element before p2\n"</span>);
+}
+
+<span class="keyword">if</span> (p1 == &arr[<span class="number">1</span>]) {
+    <span class="function">printf</span>(<span class="string">"p1 points to arr[1]\n"</span>);
+}</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="pointers-and-arrays">
+            <h2>Pointers and Arrays</h2>
+            <p>In C, arrays and pointers are closely related. An array name can be used as a pointer to its first element.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> arr[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+<span class="datatype">int</span>* ptr = arr;  <span class="comment">// Equivalent to ptr = &arr[0]</span>
+
+<span class="comment">// Accessing array elements using array notation</span>
+<span class="function">printf</span>(<span class="string">"arr[2] = %d\n"</span>, arr[<span class="number">2</span>]);  <span class="comment">// 30</span>
+
+<span class="comment">// Accessing array elements using pointer notation</span>
+<span class="function">printf</span>(<span class="string">"*(ptr+2) = %d\n"</span>, *(ptr+<span class="number">2</span>));  <span class="comment">// 30</span>
+<span class="function">printf</span>(<span class="string">"ptr[2] = %d\n"</span>, ptr[<span class="number">2</span>]);      <span class="comment">// 30</span></pre>
+            </div>
+            
+            <div class="note">
+                <p>The expressions <code>arr[i]</code>, <code>*(arr+i)</code>, <code>ptr[i]</code>, and <code>*(ptr+i)</code> are all equivalent (assuming <code>ptr</code> points to <code>arr[0]</code>).</p>
+            </div>
+            
+            <h3>Differences Between Arrays and Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> arr[<span class="number">5</span>];
+<span class="datatype">int</span>* ptr;
+
+<span class="comment">// Size differences</span>
+<span class="function">printf</span>(<span class="string">"sizeof(arr) = %zu\n"</span>, <span class="keyword">sizeof</span>(arr));  <span class="comment">// Size of the entire array (5 * sizeof(int))</span>
+<span class="function">printf</span>(<span class="string">"sizeof(ptr) = %zu\n"</span>, <span class="keyword">sizeof</span>(ptr));  <span class="comment">// Size of a pointer (typically 4 or 8 bytes)</span>
+
+<span class="comment">// Assignment differences</span>
+ptr = arr;  <span class="comment">// Valid: ptr can point to the array</span>
+<span class="comment">// arr = ptr;  // Invalid: array name is not modifiable</span></pre>
+            </div>
+            
+            <h3>Pointer to an Array</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> arr[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+<span class="datatype">int</span> (*arrPtr)[<span class="number">5</span>] = &arr;  <span class="comment">// Pointer to an array of 5 integers</span>
+
+<span class="comment">// Accessing elements</span>
+<span class="function">printf</span>(<span class="string">"First element: %d\n"</span>, (*arrPtr)[<span class="number">0</span>]);  <span class="comment">// 10</span>
+<span class="function">printf</span>(<span class="string">"Third element: %d\n"</span>, (*arrPtr)[<span class="number">2</span>]);  <span class="comment">// 30</span></pre>
+            </div>
+        </div>
+        
+        <div class="section" id="pointers-to-pointers">
+            <h2>Pointers to Pointers</h2>
+            <p>A pointer can point to another pointer, creating multiple levels of indirection.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> num = <span class="number">10</span>;
+<span class="datatype">int</span>* ptr = &num;      <span class="comment">// Pointer to num</span>
+<span class="datatype">int</span>** pptr = &ptr;    <span class="comment">// Pointer to pointer to num</span>
+
+<span class="function">printf</span>(<span class="string">"Value of num: %d\n"</span>, num);
+<span class="function">printf</span>(<span class="string">"Value of *ptr: %d\n"</span>, *ptr);
+<span class="function">printf</span>(<span class="string">"Value of **pptr: %d\n"</span>, **pptr);
+
+**pptr = <span class="number">20</span>;  <span class="comment">// Modify num through double pointer</span>
+<span class="function">printf</span>(<span class="string">"New value of num: %d\n"</span>, num);  <span class="comment">// 20</span></pre>
+            </div>
+            
+            <h3>Common Use Case: Dynamic 2D Arrays</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> rows = <span class="number">3</span>, cols = <span class="number">4</span>;
+
+<span class="comment">// Allocate memory for a 2D array</span>
+<span class="datatype">int</span>** matrix = (<span class="datatype">int</span>**) <span class="function">malloc</span>(rows * <span class="keyword">sizeof</span>(<span class="datatype">int</span>*));
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < rows; i++) {
+    matrix[i] = (<span class="datatype">int</span>*) <span class="function">malloc</span>(cols * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+}
+
+<span class="comment">// Initialize the matrix</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < rows; i++) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> j = <span class="number">0</span>; j < cols; j++) {
+        matrix[i][j] = i * cols + j;
+    }
+}
+
+<span class="comment">// Access elements</span>
+<span class="function">printf</span>(<span class="string">"matrix[1][2] = %d\n"</span>, matrix[<span class="number">1</span>][<span class="number">2</span>]);  <span class="comment">// 6</span>
+
+<span class="comment">// Free memory</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < rows; i++) {
+    <span class="function">free</span>(matrix[i]);
+}
+<span class="function">free</span>(matrix);</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="void-pointers">
+            <h2>Void Pointers</h2>
+            <p>A void pointer can point to any data type, providing flexibility for generic functions and data structures.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> num = <span class="number">10</span>;
+<span class="datatype">float</span> f = <span class="number">3.14f</span>;
+<span class="datatype">char</span> c = <span class="string">'A'</span>;
+
+<span class="datatype">void</span>* vptr;
+
+vptr = &num;  <span class="comment">// Point to an integer</span>
+<span class="function">printf</span>(<span class="string">"Integer value: %d\n"</span>, *(<span class="datatype">int</span>*)vptr);  <span class="comment">// Cast back to int* before dereferencing</span>
+
+vptr = &f;    <span class="comment">// Point to a float</span>
+<span class="function">printf</span>(<span class="string">"Float value: %.2f\n"</span>, *(<span class="datatype">float</span>*)vptr);
+
+vptr = &c;    <span class="comment">// Point to a char</span>
+<span class="function">printf</span>(<span class="string">"Character value: %c\n"</span>, *(<span class="datatype">char</span>*)vptr);</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Void pointers must be cast to the appropriate type before dereferencing. No pointer arithmetic can be performed on void pointers without casting.</p>
+            </div>
+            
+            <h3>Common Use Case: Generic Functions</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Generic swap function using void pointers</span>
+<span class="datatype">void</span> <span class="function">swap</span>(<span class="datatype">void</span>* a, <span class="datatype">void</span>* b, <span class="datatype">size_t</span> size) {
+    <span class="datatype">char</span> temp[size];
+    <span class="function">memcpy</span>(temp, a, size);
+    <span class="function">memcpy</span>(a, b, size);
+    <span class="function">memcpy</span>(b, temp, size);
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> x = <span class="number">5</span>, y = <span class="number">10</span>;
+    <span class="function">printf</span>(<span class="string">"Before swap: x = %d, y = %d\n"</span>, x, y);
+    <span class="function">swap</span>(&x, &y, <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    <span class="function">printf</span>(<span class="string">"After swap: x = %d, y = %d\n"</span>, x, y);
+    
+    <span class="datatype">float</span> a = <span class="number">3.14f</span>, b = <span class="number">2.71f</span>;
+    <span class="function">printf</span>(<span class="string">"Before swap: a = %.2f, b = %.2f\n"</span>, a, b);
+    <span class="function">swap</span>(&a, &b, <span class="keyword">sizeof</span>(<span class="datatype">float</span>));
+    <span class="function">printf</span>(<span class="string">"After swap: a = %.2f, b = %.2f\n"</span>, a, b);
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="null-pointers">
+            <h2>NULL Pointers</h2>
+            <p>A NULL pointer is a pointer that doesn't point to any valid memory location. It's often used to indicate an invalid or unavailable pointer.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* ptr = <span class="keyword">NULL</span>;  <span class="comment">// Initialize pointer to NULL</span>
+
+<span class="keyword">if</span> (ptr == <span class="keyword">NULL</span>) {
+    <span class="function">printf</span>(<span class="string">"ptr is a NULL pointer\n"</span>);
+}
+
+<span class="comment">// Safer way to check for NULL</span>
+<span class="keyword">if</span> (!ptr) {
+    <span class="function">printf</span>(<span class="string">"ptr is a NULL pointer\n"</span>);
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Dereferencing a NULL pointer causes a runtime error (segmentation fault). Always check if a pointer is NULL before dereferencing it.</p>
+            </div>
+            
+            <h3>Common Use Cases for NULL Pointers</h3>
+            <ul>
+                <li>Initializing pointers that will be assigned later</li>
+                <li>Indicating the end of a linked list</li>
+                <li>Error handling in functions that return pointers</li>
+                <li>Checking if memory allocation was successful</li>
+            </ul>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* <span class="function">findValue</span>(<span class="datatype">int</span>* arr, <span class="datatype">int</span> size, <span class="datatype">int</span> value) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < size; i++) {
+        <span class="keyword">if</span> (arr[i] == value) {
+            <span class="keyword">return</span> &arr[i];
+        }
+    }
+    <span class="keyword">return</span> <span class="keyword">NULL</span>;  <span class="comment">// Value not found</span>
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> numbers[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+    <span class="datatype">int</span>* result = <span class="function">findValue</span>(numbers, <span class="number">5</span>, <span class="number">30</span>);
+    
+    <span class="keyword">if</span> (result) {
+        <span class="function">printf</span>(<span class="string">"Value found: %d\n"</span>, *result);
+    } <span class="keyword">else</span> {
+        <span class="function">printf</span>(<span class="string">"Value not found\n"</span>);
+    }
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="common-pointer-pitfalls">
+            <h2>Common Pointer Pitfalls</h2>
+            
+            <h3>Uninitialized Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* ptr;  <span class="comment">// Uninitialized pointer</span>
+<span class="comment">// *ptr = 10;  // DANGER: Dereferencing uninitialized pointer</span>
+
+<span class="comment">// Correct way</span>
+<span class="datatype">int</span> num = <span class="number">0</span>;
+<span class="datatype">int</span>* safePtr = &num;
+*safePtr = <span class="number">10</span>;</pre>
+            </div>
+            
+            <h3>Dangling Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* createDangling() {
+    <span class="datatype">int</span> local = <span class="number">10</span>;
+    <span class="keyword">return</span> &local;  <span class="comment">// DANGER: Returning address of local variable</span>
+}
+
+<span class="comment">// Correct way</span>
+<span class="datatype">int</span>* createSafe() {
+    <span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    *ptr = <span class="number">10</span>;
+    <span class="keyword">return</span> ptr;
+}</pre>
+            </div>
+            
+            <h3>Memory Leaks</h3>
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">memoryLeak</span>() {
+    <span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    *ptr = <span class="number">10</span>;
+    <span class="comment">// Missing free(ptr); - Memory leak</span>
+}
+
+<span class="comment">// Correct way</span>
+<span class="datatype">void</span> <span class="function">noLeak</span>() {
+    <span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    *ptr = <span class="number">10</span>;
+    <span class="comment">// Do something with ptr</span>
+    <span class="function">free</span>(ptr);  <span class="comment">// Release memory when done</span>
+    ptr = <span class="keyword">NULL</span>;   <span class="comment">// Avoid dangling pointer</span>
+}</pre>
+            </div>
+            
+            <h3>Buffer Overflows</h3>
+            <div class="code-block">
+                <pre><span class="datatype">char</span> buffer[<span class="number">5</span>];
+<span class="comment">// strcpy(buffer, "Hello, World!");  // DANGER: Buffer overflow</span>
+
+<span class="comment">// Correct way</span>
+<span class="function">strncpy</span>(buffer, <span class="string">"Hello"</span>, <span class="keyword">sizeof</span>(buffer) - <span class="number">1</span>);
+buffer[<span class="keyword">sizeof</span>(buffer) - <span class="number">1</span>] = <span class="string">'\0'</span>;  <span class="comment">// Ensure null termination</span></pre>
+            </div>
+        </div>
+        
+        <p><a href="index.html#pointers">Back to Pointers</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+
+        // Show/hide back-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

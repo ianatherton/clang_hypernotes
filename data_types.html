@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Types - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-yellow">
+                <label for="highlight-yellow">Neon Yellow</label>
+            </div>
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-green">
+                <label for="highlight-green">Neon Green</label>
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Data Types in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="primitive-types">
+            <h2>Primitive Types</h2>
+            <p>C provides several <strong>basic data types</strong> that are built into the language. These are often called <strong>primitive types</strong>.</p>
+            
+            <h3>Integer Types</h3>
+            <p><strong>Integer types</strong> store whole numbers without fractional parts.</p>
+            
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Size (typical)</th>
+                    <th>Range (typical)</th>
+                    <th>Format Specifier</th>
+                </tr>
+                <tr>
+                    <td><code class="datatype">char</code></td>
+                    <td>1 byte</td>
+                    <td>-128 to 127 or 0 to 255</td>
+                    <td><code>%c</code> (character)<br><code>%d</code> (integer)</td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">unsigned char</code></td>
+                    <td>1 byte</td>
+                    <td>0 to 255</td>
+                    <td><code>%c</code> (character)<br><code>%u</code> (integer)</td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">short</code> or <code class="datatype">short int</code></td>
+                    <td>2 bytes</td>
+                    <td>-32,768 to 32,767</td>
+                    <td><code>%hd</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">unsigned short</code></td>
+                    <td>2 bytes</td>
+                    <td>0 to 65,535</td>
+                    <td><code>%hu</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">int</code></td>
+                    <td>4 bytes</td>
+                    <td>-2,147,483,648 to 2,147,483,647</td>
+                    <td><code>%d</code> or <code>%i</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">unsigned int</code></td>
+                    <td>4 bytes</td>
+                    <td>0 to 4,294,967,295</td>
+                    <td><code>%u</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">long</code> or <code class="datatype">long int</code></td>
+                    <td>4 or 8 bytes</td>
+                    <td>-2,147,483,648 to 2,147,483,647 (4 bytes)<br>or -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807 (8 bytes)</td>
+                    <td><code>%ld</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">unsigned long</code></td>
+                    <td>4 or 8 bytes</td>
+                    <td>0 to 4,294,967,295 (4 bytes)<br>or 0 to 18,446,744,073,709,551,615 (8 bytes)</td>
+                    <td><code>%lu</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">long long</code></td>
+                    <td>8 bytes</td>
+                    <td>-9,223,372,036,854,775,808 to 9,223,372,036,854,775,807</td>
+                    <td><code>%lld</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">unsigned long long</code></td>
+                    <td>8 bytes</td>
+                    <td>0 to 18,446,744,073,709,551,615</td>
+                    <td><code>%llu</code></td>
+                </tr>
+            </table>
+            
+            <div class="note">
+                <p>The exact size and range of integer types can vary depending on the compiler and platform. The values shown above are typical for many modern systems.</p>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> count = <span class="number">42</span>;
+<span class="datatype">unsigned int</span> positiveCount = <span class="number">100</span>;
+<span class="datatype">long long</span> bigNumber = <span class="number">9223372036854775807LL</span>;  <span class="comment">// Note the LL suffix for long long literals</span>
+
+<span class="function">printf</span>(<span class="string">"Count: %d\n"</span>, count);
+<span class="function">printf</span>(<span class="string">"Positive count: %u\n"</span>, positiveCount);
+<span class="function">printf</span>(<span class="string">"Big number: %lld\n"</span>, bigNumber);</pre>
+            </div>
+            
+            <div class="tip">
+                <p>To ensure <strong>portability</strong>, you can use types from <code>&lt;stdint.h&gt;</code> (C99 and later) that have <strong>fixed sizes</strong>, such as <code>int32_t</code> for a 32-bit integer.</p>
+            </div>
+            
+            <h3>Floating-Point Types</h3>
+            <p><strong>Floating-point types</strong> store numbers with fractional parts.</p>
+            
+            <table>
+                <tr>
+                    <th>Type</th>
+                    <th>Size</th>
+                    <th>Precision</th>
+                    <th>Format Specifier</th>
+                </tr>
+                <tr>
+                    <td><code class="datatype">float</code></td>
+                    <td>4 bytes</td>
+                    <td>~7 decimal digits</td>
+                    <td><code>%f</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">double</code></td>
+                    <td>8 bytes</td>
+                    <td>~15 decimal digits</td>
+                    <td><code>%lf</code> or <code>%f</code></td>
+                </tr>
+                <tr>
+                    <td><code class="datatype">long double</code></td>
+                    <td>12 or 16 bytes</td>
+                    <td>~19 decimal digits</td>
+                    <td><code>%Lf</code></td>
+                </tr>
+            </table>
+            
+            <div class="code-block">
+                <pre><span class="datatype">float</span> pi = <span class="number">3.14159f</span>;  <span class="comment">// Note the f suffix for float literals</span>
+<span class="datatype">double</span> precisePI = <span class="number">3.14159265358979323846</span>;
+<span class="datatype">long double</span> veryPrecisePI = <span class="number">3.14159265358979323846L</span>;  <span class="comment">// Note the L suffix for long double literals</span>
+
+<span class="function">printf</span>(<span class="string">"Pi (float): %.5f\n"</span>, pi);
+<span class="function">printf</span>(<span class="string">"Pi (double): %.15f\n"</span>, precisePI);
+<span class="function">printf</span>(<span class="string">"Pi (long double): %.18Lf\n"</span>, veryPrecisePI);</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Floating-point arithmetic can lead to precision errors due to the way these numbers are represented in binary. Never use floating-point types for exact calculations like currency.</p>
+            </div>
+            
+            <h3>Character Type</h3>
+            <p>The <code>char</code> type is used to store single characters, but it's also an integer type.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">char</span> letter = <span class="string">'A'</span>;  <span class="comment">// Character literal in single quotes</span>
+<span class="datatype">char</span> newline = <span class="string">'\n'</span>;  <span class="comment">// Escape sequence for newline</span>
+
+<span class="function">printf</span>(<span class="string">"Letter: %c\n"</span>, letter);
+<span class="function">printf</span>(<span class="string">"ASCII value of letter: %d\n"</span>, letter);  <span class="comment">// Prints 65 for 'A'</span></pre>
+            </div>
+            
+            <div class="definition">
+                <h4>Common Escape Sequences</h4>
+                <ul>
+                    <li><code>\n</code> - Newline</li>
+                    <li><code>\t</code> - Tab</li>
+                    <li><code>\r</code> - Carriage return</li>
+                    <li><code>\b</code> - Backspace</li>
+                    <li><code>\f</code> - Form feed</li>
+                    <li><code>\v</code> - Vertical tab</li>
+                    <li><code>\\</code> - Backslash</li>
+                    <li><code>\'</code> - Single quote</li>
+                    <li><code>\"</code> - Double quote</li>
+                    <li><code>\0</code> - Null character</li>
+                    <li><code>\xhh</code> - Hexadecimal value (e.g., <code>\x41</code> for 'A')</li>
+                </ul>
+            </div>
+            
+            <h3>Boolean Type (C99 and later)</h3>
+            <p>C99 introduced a boolean type through the <code>&lt;stdbool.h&gt;</code> header.</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdbool.h&gt;</span>
+
+<span class="datatype">bool</span> isValid = <span class="keyword">true</span>;
+<span class="datatype">bool</span> isComplete = <span class="keyword">false</span>;
+
+<span class="keyword">if</span> (isValid) {
+    <span class="function">printf</span>(<span class="string">"The value is valid.\n"</span>);
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>Before C99, boolean values were typically represented using integers, with 0 for false and non-zero values for true.</p>
+            </div>
+            
+            <h3>Void Type</h3>
+            <p>The <code>void</code> type represents the absence of a type. It's commonly used for functions that don't return a value and for generic pointers.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">printMessage</span>() {
+    <span class="function">printf</span>(<span class="string">"This function doesn't return a value.\n"</span>);
+}
+
+<span class="datatype">void</span>* <span class="function">genericPointer</span>(<span class="datatype">void</span>* data) {
+    <span class="comment">// Can point to any data type</span>
+    <span class="keyword">return</span> data;
+}</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="type-conversion">
+            <h2>Type Conversion</h2>
+            <p>C allows conversion between different data types, either implicitly or explicitly.</p>
+            
+            <h3>Implicit Type Conversion (Automatic)</h3>
+            <p>The compiler automatically converts one data type to another when:</p>
+            <ul>
+                <li>Different data types are used in an expression</li>
+                <li>A value is assigned to a variable of a different type</li>
+            </ul>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> i = <span class="number">10</span>;
+<span class="datatype">float</span> f = <span class="number">3.5f</span>;
+<span class="datatype">double</span> d;
+
+d = i + f;  <span class="comment">// i is converted to float, then the result is converted to double</span>
+<span class="function">printf</span>(<span class="string">"Result: %f\n"</span>, d);  <span class="comment">// Output: 13.500000</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Implicit conversions can lead to loss of data or precision, especially when converting from a larger type to a smaller type or from floating-point to integer.</p>
+            </div>
+            
+            <h3>Explicit Type Conversion (Casting)</h3>
+            <p>You can explicitly convert a value from one type to another using a cast operator.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">float</span> f = <span class="number">3.75f</span>;
+<span class="datatype">int</span> i;
+
+i = (<span class="datatype">int</span>)f;  <span class="comment">// Explicitly cast float to int</span>
+<span class="function">printf</span>(<span class="string">"Float: %f, Integer: %d\n"</span>, f, i);  <span class="comment">// Output: Float: 3.750000, Integer: 3</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>When casting from floating-point to integer, the fractional part is truncated (not rounded).</p>
+            </div>
+        </div>
+        
+        <div class="section" id="sizeof-operator">
+            <h2>sizeof Operator</h2>
+            <p>The <code>sizeof</code> operator returns the size in bytes of a type or variable.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> i;
+<span class="datatype">float</span> f;
+<span class="datatype">double</span> d;
+<span class="datatype">char</span> c;
+
+<span class="function">printf</span>(<span class="string">"Size of int: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(i));
+<span class="function">printf</span>(<span class="string">"Size of float: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(f));
+<span class="function">printf</span>(<span class="string">"Size of double: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(d));
+<span class="function">printf</span>(<span class="string">"Size of char: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(c));</pre>
+            </div>
+            
+            <div class="note">
+                <p>The <code>%zu</code> format specifier is used for <code>size_t</code> values, which is the type returned by <code>sizeof</code>.</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#data-types">Back to Data Types</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+
+        // Show/hide back-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

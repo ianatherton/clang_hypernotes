@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Basics - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-yellow">
+                <label for="highlight-yellow">Neon Yellow</label>
+            </div>
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-green">
+                <label for="highlight-green">Neon Green</label>
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>C Basics</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="structure">
+            <h2>Program Structure</h2>
+            <p>Every C program consists of one or more functions, with <code><strong>main()</strong></code> being the <strong>entry point</strong> of execution.</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="comment">/* This is the main function */</span>
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">printf</span>(<span class="string">"Hello, World!\n"</span>);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="definition">
+                <h3>Basic Components of a C Program</h3>
+                <ul>
+                    <li><strong>Preprocessor Directives</strong>: Lines starting with <code>#</code> that are processed before compilation.</li>
+                    <li><strong>Functions</strong>: Blocks of code that perform specific tasks.</li>
+                    <li><strong>Statements</strong>: Instructions that are executed in sequence.</li>
+                    <li><strong>Comments</strong>: Notes for human readers that are ignored by the compiler.</li>
+                </ul>
+            </div>
+            
+            <div class="note">
+                <p>The <code>main()</code> function returns an integer value to the operating system. By convention, <code>0</code> indicates successful execution.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="compilation">
+            <h2>Compilation Process</h2>
+            <p>Converting C source code into an executable program involves several steps:</p>
+            
+            <ol>
+                <li><strong>Preprocessing</strong>: Expands macros and includes header files.</li>
+                <li><strong>Compilation</strong>: Converts C code to assembly language.</li>
+                <li><strong>Assembly</strong>: Converts assembly code to object code.</li>
+                <li><strong>Linking</strong>: Combines object files and libraries into an executable.</li>
+            </ol>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Basic compilation command</span>
+gcc -o program_name source_file.c
+
+<span class="comment"># Compilation with optimization</span>
+gcc -O2 -o program_name source_file.c
+
+<span class="comment"># Compilation with debugging information</span>
+gcc -g -o program_name source_file.c</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Use <code>-Wall</code> flag to enable all compiler warnings, which can help identify potential issues in your code.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="syntax">
+            <h2>Basic Syntax</h2>
+            
+            <h3>Statements and Semicolons</h3>
+            <p>In C, statements are terminated with semicolons:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> x = <span class="number">10</span>;  <span class="comment">// Declaration and initialization</span>
+<span class="function">printf</span>(<span class="string">"Value: %d\n"</span>, x);  <span class="comment">// Function call</span>
+x = x + <span class="number">5</span>;  <span class="comment">// Assignment</span></pre>
+            </div>
+            
+            <h3>Blocks</h3>
+            <p>Blocks are enclosed in curly braces <code>{}</code> and can contain multiple statements:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">if</span> (x > <span class="number">10</span>) {
+    <span class="function">printf</span>(<span class="string">"x is greater than 10\n"</span>);
+    x = <span class="number">10</span>;
+}</pre>
+            </div>
+            
+            <h3>Identifiers</h3>
+            <p>Rules for naming variables, functions, etc.:</p>
+            <ul>
+                <li>Can contain letters, digits, and underscores</li>
+                <li>Must start with a letter or underscore</li>
+                <li>Case-sensitive (<code>count</code> and <code>Count</code> are different)</li>
+                <li>Cannot use C keywords</li>
+            </ul>
+            
+            <div class="warning">
+                <p>Avoid using names that begin with an underscore followed by a capital letter or another underscore, as these are reserved for system use.</p>
+            </div>
+            
+            <h3>Keywords</h3>
+            <p>C has a set of reserved keywords that cannot be used as identifiers:</p>
+            
+            <table>
+                <tr>
+                    <td><code class="keyword">auto</code></td>
+                    <td><code class="keyword">break</code></td>
+                    <td><code class="keyword">case</code></td>
+                    <td><code class="keyword">char</code></td>
+                    <td><code class="keyword">const</code></td>
+                </tr>
+                <tr>
+                    <td><code class="keyword">continue</code></td>
+                    <td><code class="keyword">default</code></td>
+                    <td><code class="keyword">do</code></td>
+                    <td><code class="keyword">double</code></td>
+                    <td><code class="keyword">else</code></td>
+                </tr>
+                <tr>
+                    <td><code class="keyword">enum</code></td>
+                    <td><code class="keyword">extern</code></td>
+                    <td><code class="keyword">float</code></td>
+                    <td><code class="keyword">for</code></td>
+                    <td><code class="keyword">goto</code></td>
+                </tr>
+                <tr>
+                    <td><code class="keyword">if</code></td>
+                    <td><code class="keyword">int</code></td>
+                    <td><code class="keyword">long</code></td>
+                    <td><code class="keyword">register</code></td>
+                    <td><code class="keyword">return</code></td>
+                </tr>
+                <tr>
+                    <td><code class="keyword">short</code></td>
+                    <td><code class="keyword">signed</code></td>
+                    <td><code class="keyword">sizeof</code></td>
+                    <td><code class="keyword">static</code></td>
+                    <td><code class="keyword">struct</code></td>
+                </tr>
+                <tr>
+                    <td><code class="keyword">switch</code></td>
+                    <td><code class="keyword">typedef</code></td>
+                    <td><code class="keyword">union</code></td>
+                    <td><code class="keyword">unsigned</code></td>
+                    <td><code class="keyword">void</code></td>
+                </tr>
+                <tr>
+                    <td><code class="keyword">volatile</code></td>
+                    <td><code class="keyword">while</code></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+        
+        <p><a href="index.html#basics">Back to C Basics</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

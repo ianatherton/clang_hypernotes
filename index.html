@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-yellow">
+                <label for="highlight-yellow">Neon Yellow</label>
+            </div>
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-green">
+                <label for="highlight-green">Neon Green</label>
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>C Programming Hyper-Notes</h1>
+        <p>A comprehensive reference for C programming from beginner to advanced levels.</p>
+        
+        <div class="section toc" id="table-of-contents">
+            <h2>Table of Contents</h2>
+            <ul>
+                <li><a href="#introduction" class="complete">Introduction to C</a></li>
+                <li>
+                    <a href="c_basics.html" class="complete">C Basics</a>
+                    <ul>
+                        <li><a href="c_basics.html#structure">Program Structure</a></li>
+                        <li><a href="c_basics.html#compilation">Compilation Process</a></li>
+                        <li><a href="c_basics.html#syntax">Basic Syntax</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="data_types.html" class="complete">Data Types</a>
+                    <ul>
+                        <li><a href="data_types.html#primitive-types">Primitive Types</a></li>
+                        <li><a href="data_types.html#derived-types">Derived Types</a></li>
+                        <li><a href="data_types.html#user-defined-types">User-Defined Types</a></li>
+                        <li><a href="data_types.html#type-conversion">Type Conversion</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#variables" class="complete">Variables</a>
+                    <ul>
+                        <li><a href="#variable-declaration">Declaration & Initialization</a></li>
+                        <li><a href="#variable-scope">Scope & Lifetime</a></li>
+                        <li><a href="#storage-classes">Storage Classes</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#operators" class="complete">Operators</a>
+                    <ul>
+                        <li><a href="#arithmetic-operators">Arithmetic Operators</a></li>
+                        <li><a href="#relational-operators">Relational Operators</a></li>
+                        <li><a href="#logical-operators">Logical Operators</a></li>
+                        <li><a href="#bitwise-operators">Bitwise Operators</a></li>
+                        <li><a href="#assignment-operators">Assignment Operators</a></li>
+                        <li><a href="#misc-operators">Miscellaneous Operators</a></li>
+                        <li><a href="#operator-precedence">Operator Precedence</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="control_flow.html" class="complete">Control Flow</a>
+                    <ul>
+                        <li><a href="control_flow.html#if-else">if-else Statements</a></li>
+                        <li><a href="control_flow.html#switch">switch Statement</a></li>
+                        <li><a href="control_flow.html#loops">Loops (for, while, do-while)</a></li>
+                        <li><a href="control_flow.html#break-continue">break & continue</a></li>
+                        <li><a href="control_flow.html#goto">goto Statement</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="functions.html" class="complete">Functions</a>
+                    <ul>
+                        <li><a href="functions.html#function-declaration">Declaration & Definition</a></li>
+                        <li><a href="functions.html#function-parameters">Parameters & Return Values</a></li>
+                        <li><a href="functions.html#function-prototypes">Function Prototypes</a></li>
+                        <li><a href="functions.html#recursion">Recursion</a></li>
+                        <li><a href="functions.html#function-pointers">Function Pointers</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#arrays" class="under-construction">Arrays</a>
+                    <ul>
+                        <li><a href="#array-declaration">Declaration & Initialization</a></li>
+                        <li><a href="#multi-dimensional-arrays">Multi-dimensional Arrays</a></li>
+                        <li><a href="#arrays-and-functions">Arrays & Functions</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="pointers.html" class="complete">Pointers</a>
+                    <ul>
+                        <li><a href="pointers.html#pointer-basics">Pointer Basics</a></li>
+                        <li><a href="pointers.html#pointer-arithmetic">Pointer Arithmetic</a></li>
+                        <li><a href="pointers.html#pointers-and-arrays">Pointers and Arrays</a></li>
+                        <li><a href="pointers.html#pointers-to-pointers">Pointers to Pointers</a></li>
+                        <li><a href="pointers.html#void-pointers">Void Pointers</a></li>
+                        <li><a href="pointers.html#null-pointers">NULL Pointers</a></li>
+                        <li><a href="pointers.html#common-pointer-pitfalls">Common Pitfalls</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#strings" class="under-construction">Strings</a>
+                    <ul>
+                        <li><a href="#string-basics">String Basics</a></li>
+                        <li><a href="#string-functions">String Functions</a></li>
+                        <li><a href="#string-manipulation">String Manipulation</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="structures.html" class="complete">Structures</a>
+                    <ul>
+                        <li><a href="structures.html#structure-declaration">Declaration & Initialization</a></li>
+                        <li><a href="structures.html#nested-structures">Nested Structures</a></li>
+                        <li><a href="structures.html#structures-and-functions">Structures & Functions</a></li>
+                        <li><a href="structures.html#structure-pointers">Structure Pointers</a></li>
+                        <li><a href="structures.html#structure-padding">Structure Padding</a></li>
+                        <li><a href="structures.html#bit-fields">Bit Fields</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#unions" class="under-construction">Unions</a>
+                    <ul>
+                        <li><a href="#union-basics">Union Basics</a></li>
+                        <li><a href="#union-vs-structure">Unions vs. Structures</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#enums" class="under-construction">Enumerations</a>
+                    <ul>
+                        <li><a href="#enum-declaration">Declaration & Usage</a></li>
+                        <li><a href="#enum-vs-define">Enums vs. #define</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#preprocessor" class="under-construction">Preprocessor Directives</a>
+                    <ul>
+                        <li><a href="#include">#include</a></li>
+                        <li><a href="#define">#define</a></li>
+                        <li><a href="#conditional-compilation">Conditional Compilation</a></li>
+                        <li><a href="#macros">Macros</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#standard-library" class="under-construction">Standard Library</a>
+                    <ul>
+                        <li><a href="#standard-library-functions">Standard Library Functions</a></li>
+                        <li><a href="#standard-library-macros">Standard Library Macros</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#file-io" class="under-construction">File I/O</a>
+                    <ul>
+                        <li><a href="#file-operations">File Operations</a></li>
+                        <li><a href="#text-files">Text Files</a></li>
+                        <li><a href="#binary-files">Binary Files</a></li>
+                        <li><a href="#error-handling">Error Handling</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="memory_management.html" class="complete">Memory Management</a>
+                    <ul>
+                        <li><a href="memory_management.html#memory-layout">Memory Layout</a></li>
+                        <li><a href="memory_management.html#memory-allocation">Dynamic Memory Allocation</a></li>
+                        <li><a href="memory_management.html#memory-management-best-practices">Best Practices</a></li>
+                        <li><a href="memory_management.html#common-memory-issues">Common Memory Issues</a></li>
+                        <li><a href="memory_management.html#advanced-memory-management">Advanced Techniques</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#advanced">Advanced Topics</a>
+                    <ul>
+                        <li><a href="#bit-fields">Bit Fields</a></li>
+                        <li><a href="#typedef">typedef</a></li>
+                        <li><a href="#command-line-args">Command Line Arguments</a></li>
+                        <li><a href="#variable-arguments">Variable Arguments</a></li>
+                        <li><a href="#multi-file-programs">Multi-file Programs</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#best-practices" class="under-construction">Best Practices</a>
+                    <ul>
+                        <li><a href="#code-organization">Code Organization</a></li>
+                        <li><a href="#naming-conventions">Naming Conventions</a></li>
+                        <li><a href="#error-handling-practices">Error Handling</a></li>
+                        <li><a href="#debugging">Debugging Techniques</a></li>
+                    </ul>
+                </li>
+                <li>
+                    <a href="#code-snippets">Useful Code Snippets</a>
+                    <ul>
+                        <li><a href="#snippets-basic">Basic Snippets</a></li>
+                        <li><a href="#snippets-intermediate">Intermediate Snippets</a></li>
+                        <li><a href="#snippets-advanced">Advanced Snippets</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <!-- Introduction Section -->
+        <div class="section" id="introduction">
+            <h2>Introduction to C</h2>
+            <p>C is a general-purpose, procedural programming language developed in the early 1970s by Dennis Ritchie at Bell Labs. It was originally designed for the UNIX operating system and has since become one of the most widely used programming languages.</p>
+            
+            <div class="definition">
+                <h3>Key Characteristics of C</h3>
+                <ul>
+                    <li><strong>Efficiency</strong>: C provides low-level access to memory and hardware, making it highly efficient.</li>
+                    <li><strong>Portability</strong>: Programs written in C can be compiled for different platforms with minimal changes.</li>
+                    <li><strong>Flexibility</strong>: C can be used for a wide range of applications, from operating systems to application software.</li>
+                    <li><strong>Minimalist Design</strong>: C has a small set of keywords and a simple syntax.</li>
+                </ul>
+            </div>
+            
+            <div class="note">
+                <p>C is often referred to as a "middle-level" language because it combines elements of both high-level and low-level languages.</p>
+            </div>
+            
+            <p>This document serves as a comprehensive reference for C programming, covering everything from basic concepts to advanced techniques. Use the table of contents to navigate to specific topics.</p>
+            
+            <p><a href="#table-of-contents">Back to Table of Contents</a></p>
+        </div>
+
+        <!-- More sections will be added here -->
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+    
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

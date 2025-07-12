@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Management - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Memory Management in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="memory-layout">
+            <h2>Memory Layout in C Programs</h2>
+            <p>Understanding how <strong>memory is organized</strong> in a C program is essential for effective memory management.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* Memory Layout of a C Program */</span>
+
+<span class="comment">+------------------------+</span> <span class="comment">// High Address</span>
+<span class="comment">|       Command-line     |</span>
+<span class="comment">|       arguments &      |</span>
+<span class="comment">|      environment      |</span>
+<span class="comment">+------------------------+</span>
+<span class="comment">|                        |</span>
+<span class="comment">|         Stack          |</span> <span class="comment">// Grows downward</span>
+<span class="comment">|   (automatic variables, |</span>
+<span class="comment">|   function parameters) |</span>
+<span class="comment">|                        |</span>
+<span class="comment">+------------------------+</span>
+<span class="comment">|           ↓            |</span>
+<span class="comment">|                        |</span>
+<span class="comment">|                        |</span>
+<span class="comment">|      Free Memory       |</span>
+<span class="comment">|                        |</span>
+<span class="comment">|                        |</span>
+<span class="comment">|           ↑            |</span>
+<span class="comment">+------------------------+</span>
+<span class="comment">|                        |</span>
+<span class="comment">|          Heap          |</span> <span class="comment">// Grows upward</span>
+<span class="comment">|  (dynamically allocated |</span>
+<span class="comment">|        memory)         |</span>
+<span class="comment">|                        |</span>
+<span class="comment">+------------------------+</span>
+<span class="comment">|    Uninitialized Data  |</span>
+<span class="comment">|        (BSS)           |</span>
+<span class="comment">+------------------------+</span>
+<span class="comment">|     Initialized Data   |</span>
+<span class="comment">|   (global & static     |</span>
+<span class="comment">|     variables)         |</span>
+<span class="comment">+------------------------+</span>
+<span class="comment">|     Program Code       |</span>
+<span class="comment">|      (Text)            |</span>
+<span class="comment">+------------------------+</span> <span class="comment">// Low Address</span></pre>
+            </div>
+            
+            <h3>Memory Segments</h3>
+            <ul>
+                <li><strong>Text Segment:</strong> Contains executable code. Read-only and fixed size.</li>
+                <li><strong>Initialized Data Segment:</strong> Contains global and static variables that are initialized with non-zero values.</li>
+                <li><strong>BSS (Block Started by Symbol):</strong> Contains uninitialized global and static variables. Initialized to zero by the system.</li>
+                <li><strong>Heap:</strong> Used for dynamic memory allocation. Grows upward (toward higher addresses).</li>
+                <li><strong>Stack:</strong> Used for function calls, local variables, and function parameters. Grows downward (toward lower addresses).</li>
+            </ul>
+            
+            <div class="note">
+                <p>The stack size is limited and varies by system (typically a few MB). Stack overflow occurs when too much stack space is used, often due to deep recursion or large local arrays.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="memory-allocation">
+            <h2>Dynamic Memory Allocation</h2>
+            <p>C provides several functions for dynamic memory allocation, defined in <code>&lt;stdlib.h&gt;</code>.</p>
+            
+            <h3>malloc()</h3>
+            <p>Allocates a specified number of bytes and returns a pointer to the first byte of the allocated space.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Syntax: void* malloc(size_t size);</span>
+
+<span class="comment">// Allocate memory for an integer</span>
+<span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+
+<span class="keyword">if</span> (ptr == <span class="keyword">NULL</span>) {
+    <span class="function">printf</span>(<span class="string">"Memory allocation failed\n"</span>);
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+
+*ptr = <span class="number">42</span>;
+<span class="function">printf</span>(<span class="string">"Value: %d\n"</span>, *ptr);
+
+<span class="comment">// Don't forget to free when done</span>
+<span class="function">free</span>(ptr);</pre>
+            </div>
+            
+            <h3>calloc()</h3>
+            <p>Allocates memory for an array of elements, initializes all bytes to zero, and returns a pointer to the allocated memory.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Syntax: void* calloc(size_t num_elements, size_t element_size);</span>
+
+<span class="comment">// Allocate memory for an array of 5 integers, initialized to 0</span>
+<span class="datatype">int</span>* arr = (<span class="datatype">int</span>*) <span class="function">calloc</span>(<span class="number">5</span>, <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+
+<span class="keyword">if</span> (arr == <span class="keyword">NULL</span>) {
+    <span class="function">printf</span>(<span class="string">"Memory allocation failed\n"</span>);
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+
+<span class="comment">// All elements are initialized to 0</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+    <span class="function">printf</span>(<span class="string">"arr[%d] = %d\n"</span>, i, arr[i]);
+}
+
+<span class="function">free</span>(arr);</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Use <code>calloc()</code> when you need memory initialized to zero. It's equivalent to calling <code>malloc()</code> followed by <code>memset()</code>, but potentially more efficient.</p>
+            </div>
+            
+            <h3>realloc()</h3>
+            <p>Changes the size of a previously allocated memory block.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Syntax: void* realloc(void* ptr, size_t new_size);</span>
+
+<span class="comment">// Allocate memory for an array of 5 integers</span>
+<span class="datatype">int</span>* arr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="number">5</span> * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+
+<span class="comment">// Initialize the array</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+    arr[i] = i + <span class="number">1</span>;
+}
+
+<span class="comment">// Resize the array to hold 10 integers</span>
+<span class="datatype">int</span>* new_arr = (<span class="datatype">int</span>*) <span class="function">realloc</span>(arr, <span class="number">10</span> * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+
+<span class="keyword">if</span> (new_arr == <span class="keyword">NULL</span>) {
+    <span class="function">printf</span>(<span class="string">"Memory reallocation failed\n"</span>);
+    <span class="function">free</span>(arr);  <span class="comment">// Free the original memory</span>
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+
+arr = new_arr;  <span class="comment">// Update the pointer</span>
+
+<span class="comment">// Initialize the new elements</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">5</span>; i < <span class="number">10</span>; i++) {
+    arr[i] = i + <span class="number">1</span>;
+}
+
+<span class="comment">// Print all elements</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">10</span>; i++) {
+    <span class="function">printf</span>(<span class="string">"arr[%d] = %d\n"</span>, i, arr[i]);
+}
+
+<span class="function">free</span>(arr);</pre>
+            </div>
+            
+            <div class="warning">
+                <p><code>realloc()</code> may move the memory block to a new location if there isn't enough space at the current location. The original content is preserved up to the minimum of the old and new sizes.</p>
+            </div>
+            
+            <h3>free()</h3>
+            <p>Deallocates memory previously allocated by <code>malloc()</code>, <code>calloc()</code>, or <code>realloc()</code>.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Syntax: void free(void* ptr);</span>
+
+<span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+*ptr = <span class="number">42</span>;
+
+<span class="comment">// Use the memory...</span>
+
+<span class="function">free</span>(ptr);  <span class="comment">// Deallocate the memory</span>
+ptr = <span class="keyword">NULL</span>;   <span class="comment">// Good practice to set to NULL after freeing</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Failing to free dynamically allocated memory results in memory leaks. Accessing memory after it has been freed (dangling pointer) or freeing memory more than once (double free) causes undefined behavior.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="memory-management-best-practices">
+            <h2>Memory Management Best Practices</h2>
+            
+            <h3>Always Check for Allocation Failure</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+<span class="keyword">if</span> (ptr == <span class="keyword">NULL</span>) {
+    <span class="comment">// Handle allocation failure</span>
+    <span class="function">fprintf</span>(stderr, <span class="string">"Memory allocation failed\n"</span>);
+    <span class="keyword">return</span> <span class="number">1</span>;
+}</pre>
+            </div>
+            
+            <h3>Always Free Allocated Memory</h3>
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">process_data</span>() {
+    <span class="datatype">int</span>* data = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="number">100</span> * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    <span class="keyword">if</span> (data == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span>;
+    }
+    
+    <span class="comment">// Process data...</span>
+    
+    <span class="function">free</span>(data);  <span class="comment">// Always free before returning</span>
+}</pre>
+            </div>
+            
+            <h3>Set Pointers to NULL After Freeing</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+<span class="comment">// Use ptr...</span>
+<span class="function">free</span>(ptr);
+ptr = <span class="keyword">NULL</span>;  <span class="comment">// Prevents accidental use after freeing</span></pre>
+            </div>
+            
+            <h3>Avoid Memory Leaks</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Memory leak example</span>
+<span class="datatype">void</span> <span class="function">leak_example</span>() {
+    <span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    <span class="keyword">if</span> (ptr == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span>;
+    }
+    
+    <span class="keyword">if</span> (some_condition) {
+        <span class="keyword">return</span>;  <span class="comment">// Memory leak! ptr is not freed</span>
+    }
+    
+    <span class="function">free</span>(ptr);
+}
+
+<span class="comment">// Corrected version</span>
+<span class="datatype">void</span> <span class="function">no_leak_example</span>() {
+    <span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    <span class="keyword">if</span> (ptr == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span>;
+    }
+    
+    <span class="keyword">if</span> (some_condition) {
+        <span class="function">free</span>(ptr);  <span class="comment">// Free before returning</span>
+        <span class="keyword">return</span>;
+    }
+    
+    <span class="function">free</span>(ptr);
+}</pre>
+            </div>
+            
+            <h3>Use Valgrind for Memory Leak Detection</h3>
+            <p>Valgrind is a powerful tool for detecting memory leaks and other memory-related issues.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Compile with debugging information</span>
+$ gcc -g program.c -o program
+
+<span class="comment">// Run with Valgrind</span>
+$ valgrind --leak-check=full ./program</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="common-memory-issues">
+            <h2>Common Memory Issues</h2>
+            
+            <h3>Memory Leaks</h3>
+            <p>Occurs when dynamically allocated memory is not freed, causing the program to consume more and more memory over time.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">memory_leak</span>() {
+    <span class="keyword">while</span> (<span class="number">1</span>) {
+        <span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+        <span class="comment">// No free() call - memory leak</span>
+    }
+}</pre>
+            </div>
+            
+            <h3>Dangling Pointers</h3>
+            <p>Occurs when a pointer still references memory that has been freed.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+*ptr = <span class="number">42</span>;
+<span class="function">free</span>(ptr);
+
+<span class="comment">// ptr is now a dangling pointer</span>
+*ptr = <span class="number">100</span>;  <span class="comment">// DANGER: Undefined behavior</span></pre>
+            </div>
+            
+            <h3>Double Free</h3>
+            <p>Occurs when <code>free()</code> is called more than once on the same memory address.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+<span class="function">free</span>(ptr);
+<span class="function">free</span>(ptr);  <span class="comment">// DANGER: Double free</span></pre>
+            </div>
+            
+            <h3>Buffer Overflow</h3>
+            <p>Occurs when writing beyond the bounds of allocated memory.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span>* arr = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="number">5</span> * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i <= <span class="number">5</span>; i++) {  <span class="comment">// DANGER: Loop goes out of bounds</span>
+    arr[i] = i;
+}</pre>
+            </div>
+            
+            <h3>Memory Fragmentation</h3>
+            <p>Occurs when memory becomes divided into small, non-contiguous blocks, making it difficult to allocate large chunks of memory.</p>
+            
+            <div class="note">
+                <p>Memory fragmentation is often caused by repeated allocation and deallocation of different-sized memory blocks. It can be mitigated by using memory pools or allocating memory in consistent sizes.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="advanced-memory-management">
+            <h2>Advanced Memory Management Techniques</h2>
+            
+            <h3>Memory Alignment</h3>
+            <p>Proper memory alignment can improve performance and is required for certain hardware operations.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Aligned memory allocation (C11)</span>
+<span class="datatype">void</span>* <span class="function">aligned_alloc</span>(<span class="datatype">size_t</span> alignment, <span class="datatype">size_t</span> size);
+
+<span class="comment">// Example: Allocate 1024 bytes aligned to a 64-byte boundary</span>
+<span class="datatype">void</span>* ptr = <span class="function">aligned_alloc</span>(<span class="number">64</span>, <span class="number">1024</span>);
+<span class="keyword">if</span> (ptr) {
+    <span class="comment">// Use the aligned memory</span>
+    <span class="function">free</span>(ptr);
+}</pre>
+            </div>
+            
+            <h3>Custom Memory Allocators</h3>
+            <p>For performance-critical applications, custom memory allocators can be more efficient than the standard library functions.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Simple memory pool example</span>
+<span class="keyword">typedef</span> <span class="keyword">struct</span> {
+    <span class="datatype">char</span>* buffer;
+    <span class="datatype">size_t</span> size;
+    <span class="datatype">size_t</span> used;
+} MemoryPool;
+
+<span class="datatype">void</span> <span class="function">init_pool</span>(MemoryPool* pool, <span class="datatype">size_t</span> size) {
+    pool->buffer = (<span class="datatype">char</span>*) <span class="function">malloc</span>(size);
+    pool->size = size;
+    pool->used = <span class="number">0</span>;
+}
+
+<span class="datatype">void</span>* <span class="function">pool_alloc</span>(MemoryPool* pool, <span class="datatype">size_t</span> size) {
+    <span class="keyword">if</span> (pool->used + size > pool->size) {
+        <span class="keyword">return</span> <span class="keyword">NULL</span>;  <span class="comment">// Not enough space</span>
+    }
+    
+    <span class="datatype">void</span>* ptr = pool->buffer + pool->used;
+    pool->used += size;
+    <span class="keyword">return</span> ptr;
+}
+
+<span class="datatype">void</span> <span class="function">destroy_pool</span>(MemoryPool* pool) {
+    <span class="function">free</span>(pool->buffer);
+    pool->buffer = <span class="keyword">NULL</span>;
+    pool->size = <span class="number">0</span>;
+    pool->used = <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <h3>Memory-Mapped Files</h3>
+            <p>Memory mapping allows files to be accessed as if they were in memory, which can be more efficient for large files.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Memory-mapped file example using POSIX mmap</span>
+<span class="datatype">int</span> fd = <span class="function">open</span>(<span class="string">"file.dat"</span>, O_RDONLY);
+<span class="keyword">if</span> (fd == -<span class="number">1</span>) {
+    <span class="function">perror</span>(<span class="string">"open"</span>);
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+
+<span class="comment">// Get file size</span>
+<span class="keyword">struct</span> stat sb;
+<span class="keyword">if</span> (<span class="function">fstat</span>(fd, &sb) == -<span class="number">1</span>) {
+    <span class="function">perror</span>(<span class="string">"fstat"</span>);
+    <span class="function">close</span>(fd);
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+
+<span class="comment">// Map the file into memory</span>
+<span class="datatype">void</span>* addr = <span class="function">mmap</span>(<span class="keyword">NULL</span>, sb.st_size, PROT_READ, MAP_PRIVATE, fd, <span class="number">0</span>);
+<span class="keyword">if</span> (addr == MAP_FAILED) {
+    <span class="function">perror</span>(<span class="string">"mmap"</span>);
+    <span class="function">close</span>(fd);
+    <span class="keyword">return</span> <span class="number">1</span>;
+}
+
+<span class="comment">// Now you can access the file as if it were in memory</span>
+<span class="comment">// ...</span>
+
+<span class="comment">// Unmap when done</span>
+<span class="function">munmap</span>(addr, sb.st_size);
+<span class="function">close</span>(fd);</pre>
+            </div>
+        </div>
+        
+        <p><a href="index.html#memory-management">Back to Memory Management</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+
+        // Show/hide back-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

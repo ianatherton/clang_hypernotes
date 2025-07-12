@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Control Flow - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-yellow">
+                <label for="highlight-yellow">Neon Yellow</label>
+            </div>
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-green">
+                <label for="highlight-green">Neon Green</label>
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Control Flow in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="if-else">
+            <h2>if-else Statements</h2>
+            <p>The <code><strong>if</strong></code> statement allows you to execute a block of code <strong>conditionally</strong> based on whether an expression evaluates to <strong>true</strong> (non-zero) or <strong>false</strong> (zero).</p>
+            
+            <h3>Basic if Statement</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> age = <span class="number">18</span>;
+
+<span class="keyword">if</span> (age >= <span class="number">18</span>) {
+    <span class="function">printf</span>(<span class="string">"You are an adult.\n"</span>);
+}</pre>
+            </div>
+            
+            <h3>if-else Statement</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> score = <span class="number">75</span>;
+
+<span class="keyword">if</span> (score >= <span class="number">60</span>) {
+    <span class="function">printf</span>(<span class="string">"You passed!\n"</span>);
+} <span class="keyword">else</span> {
+    <span class="function">printf</span>(<span class="string">"You failed.\n"</span>);
+}</pre>
+            </div>
+            
+            <h3>if-else if-else Statement</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> score = <span class="number">85</span>;
+
+<span class="keyword">if</span> (score >= <span class="number">90</span>) {
+    <span class="function">printf</span>(<span class="string">"Grade: A\n"</span>);
+} <span class="keyword">else if</span> (score >= <span class="number">80</span>) {
+    <span class="function">printf</span>(<span class="string">"Grade: B\n"</span>);
+} <span class="keyword">else if</span> (score >= <span class="number">70</span>) {
+    <span class="function">printf</span>(<span class="string">"Grade: C\n"</span>);
+} <span class="keyword">else if</span> (score >= <span class="number">60</span>) {
+    <span class="function">printf</span>(<span class="string">"Grade: D\n"</span>);
+} <span class="keyword">else</span> {
+    <span class="function">printf</span>(<span class="string">"Grade: F\n"</span>);
+}</pre>
+            </div>
+            
+            <h3>Nested if Statements</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> age = <span class="number">25</span>;
+<span class="datatype">int</span> hasLicense = <span class="number">1</span>;  <span class="comment">// 1 for true, 0 for false</span>
+
+<span class="keyword">if</span> (age >= <span class="number">18</span>) {
+    <span class="keyword">if</span> (hasLicense) {
+        <span class="function">printf</span>(<span class="string">"You can drive.\n"</span>);
+    } <span class="keyword">else</span> {
+        <span class="function">printf</span>(<span class="string">"You need a license to drive.\n"</span>);
+    }
+} <span class="keyword">else</span> {
+    <span class="function">printf</span>(<span class="string">"You must be at least 18 years old to drive.\n"</span>);
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>You can use the ternary operator <code>? :</code> as a shorthand for simple if-else statements:</p>
+                <pre><span class="datatype">int</span> age = <span class="number">20</span>;
+<span class="datatype">char</span>* status = (age >= <span class="number">18</span>) ? <span class="string">"adult"</span> : <span class="string">"minor"</span>;
+<span class="function">printf</span>(<span class="string">"You are a %s.\n"</span>, status);</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="switch">
+            <h2>switch Statement</h2>
+            <p>The <code><strong>switch</strong></code> statement provides a way to select <strong>one of many code blocks</strong> to execute based on the value of an expression.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> day = <span class="number">3</span>;
+
+<span class="keyword">switch</span> (day) {
+    <span class="keyword">case</span> <span class="number">1</span>:
+        <span class="function">printf</span>(<span class="string">"Monday\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">2</span>:
+        <span class="function">printf</span>(<span class="string">"Tuesday\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">3</span>:
+        <span class="function">printf</span>(<span class="string">"Wednesday\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">4</span>:
+        <span class="function">printf</span>(<span class="string">"Thursday\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">5</span>:
+        <span class="function">printf</span>(<span class="string">"Friday\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">6</span>:
+        <span class="function">printf</span>(<span class="string">"Saturday\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="number">7</span>:
+        <span class="function">printf</span>(<span class="string">"Sunday\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">default</span>:
+        <span class="function">printf</span>(<span class="string">"Invalid day\n"</span>);
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>The <code>break</code> statement is used to exit the switch block. Without it, execution would "fall through" to the next case.</p>
+            </div>
+            
+            <h3>Fall-Through Behavior</h3>
+            <div class="code-block">
+                <pre><span class="datatype">char</span> grade = <span class="string">'B'</span>;
+
+<span class="keyword">switch</span> (grade) {
+    <span class="keyword">case</span> <span class="string">'A'</span>:
+        <span class="function">printf</span>(<span class="string">"Excellent!\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">'B'</span>:  <span class="comment">// Falls through to case 'C'</span>
+    <span class="keyword">case</span> <span class="string">'C'</span>:
+        <span class="function">printf</span>(<span class="string">"Well done\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">'D'</span>:
+        <span class="function">printf</span>(<span class="string">"You passed\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">case</span> <span class="string">'F'</span>:
+        <span class="function">printf</span>(<span class="string">"Better try again\n"</span>);
+        <span class="keyword">break</span>;
+    <span class="keyword">default</span>:
+        <span class="function">printf</span>(<span class="string">"Invalid grade\n"</span>);
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>The <code>switch</code> statement in C can <strong>only test for equality</strong> (==), not for other conditions like greater than or less than.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="loops">
+            <h2>Loops</h2>
+            <p><strong>Loops</strong> allow you to execute a block of code <strong>repeatedly</strong>.</p>
+            
+            <h3>for Loop</h3>
+            <p>The <code><strong>for</strong></code> loop is used when you know <strong>in advance</strong> how many times you want to execute a block of code.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Basic for loop</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+    <span class="function">printf</span>(<span class="string">"%d "</span>, i);
+}
+<span class="function">printf</span>(<span class="string">"\n"</span>);  <span class="comment">// Output: 0 1 2 3 4</span>
+
+<span class="comment">// Multiple initialization and increment expressions</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>, j = <span class="number">10</span>; i < j; i++, j--) {
+    <span class="function">printf</span>(<span class="string">"%d %d\n"</span>, i, j);
+}</pre>
+            </div>
+            
+            <div class="definition">
+                <h4>for Loop Components</h4>
+                <ol>
+                    <li><strong>Initialization</strong>: Executed once before the loop starts.</li>
+                    <li><strong>Condition</strong>: Evaluated before each iteration. If false, the loop ends.</li>
+                    <li><strong>Increment/Update</strong>: Executed after each iteration.</li>
+                </ol>
+            </div>
+            
+            <h3>while Loop</h3>
+            <p>The <code><strong>while</strong></code> loop executes a block of code <strong>as long as</strong> a specified condition is true.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> count = <span class="number">0</span>;
+
+<span class="keyword">while</span> (count < <span class="number">5</span>) {
+    <span class="function">printf</span>(<span class="string">"%d "</span>, count);
+    count++;
+}
+<span class="function">printf</span>(<span class="string">"\n"</span>);  <span class="comment">// Output: 0 1 2 3 4</span></pre>
+            </div>
+            
+            <h3>do-while Loop</h3>
+            <p>The <code><strong>do-while</strong></code> loop is similar to the <code>while</code> loop, but it <strong>executes the block of code once before checking the condition</strong>.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> count = <span class="number">0</span>;
+
+<span class="keyword">do</span> {
+    <span class="function">printf</span>(<span class="string">"%d "</span>, count);
+    count++;
+} <span class="keyword">while</span> (count < <span class="number">5</span>);
+<span class="function">printf</span>(<span class="string">"\n"</span>);  <span class="comment">// Output: 0 1 2 3 4</span></pre>
+            </div>
+            
+            <div class="note">
+                <p>The <code>do-while</code> loop always executes at least once, even if the condition is initially false.</p>
+            </div>
+            
+            <h3>Infinite Loops</h3>
+            <p>Loops that run indefinitely until explicitly terminated.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Infinite for loop</span>
+<span class="keyword">for</span> (;;) {
+    <span class="comment">// Code to be executed repeatedly</span>
+    <span class="keyword">if</span> (someCondition) <span class="keyword">break</span>;  <span class="comment">// Exit condition</span>
+}
+
+<span class="comment">// Infinite while loop</span>
+<span class="keyword">while</span> (<span class="number">1</span>) {
+    <span class="comment">// Code to be executed repeatedly</span>
+    <span class="keyword">if</span> (someCondition) <span class="keyword">break</span>;  <span class="comment">// Exit condition</span>
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Be cautious with infinite loops. Always ensure there's a way to exit the loop to avoid program hangs.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="break-continue">
+            <h2>break and continue Statements</h2>
+            
+            <h3>break Statement</h3>
+            <p>The <code>break</code> statement terminates the loop or switch statement and transfers execution to the statement immediately following the loop or switch.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Using break in a loop</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">10</span>; i++) {
+    <span class="keyword">if</span> (i == <span class="number">5</span>) {
+        <span class="keyword">break</span>;  <span class="comment">// Exit the loop when i equals 5</span>
+    }
+    <span class="function">printf</span>(<span class="string">"%d "</span>, i);
+}
+<span class="function">printf</span>(<span class="string">"\n"</span>);  <span class="comment">// Output: 0 1 2 3 4</span></pre>
+            </div>
+            
+            <h3>continue Statement</h3>
+            <p>The <code>continue</code> statement skips the rest of the current iteration and proceeds with the next iteration of the loop.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Using continue in a loop</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">10</span>; i++) {
+    <span class="keyword">if</span> (i % <span class="number">2</span> == <span class="number">0</span>) {
+        <span class="keyword">continue</span>;  <span class="comment">// Skip even numbers</span>
+    }
+    <span class="function">printf</span>(<span class="string">"%d "</span>, i);
+}
+<span class="function">printf</span>(<span class="string">"\n"</span>);  <span class="comment">// Output: 1 3 5 7 9</span></pre>
+            </div>
+        </div>
+        
+        <div class="section" id="goto">
+            <h2>goto Statement</h2>
+            <p>The <code>goto</code> statement transfers control to a labeled statement within the same function.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> i = <span class="number">0</span>;
+
+start:
+    <span class="keyword">if</span> (i < <span class="number">5</span>) {
+        <span class="function">printf</span>(<span class="string">"%d "</span>, i);
+        i++;
+        <span class="keyword">goto</span> start;
+    }
+<span class="function">printf</span>(<span class="string">"\n"</span>);  <span class="comment">// Output: 0 1 2 3 4</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>The <code>goto</code> statement is generally discouraged in modern programming as it can make code harder to understand and maintain. It's better to use structured control flow statements like loops and conditionals.</p>
+            </div>
+            
+            <h3>Common Use Case: Error Handling</h3>
+            <p>One acceptable use of <code>goto</code> is for error handling and cleanup in C:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">process_data</span>() {
+    <span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"data.txt"</span>, <span class="string">"r"</span>);
+    <span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+        <span class="keyword">goto</span> error_handler;
+    }
+    
+    <span class="datatype">int</span>* buffer = (<span class="datatype">int</span>*) <span class="function">malloc</span>(<span class="number">100</span> * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    <span class="keyword">if</span> (buffer == <span class="keyword">NULL</span>) {
+        <span class="keyword">goto</span> cleanup_file;
+    }
+    
+    <span class="comment">// Process data...</span>
+    
+    <span class="function">free</span>(buffer);
+    <span class="function">fclose</span>(file);
+    <span class="keyword">return</span> <span class="number">0</span>;
+    
+cleanup_file:
+    <span class="function">fclose</span>(file);
+error_handler:
+    <span class="keyword">return</span> -<span class="number">1</span>;
+}</pre>
+            </div>
+        </div>
+        
+        <p><a href="index.html#control-flow">Back to Control Flow</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+
+        // Show/hide back-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

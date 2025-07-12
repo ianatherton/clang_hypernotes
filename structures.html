@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Structures - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Structures in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="structure-declaration">
+            <h2>Structure Declaration and Initialization</h2>
+            <p><strong>Structures</strong> allow you to <strong>group related variables</strong> of different data types under a single name.</p>
+            
+            <h3>Structure Declaration</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Structure declaration</span>
+<span class="keyword">struct</span> Person {
+    <span class="datatype">char</span> name[<span class="number">50</span>];
+    <span class="datatype">int</span> age;
+    <span class="datatype">float</span> height;
+};</pre>
+            </div>
+            
+            <h3>Structure Variables</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Declaring structure variables</span>
+<span class="keyword">struct</span> Person person1, person2;
+
+<span class="comment">// Accessing structure members</span>
+<span class="function">strcpy</span>(person1.name, <span class="string">"John"</span>);
+person1.age = <span class="number">25</span>;
+person1.height = <span class="number">175.5</span>;</pre>
+            </div>
+            
+            <h3>Structure Initialization</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Initialization at declaration time</span>
+<span class="keyword">struct</span> Person person3 = {<span class="string">"Alice"</span>, <span class="number">30</span>, <span class="number">165.0</span>};
+
+<span class="comment">// Designated initializers (C99 and later)</span>
+<span class="keyword">struct</span> Person person4 = {
+    .name = <span class="string">"Bob"</span>,
+    .age = <span class="number">35</span>,
+    .height = <span class="number">180.2</span>
+};</pre>
+            </div>
+            
+            <h3>Typedef with Structures</h3>
+            <p>Using <code>typedef</code> with structures allows you to create a new type name for the structure, eliminating the need to use the <code>struct</code> keyword each time.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Using typedef with structure</span>
+<span class="keyword">typedef</span> <span class="keyword">struct</span> {
+    <span class="datatype">char</span> title[<span class="number">100</span>];
+    <span class="datatype">char</span> author[<span class="number">50</span>];
+    <span class="datatype">int</span> year;
+} Book;
+
+<span class="comment">// Now you can declare variables without the struct keyword</span>
+Book myBook = {<span class="string">"C Programming"</span>, <span class="string">"Dennis Ritchie"</span>, <span class="number">1978</span>};</pre>
+            </div>
+            
+            <div class="note">
+                <p>Structure declarations are typically placed in header files (.h) to be shared across multiple source files.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="nested-structures">
+            <h2>Nested Structures</h2>
+            <p>Structures can contain other structures as members.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">struct</span> Date {
+    <span class="datatype">int</span> day;
+    <span class="datatype">int</span> month;
+    <span class="datatype">int</span> year;
+};
+
+<span class="keyword">struct</span> Employee {
+    <span class="datatype">char</span> name[<span class="number">50</span>];
+    <span class="datatype">int</span> id;
+    <span class="keyword">struct</span> Date joinDate;  <span class="comment">// Nested structure</span>
+};
+
+<span class="keyword">struct</span> Employee emp = {
+    <span class="string">"John Doe"</span>,
+    <span class="number">1001</span>,
+    {<span class="number">15</span>, <span class="number">8</span>, <span class="number">2020</span>}  <span class="comment">// Initializing the nested structure</span>
+};
+
+<span class="function">printf</span>(<span class="string">"Employee: %s (ID: %d)\n"</span>, emp.name, emp.id);
+<span class="function">printf</span>(<span class="string">"Join Date: %d/%d/%d\n"</span>, emp.joinDate.day, emp.joinDate.month, emp.joinDate.year);</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="structures-and-functions">
+            <h2>Structures and Functions</h2>
+            
+            <h3>Passing Structures to Functions</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Function that takes a structure as parameter</span>
+<span class="datatype">void</span> <span class="function">printPerson</span>(<span class="keyword">struct</span> Person p) {
+    <span class="function">printf</span>(<span class="string">"Name: %s\n"</span>, p.name);
+    <span class="function">printf</span>(<span class="string">"Age: %d\n"</span>, p.age);
+    <span class="function">printf</span>(<span class="string">"Height: %.1f cm\n"</span>, p.height);
+}
+
+<span class="comment">// Function that returns a structure</span>
+<span class="keyword">struct</span> Person <span class="function">createPerson</span>(<span class="datatype">char</span> name[], <span class="datatype">int</span> age, <span class="datatype">float</span> height) {
+    <span class="keyword">struct</span> Person p;
+    <span class="function">strcpy</span>(p.name, name);
+    p.age = age;
+    p.height = height;
+    <span class="keyword">return</span> p;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>When passing large structures to functions, it's more efficient to pass them by reference (using pointers) to avoid copying the entire structure.</p>
+            </div>
+            
+            <h3>Passing Structures by Reference</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Function that modifies a structure through a pointer</span>
+<span class="datatype">void</span> <span class="function">updateAge</span>(<span class="keyword">struct</span> Person* p, <span class="datatype">int</span> newAge) {
+    p->age = newAge;  <span class="comment">// Arrow operator for accessing members through pointer</span>
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="keyword">struct</span> Person person = {<span class="string">"John"</span>, <span class="number">25</span>, <span class="number">175.5</span>};
+    
+    <span class="function">printf</span>(<span class="string">"Before update: %d\n"</span>, person.age);  <span class="comment">// Output: 25</span>
+    <span class="function">updateAge</span>(&person, <span class="number">26</span>);
+    <span class="function">printf</span>(<span class="string">"After update: %d\n"</span>, person.age);   <span class="comment">// Output: 26</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>When accessing structure members through a pointer, use the arrow operator (<code>-></code>) instead of the dot operator (<code>.</code>).</p>
+            </div>
+        </div>
+        
+        <div class="section" id="structure-pointers">
+            <h2>Structure Pointers</h2>
+            <p>Pointers to structures are commonly used for dynamic memory allocation and efficient parameter passing.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Declaring a pointer to a structure</span>
+<span class="keyword">struct</span> Person* personPtr;
+
+<span class="comment">// Allocating memory for a structure</span>
+personPtr = (<span class="keyword">struct</span> Person*) <span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="keyword">struct</span> Person));
+
+<span class="comment">// Accessing members using the arrow operator</span>
+<span class="function">strcpy</span>(personPtr->name, <span class="string">"Jane"</span>);
+personPtr->age = <span class="number">28</span>;
+personPtr->height = <span class="number">170.0</span>;
+
+<span class="comment">// Don't forget to free the allocated memory</span>
+<span class="function">free</span>(personPtr);</pre>
+            </div>
+            
+            <h3>Array of Structures</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Array of structures</span>
+<span class="keyword">struct</span> Person people[<span class="number">3</span>] = {
+    {<span class="string">"John"</span>, <span class="number">25</span>, <span class="number">175.5</span>},
+    {<span class="string">"Alice"</span>, <span class="number">30</span>, <span class="number">165.0</span>},
+    {<span class="string">"Bob"</span>, <span class="number">35</span>, <span class="number">180.2</span>}
+};
+
+<span class="comment">// Accessing elements</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">3</span>; i++) {
+    <span class="function">printf</span>(<span class="string">"Person %d: %s, %d years old\n"</span>, i+<span class="number">1</span>, people[i].name, people[i].age);
+}</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="structure-padding">
+            <h2>Structure Padding and Alignment</h2>
+            <p>The compiler may add padding between structure members to align them properly in memory, which can affect the size of the structure.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">struct</span> Example1 {
+    <span class="datatype">char</span> c;     <span class="comment">// 1 byte</span>
+    <span class="datatype">int</span> i;      <span class="comment">// 4 bytes</span>
+    <span class="datatype">char</span> d;     <span class="comment">// 1 byte</span>
+};
+
+<span class="keyword">struct</span> Example2 {
+    <span class="datatype">char</span> c;     <span class="comment">// 1 byte</span>
+    <span class="datatype">char</span> d;     <span class="comment">// 1 byte</span>
+    <span class="datatype">int</span> i;      <span class="comment">// 4 bytes</span>
+};
+
+<span class="function">printf</span>(<span class="string">"Size of Example1: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Example1));  <span class="comment">// Might be 12 bytes due to padding</span>
+<span class="function">printf</span>(<span class="string">"Size of Example2: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Example2));  <span class="comment">// Might be 8 bytes</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>To minimize padding, arrange structure members in order of decreasing size or group members of the same size together.</p>
+            </div>
+            
+            <h3>Packed Structures</h3>
+            <p>Some compilers provide extensions to create "packed" structures without padding, but this can affect performance on some architectures.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// GCC extension for packed structures</span>
+<span class="keyword">struct</span> __attribute__((packed)) PackedExample {
+    <span class="datatype">char</span> c;     <span class="comment">// 1 byte</span>
+    <span class="datatype">int</span> i;      <span class="comment">// 4 bytes</span>
+    <span class="datatype">char</span> d;     <span class="comment">// 1 byte</span>
+};
+
+<span class="function">printf</span>(<span class="string">"Size of PackedExample: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> PackedExample));  <span class="comment">// 6 bytes</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Packed structures may cause performance issues on some architectures that require aligned memory access.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="bit-fields">
+            <h2>Bit Fields</h2>
+            <p>Bit fields allow you to specify the number of bits for structure members, which is useful for saving memory when you know the value range of a variable.</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">struct</span> Date {
+    <span class="datatype">unsigned int</span> day   : <span class="number">5</span>;  <span class="comment">// 5 bits for day (0-31)</span>
+    <span class="datatype">unsigned int</span> month : <span class="number">4</span>;  <span class="comment">// 4 bits for month (0-15)</span>
+    <span class="datatype">unsigned int</span> year  : <span class="number">12</span>; <span class="comment">// 12 bits for year (0-4095)</span>
+};
+
+<span class="keyword">struct</span> Date today;
+today.day = <span class="number">15</span>;
+today.month = <span class="number">7</span>;
+today.year = <span class="number">2023</span>;
+
+<span class="function">printf</span>(<span class="string">"Date: %d/%d/%d\n"</span>, today.day, today.month, today.year);
+<span class="function">printf</span>(<span class="string">"Size of Date: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> Date));  <span class="comment">// Typically 4 bytes</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Bit fields are not portable across different compilers and architectures. The order of bit allocation within a word is implementation-defined.</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#structures">Back to Structures</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+
+        // Show/hide back-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Functions - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>Functions in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="function-declaration">
+            <h2>Function Declaration and Definition</h2>
+            <p><strong>Functions</strong> are blocks of code that perform specific tasks. They help <strong>organize code</strong>, promote <strong>reusability</strong>, and make programs easier to understand and maintain.</p>
+            
+            <h3>Function Declaration (Prototype)</h3>
+            <p>A <strong>function declaration</strong> tells the compiler about a function's name, return type, and parameters. It <strong>doesn't contain the function body</strong>.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Function declaration (prototype)</span>
+<span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b);  <span class="comment">// Note the semicolon at the end</span></pre>
+            </div>
+            
+            <h3>Function Definition</h3>
+            <p>A <strong>function definition</strong> provides the <strong>actual body</strong> of the function.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Function definition</span>
+<span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> a + b;  <span class="comment">// Return statement</span>
+}</pre>
+            </div>
+            
+            <h3>Complete Example</h3>
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="comment">// Function declaration</span>
+<span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b);
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> result = <span class="function">add</span>(<span class="number">5</span>, <span class="number">3</span>);
+    <span class="function">printf</span>(<span class="string">"5 + 3 = %d\n"</span>, result);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+
+<span class="comment">// Function definition</span>
+<span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> a + b;
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>In C, function declarations (prototypes) are typically placed in header files (.h), while function definitions are placed in source files (.c).</p>
+            </div>
+        </div>
+        
+        <div class="section" id="function-parameters">
+            <h2>Parameters and Return Values</h2>
+            
+            <h3>Parameters</h3>
+            <p>Parameters are variables that receive values when the function is called. They are also called formal parameters.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">greet</span>(<span class="datatype">char</span>* name, <span class="datatype">int</span> age) {
+    <span class="function">printf</span>(<span class="string">"Hello, %s! You are %d years old.\n"</span>, name, age);
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">greet</span>(<span class="string">"Alice"</span>, <span class="number">25</span>);  <span class="comment">// Arguments: "Alice" and 25</span>
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <h3>Return Values</h3>
+            <p>Functions can return a value using the <code>return</code> statement. The return type is specified in the function declaration.</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">square</span>(<span class="datatype">int</span> num) {
+    <span class="keyword">return</span> num * num;
+}
+
+<span class="datatype">double</span> <span class="function">calculateArea</span>(<span class="datatype">double</span> radius) {
+    <span class="keyword">return</span> <span class="number">3.14159</span> * radius * radius;
+}
+
+<span class="datatype">void</span> <span class="function">printMessage</span>() {  <span class="comment">// No return value (void)</span>
+    <span class="function">printf</span>(<span class="string">"This function doesn't return anything.\n"</span>);
+    <span class="keyword">return</span>;  <span class="comment">// Optional for void functions</span>
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>If a function doesn't return a value, use the <code>void</code> return type. The <code>return</code> statement without a value is optional in void functions.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="parameter-passing">
+            <h2>Parameter Passing</h2>
+            <p>C uses "pass by value" by default, which means the function receives a copy of the argument's value, not the original variable.</p>
+            
+            <h3>Pass by Value</h3>
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">increment</span>(<span class="datatype">int</span> num) {
+    num++;  <span class="comment">// Modifies the local copy, not the original variable</span>
+    <span class="function">printf</span>(<span class="string">"Inside function: %d\n"</span>, num);
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> x = <span class="number">5</span>;
+    <span class="function">printf</span>(<span class="string">"Before function call: %d\n"</span>, x);
+    <span class="function">increment</span>(x);
+    <span class="function">printf</span>(<span class="string">"After function call: %d\n"</span>, x);  <span class="comment">// Still 5, unchanged</span>
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <h3>Pass by Reference (using pointers)</h3>
+            <p>To modify the original variable, you can pass its address (using pointers).</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">incrementByReference</span>(<span class="datatype">int</span>* numPtr) {
+    (*numPtr)++;  <span class="comment">// Modifies the value at the address pointed to by numPtr</span>
+    <span class="function">printf</span>(<span class="string">"Inside function: %d\n"</span>, *numPtr);
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> x = <span class="number">5</span>;
+    <span class="function">printf</span>(<span class="string">"Before function call: %d\n"</span>, x);
+    <span class="function">incrementByReference</span>(&x);  <span class="comment">// Pass the address of x</span>
+    <span class="function">printf</span>(<span class="string">"After function call: %d\n"</span>, x);  <span class="comment">// Now 6, modified</span>
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>When passing pointers, be careful to ensure they point to valid memory locations to avoid undefined behavior.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="function-prototypes">
+            <h2>Function Prototypes</h2>
+            <p>Function prototypes inform the compiler about the function's signature before its actual definition.</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="comment">// Function prototypes</span>
+<span class="datatype">double</span> <span class="function">calculateArea</span>(<span class="datatype">double</span> radius);
+<span class="datatype">void</span> <span class="function">printResult</span>(<span class="datatype">double</span> area);
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">double</span> radius = <span class="number">5.0</span>;
+    <span class="datatype">double</span> area = <span class="function">calculateArea</span>(radius);
+    <span class="function">printResult</span>(area);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}
+
+<span class="datatype">double</span> <span class="function">calculateArea</span>(<span class="datatype">double</span> radius) {
+    <span class="keyword">return</span> <span class="number">3.14159</span> * radius * radius;
+}
+
+<span class="datatype">void</span> <span class="function">printResult</span>(<span class="datatype">double</span> area) {
+    <span class="function">printf</span>(<span class="string">"The area is: %.2f\n"</span>, area);
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>Function prototypes are essential when functions are defined after they are called or in different source files.</p>
+            </div>
+            
+            <h3>K&R Style vs. ANSI C Style</h3>
+            <p>In older K&R style C, function declarations didn't include parameter types. Modern ANSI C requires parameter types in both declarations and definitions.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// K&R style (old, not recommended)</span>
+<span class="datatype">int</span> <span class="function">add</span>(); <span class="comment">// No parameter information</span>
+
+<span class="comment">// ANSI C style (modern, recommended)</span>
+<span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b); <span class="comment">// With parameter types</span></pre>
+            </div>
+        </div>
+        
+        <div class="section" id="recursion">
+            <h2>Recursion</h2>
+            <p>Recursion occurs when a function calls itself. It's useful for solving problems that can be broken down into smaller, similar subproblems.</p>
+            
+            <h3>Factorial Example</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">factorial</span>(<span class="datatype">int</span> n) {
+    <span class="keyword">if</span> (n <= <span class="number">1</span>) {  <span class="comment">// Base case</span>
+        <span class="keyword">return</span> <span class="number">1</span>;
+    } <span class="keyword">else</span> {  <span class="comment">// Recursive case</span>
+        <span class="keyword">return</span> n * <span class="function">factorial</span>(n - <span class="number">1</span>);
+    }
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">printf</span>(<span class="string">"5! = %d\n"</span>, <span class="function">factorial</span>(<span class="number">5</span>));  <span class="comment">// Output: 5! = 120</span>
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <h3>Fibonacci Example</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">fibonacci</span>(<span class="datatype">int</span> n) {
+    <span class="keyword">if</span> (n <= <span class="number">1</span>) {  <span class="comment">// Base cases</span>
+        <span class="keyword">return</span> n;
+    } <span class="keyword">else</span> {  <span class="comment">// Recursive case</span>
+        <span class="keyword">return</span> <span class="function">fibonacci</span>(n - <span class="number">1</span>) + <span class="function">fibonacci</span>(n - <span class="number">2</span>);
+    }
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">printf</span>(<span class="string">"Fibonacci(7) = %d\n"</span>, <span class="function">fibonacci</span>(<span class="number">7</span>));  <span class="comment">// Output: Fibonacci(7) = 13</span>
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Recursive functions can lead to stack overflow if they call themselves too many times without reaching a base case. Always ensure there's a proper termination condition.</p>
+            </div>
+            
+            <div class="tip">
+                <p>Many recursive algorithms can be rewritten iteratively for better performance, especially when the recursion depth might be large.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="function-pointers">
+            <h2>Function Pointers</h2>
+            <p>Function pointers allow you to store and pass functions as arguments to other functions, enabling more flexible and dynamic code.</p>
+            
+            <h3>Declaring and Using Function Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> a + b;
+}
+
+<span class="datatype">int</span> <span class="function">subtract</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> a - b;
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="comment">// Declare a function pointer</span>
+    <span class="datatype">int</span> (*operation)(<span class="datatype">int</span>, <span class="datatype">int</span>);
+    
+    <span class="comment">// Assign the address of add to the function pointer</span>
+    operation = &add;  <span class="comment">// The & is optional</span>
+    <span class="function">printf</span>(<span class="string">"Result of add: %d\n"</span>, operation(<span class="number">5</span>, <span class="number">3</span>));  <span class="comment">// Output: 8</span>
+    
+    <span class="comment">// Assign the address of subtract to the function pointer</span>
+    operation = subtract;  <span class="comment">// Without &</span>
+    <span class="function">printf</span>(<span class="string">"Result of subtract: %d\n"</span>, (*operation)(<span class="number">5</span>, <span class="number">3</span>));  <span class="comment">// Output: 2</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <h3>Function Pointers as Arguments</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">apply</span>(<span class="datatype">int</span> (*func)(<span class="datatype">int</span>, <span class="datatype">int</span>), <span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> func(a, b);
+}
+
+<span class="datatype">int</span> <span class="function">multiply</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> a * b;
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">printf</span>(<span class="string">"Result of add: %d\n"</span>, <span class="function">apply</span>(add, <span class="number">5</span>, <span class="number">3</span>));  <span class="comment">// Output: 8</span>
+    <span class="function">printf</span>(<span class="string">"Result of multiply: %d\n"</span>, <span class="function">apply</span>(multiply, <span class="number">5</span>, <span class="number">3</span>));  <span class="comment">// Output: 15</span>
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <h3>Array of Function Pointers</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="comment">// Array of function pointers</span>
+    <span class="datatype">int</span> (*operations[<span class="number">3</span>])(<span class="datatype">int</span>, <span class="datatype">int</span>) = {add, subtract, multiply};
+    
+    <span class="datatype">int</span> a = <span class="number">10</span>, b = <span class="number">5</span>;
+    <span class="datatype">char</span>* opNames[<span class="number">3</span>] = {<span class="string">"add"</span>, <span class="string">"subtract"</span>, <span class="string">"multiply"</span>};
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">3</span>; i++) {
+        <span class="function">printf</span>(<span class="string">"Result of %s: %d\n"</span>, opNames[i], operations[i](a, b));
+    }
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>Function pointers are widely used in callback mechanisms, event handling, and implementing polymorphism in C.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="variable-arguments">
+            <h2>Variable Arguments</h2>
+            <p>C allows functions to accept a variable number of arguments using the <code>&lt;stdarg.h&gt;</code> header.</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;stdarg.h&gt;</span>
+
+<span class="comment">// Function with variable arguments</span>
+<span class="datatype">double</span> <span class="function">average</span>(<span class="datatype">int</span> count, ...) {
+    <span class="datatype">va_list</span> args;
+    <span class="datatype">double</span> sum = <span class="number">0</span>;
+    
+    <span class="comment">// Initialize the argument list</span>
+    <span class="function">va_start</span>(args, count);
+    
+    <span class="comment">// Access all arguments</span>
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < count; i++) {
+        <span class="datatype">int</span> num = <span class="function">va_arg</span>(args, <span class="datatype">int</span>);
+        sum += num;
+    }
+    
+    <span class="comment">// Clean up</span>
+    <span class="function">va_end</span>(args);
+    
+    <span class="keyword">return</span> sum / count;
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">printf</span>(<span class="string">"Average of 2, 4, 6: %.2f\n"</span>, <span class="function">average</span>(<span class="number">3</span>, <span class="number">2</span>, <span class="number">4</span>, <span class="number">6</span>));
+    <span class="function">printf</span>(<span class="string">"Average of 5, 10, 15, 20, 25: %.2f\n"</span>, <span class="function">average</span>(<span class="number">5</span>, <span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="number">20</span>, <span class="number">25</span>));
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>When using variable arguments, you need some way to know how many arguments were passed or when to stop processing them. Common approaches include:</p>
+                <ul>
+                    <li>Passing the count as the first argument (as shown above)</li>
+                    <li>Using a sentinel value (like NULL) to mark the end</li>
+                    <li>Using a format string (like in printf) to determine the number and types of arguments</li>
+                </ul>
+            </div>
+        </div>
+        
+        <p><a href="index.html#functions">Back to Functions</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+
+        // Show/hide back-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
