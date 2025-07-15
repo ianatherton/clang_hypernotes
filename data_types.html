@@ -22,11 +22,6 @@
                 <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
             </div>
         </div>
-            <div class="highlight-option">
-                <input type="checkbox" id="highlight-green">
-                <label for="highlight-green">Neon Green</label>
-            </div>
-        </div>
         <div class="flagged-sections">
             <label for="flagged-select">Jump to:</label>
             <select id="flagged-select">
@@ -235,6 +230,97 @@
     <span class="comment">// Can point to any data type</span>
     <span class="keyword">return</span> data;
 }</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="variables">
+            <h2>Variables</h2>
+            <p><strong>Variables</strong> are named storage locations that hold values of specific data types. They are the fundamental building blocks for storing and manipulating data in C programs.</p>
+            
+            <h3>Variable Declaration and Initialization</h3>
+            <p>In C, variables must be declared before they can be used. Declaration specifies the data type and name of the variable.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Variable declaration</span>
+<span class="datatype">int</span> count;           <span class="comment">// Declares an integer variable named 'count'</span>
+<span class="datatype">float</span> temperature;   <span class="comment">// Declares a float variable named 'temperature'</span>
+
+<span class="comment">// Variable initialization</span>
+count = <span class="number">10</span>;          <span class="comment">// Assigns the value 10 to 'count'</span>
+temperature = <span class="number">98.6f</span>;  <span class="comment">// Assigns the value 98.6 to 'temperature'</span>
+
+<span class="comment">// Declaration and initialization in a single statement</span>
+<span class="datatype">int</span> age = <span class="number">25</span>;        <span class="comment">// Declares an integer 'age' and initializes it to 25</span>
+<span class="datatype">char</span> grade = <span class="string">'A'</span>;    <span class="comment">// Declares a character 'grade' and initializes it to 'A'</span></pre>
+            </div>
+            
+            <h3>Variable Naming Rules</h3>
+            <p>When naming variables in C, follow these rules:</p>
+            <ul>
+                <li>Names can contain letters, digits, and underscores</li>
+                <li>Names must begin with a letter or underscore</li>
+                <li>Names are case-sensitive (<code>age</code> and <code>Age</code> are different variables)</li>
+                <li>Names cannot use C keywords (like <code>int</code>, <code>float</code>, <code>return</code>, etc.)</li>
+                <li>Names should be descriptive and meaningful</li>
+            </ul>
+            
+            <div class="warning">
+                <p>Avoid using names that begin with an underscore followed by a capital letter or another underscore, as these are reserved for system use.</p>
+            </div>
+            
+            <h3>Variable Scope and Lifetime</h3>
+            <p>The <strong>scope</strong> of a variable determines where in the program the variable can be accessed. The <strong>lifetime</strong> determines when the variable is created and destroyed.</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Global variable (file scope)</span>
+<span class="datatype">int</span> globalVar = <span class="number">100</span>;  <span class="comment">// Accessible throughout the file</span>
+
+<span class="datatype">void</span> <span class="function">exampleFunction</span>() {
+    <span class="comment">// Local variable (block scope)</span>
+    <span class="datatype">int</span> localVar = <span class="number">10</span>;  <span class="comment">// Only accessible within this function</span>
+    
+    {
+        <span class="comment">// Nested block scope</span>
+        <span class="datatype">int</span> nestedVar = <span class="number">5</span>;  <span class="comment">// Only accessible within this block</span>
+        <span class="function">printf</span>(<span class="string">"Inside nested block: %d, %d, %d\n"</span>, globalVar, localVar, nestedVar);
+    }
+    
+    <span class="comment">// nestedVar is not accessible here</span>
+    <span class="function">printf</span>(<span class="string">"Inside function: %d, %d\n"</span>, globalVar, localVar);
+}</pre>
+            </div>
+            
+            <h3>Storage Classes</h3>
+            <p>C provides several storage classes that control the scope and lifetime of variables:</p>
+            <ul>
+                <li><code class="keyword">auto</code> - Default for local variables (automatically allocated and deallocated)</li>
+                <li><code class="keyword">static</code> - Preserves value between function calls and limits scope to the file</li>
+                <li><code class="keyword">extern</code> - Declares a variable that is defined in another file</li>
+                <li><code class="keyword">register</code> - Suggests that the variable be stored in a CPU register for faster access</li>
+            </ul>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Static variable example</span>
+<span class="datatype">void</span> <span class="function">countCalls</span>() {
+    <span class="keyword">static</span> <span class="datatype">int</span> count = <span class="number">0</span>;  <span class="comment">// Initialized only once, value persists between calls</span>
+    count++;
+    <span class="function">printf</span>(<span class="string">"This function has been called %d times\n"</span>, count);
+}</pre>
+            </div>
+            
+            <h3>Constants</h3>
+            <p>Constants are variables whose values cannot be changed after initialization:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Using const keyword</span>
+<span class="keyword">const</span> <span class="datatype">float</span> PI = <span class="number">3.14159f</span>;  <span class="comment">// Value cannot be changed</span>
+
+<span class="comment">// Using #define directive (preprocessor constant)</span>
+<span class="preprocessor">#define MAX_SIZE 100</span>  <span class="comment">// Symbolic constant, no memory allocation</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>Use <code>const</code> for type-safe constants and <code>#define</code> for simple text substitution. <code>const</code> variables have a specific type and scope, while <code>#define</code> constants are processed by the preprocessor before compilation.</p>
             </div>
         </div>
         

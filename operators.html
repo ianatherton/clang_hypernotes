@@ -1,0 +1,1128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C Operators - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+            <div class="highlight-option">
+                <input type="checkbox" id="highlight-green">
+                <label for="highlight-green">Neon Green</label>
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>C Operators</h1>
+        <p>Operators are symbols that tell the compiler to perform specific mathematical or logical operations.</p>
+        
+        <div class="section" id="arithmetic-operators">
+            <h2>Arithmetic Operators</h2>
+            <p>Arithmetic operators are used to perform mathematical operations like addition, subtraction, multiplication, etc.</p>
+            
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>+</td>
+                        <td>Addition</td>
+                        <td>a + b = 30</td>
+                    </tr>
+                    <tr>
+                        <td>-</td>
+                        <td>Subtraction</td>
+                        <td>a - b = 10</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>Multiplication</td>
+                        <td>a * b = 200</td>
+                    </tr>
+                    <tr>
+                        <td>/</td>
+                        <td>Division</td>
+                        <td>b / a = 2</td>
+                    </tr>
+                    <tr>
+                        <td>%</td>
+                        <td>Modulus (remainder after division)</td>
+                        <td>b % a = 0</td>
+                    </tr>
+                    <tr>
+                        <td>++</td>
+                        <td>Increment (increases value by 1)</td>
+                        <td>a++ results in a = 21</td>
+                    </tr>
+                    <tr>
+                        <td>--</td>
+                        <td>Decrement (decreases value by 1)</td>
+                        <td>a-- results in a = 19</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="code-block">
+                <h3>Example: Arithmetic Operators</h3>
+                <pre><span class="comment">/**
+ * Demonstration of C Arithmetic Operators
+ * This program shows the usage of all arithmetic operators in C
+ */</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="comment">// Initialize variables</span>
+    <span class="datatype">int</span> a = <span class="number">20</span>, b = <span class="number">10</span>, c;
+    
+    <span class="comment">// Addition</span>
+    c = a + b;
+    <span class="function">printf</span>(<span class="string">"Addition: a + b = %d\n"</span>, c);  <span class="comment">// 30</span>
+    
+    <span class="comment">// Subtraction</span>
+    c = a - b;
+    <span class="function">printf</span>(<span class="string">"Subtraction: a - b = %d\n"</span>, c);  <span class="comment">// 10</span>
+    
+    <span class="comment">// Multiplication</span>
+    c = a * b;
+    <span class="function">printf</span>(<span class="string">"Multiplication: a * b = %d\n"</span>, c);  <span class="comment">// 200</span>
+    
+    <span class="comment">// Division</span>
+    c = a / b;
+    <span class="function">printf</span>(<span class="string">"Division: a / b = %d\n"</span>, c);  <span class="comment">// 2</span>
+    
+    <span class="comment">// Modulus (remainder)</span>
+    c = a % b;
+    <span class="function">printf</span>(<span class="string">"Modulus: a %% b = %d\n"</span>, c);  <span class="comment">// 0</span>
+    
+    <span class="comment">// Division with decimal result</span>
+    <span class="datatype">float</span> x = <span class="number">15.0</span>, y = <span class="number">4.0</span>, z;
+    z = x / y;
+    <span class="function">printf</span>(<span class="string">"Float division: %.1f / %.1f = %.2f\n"</span>, x, y, z);  <span class="comment">// 3.75</span>
+    
+    <span class="comment">// Increment operators</span>
+    <span class="function">printf</span>(<span class="string">"\nIncrement/Decrement Operators:\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Original values: a = %d, b = %d\n"</span>, a, b);  <span class="comment">// a = 20, b = 10</span>
+    
+    <span class="comment">// Postfix increment (use then increment)</span>
+    <span class="function">printf</span>(<span class="string">"Postfix a++: %d\n"</span>, a++);  <span class="comment">// 20</span>
+    <span class="function">printf</span>(<span class="string">"After a++: a = %d\n"</span>, a);   <span class="comment">// 21</span>
+    
+    <span class="comment">// Prefix decrement (decrement then use)</span>
+    <span class="function">printf</span>(<span class="string">"Prefix --b: %d\n"</span>, --b);    <span class="comment">// 9</span>
+    <span class="function">printf</span>(<span class="string">"After --b: b = %d\n"</span>, b);   <span class="comment">// 9</span>
+    
+    <span class="comment">// Prefix increment (increment then use)</span>
+    a = <span class="number">20</span>;  <span class="comment">// Reset a</span>
+    <span class="function">printf</span>(<span class="string">"\nPrefix ++a: %d\n"</span>, ++a);  <span class="comment">// 21</span>
+    <span class="function">printf</span>(<span class="string">"After ++a: a = %d\n"</span>, a);   <span class="comment">// 21</span>
+    
+    <span class="comment">// Postfix decrement (use then decrement)</span>
+    b = <span class="number">10</span>;  <span class="comment">// Reset b</span>
+    <span class="function">printf</span>(<span class="string">"Postfix b--: %d\n"</span>, b--);  <span class="comment">// 10</span>
+    <span class="function">printf</span>(<span class="string">"After b--: b = %d\n"</span>, b);   <span class="comment">// 9</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+                <p>Output:</p>
+                <pre><code>
+Addition: a + b = 30
+Subtraction: a - b = 10
+Multiplication: a * b = 200
+Division: a / b = 2
+Modulus: a % b = 0
+Float division: 15.0 / 4.0 = 3.75
+
+Increment/Decrement Operators:
+Original values: a = 20, b = 10
+Postfix a++: 20
+After a++: a = 21
+Prefix --b: 9
+After --b: b = 9
+
+Prefix ++a: 21
+After ++a: a = 21
+Postfix b--: 10
+After b--: b = 9
+                </code></pre>
+            </div>
+            
+            <div class="note">
+                <p>Note: The increment (++) and decrement (--) operators can be used as prefix or postfix. When used as prefix (++a), the value is incremented first and then used. When used as postfix (a++), the current value is used first and then incremented.</p>
+            </div>
+            
+            <p><a href="#top">Back to Top</a></p>
+        </div>
+        
+        <div class="section" id="relational-operators">
+            <h2>Relational Operators</h2>
+            <p>Relational operators are used to compare two values.</p>
+            
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>==</td>
+                        <td>Equal to</td>
+                        <td>(a == b) is false</td>
+                    </tr>
+                    <tr>
+                        <td>!=</td>
+                        <td>Not equal to</td>
+                        <td>(a != b) is true</td>
+                    </tr>
+                    <tr>
+                        <td>&gt;</td>
+                        <td>Greater than</td>
+                        <td>(a &gt; b) is true</td>
+                    </tr>
+                    <tr>
+                        <td>&lt;</td>
+                        <td>Less than</td>
+                        <td>(a &lt; b) is false</td>
+                    </tr>
+                    <tr>
+                        <td>&gt;=</td>
+                        <td>Greater than or equal to</td>
+                        <td>(a &gt;= b) is true</td>
+                    </tr>
+                    <tr>
+                        <td>&lt;=</td>
+                        <td>Less than or equal to</td>
+                        <td>(a &lt;= b) is false</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="code-block">
+                <h3>Example: Relational Operators</h3>
+                <pre><span class="comment">/**
+ * Demonstration of C Relational Operators
+ * This program shows how relational operators compare values
+ * and return boolean results (1 for true, 0 for false)
+ */</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;stdbool.h&gt;</span>  <span class="comment">// For bool type in C99 and later</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="comment">// Initialize variables</span>
+    <span class="datatype">int</span> a = <span class="number">20</span>, b = <span class="number">10</span>, c = <span class="number">20</span>;
+    
+    <span class="comment">// Print header</span>
+    <span class="function">printf</span>(<span class="string">"Relational Operators Comparison (1=true, 0=false)\n"</span>);
+    <span class="function">printf</span>(<span class="string">"-------------------------------------------------\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Values: a = %d, b = %d, c = %d\n\n"</span>, a, b, c);
+    
+    <span class="comment">// Equal to</span>
+    <span class="function">printf</span>(<span class="string">"Equal to (==):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"a == b: %d\n"</span>, a == b);     <span class="comment">// 0 (false)</span>
+    <span class="function">printf</span>(<span class="string">"a == c: %d\n\n"</span>, a == c);   <span class="comment">// 1 (true)</span>
+    
+    <span class="comment">// Not equal to</span>
+    <span class="function">printf</span>(<span class="string">"Not equal to (!=):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"a != b: %d\n"</span>, a != b);     <span class="comment">// 1 (true)</span>
+    <span class="function">printf</span>(<span class="string">"a != c: %d\n\n"</span>, a != c);   <span class="comment">// 0 (false)</span>
+    
+    <span class="comment">// Greater than</span>
+    <span class="function">printf</span>(<span class="string">"Greater than (>):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"a > b: %d\n"</span>, a > b);       <span class="comment">// 1 (true)</span>
+    <span class="function">printf</span>(<span class="string">"a > c: %d\n\n"</span>, a > c);     <span class="comment">// 0 (false)</span>
+    
+    <span class="comment">// Less than</span>
+    <span class="function">printf</span>(<span class="string">"Less than (<):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"a < b: %d\n"</span>, a < b);       <span class="comment">// 0 (false)</span>
+    <span class="function">printf</span>(<span class="string">"b < a: %d\n\n"</span>, b < a);     <span class="comment">// 1 (true)</span>
+    
+    <span class="comment">// Greater than or equal to</span>
+    <span class="function">printf</span>(<span class="string">"Greater than or equal to (>=):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"a >= b: %d\n"</span>, a >= b);     <span class="comment">// 1 (true)</span>
+    <span class="function">printf</span>(<span class="string">"a >= c: %d\n\n"</span>, a >= c);   <span class="comment">// 1 (true)</span>
+    
+    <span class="comment">// Less than or equal to</span>
+    <span class="function">printf</span>(<span class="string">"Less than or equal to (<=):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"a <= b: %d\n"</span>, a <= b);     <span class="comment">// 0 (false)</span>
+    <span class="function">printf</span>(<span class="string">"a <= c: %d\n"</span>, a <= c);     <span class="comment">// 1 (true)</span>
+    
+    <span class="comment">// Using relational operators in if statements</span>
+    <span class="function">printf</span>(<span class="string">"\nUsing relational operators in if statements:\n"</span>);
+    <span class="keyword">if</span> (a > b) {
+        <span class="function">printf</span>(<span class="string">"a is greater than b\n"</span>);
+    }
+    
+    <span class="keyword">if</span> (a == c) {
+        <span class="function">printf</span>(<span class="string">"a is equal to c\n"</span>);
+    }
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+                <p>Output:</p>
+                <pre><code>
+Relational Operators Comparison (1=true, 0=false)
+-------------------------------------------------
+Values: a = 20, b = 10, c = 20
+
+Equal to (==):
+a == b: 0
+a == c: 1
+
+Not equal to (!=):
+a != b: 1
+a != c: 0
+
+Greater than (>):
+a > b: 1
+a > c: 0
+
+Less than (<):
+a < b: 0
+b < a: 1
+
+Greater than or equal to (>=):
+a >= b: 1
+a >= c: 1
+
+Less than or equal to (<=):
+a <= b: 0
+a <= c: 1
+
+Using relational operators in if statements:
+a is greater than b
+a is equal to c
+                </code></pre>
+            </div>
+            
+            <div class="note">
+                <p>Note: In C, relational operators return 1 for true and 0 for false.</p>
+            </div>
+            
+            <p><a href="#top">Back to Top</a></p>
+        </div>
+        
+        <div class="section" id="logical-operators">
+            <h2>Logical Operators</h2>
+            <p>Logical operators are used to combine conditional statements.</p>
+            
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&&</td>
+                        <td>Logical AND</td>
+                        <td>(a > b) && (a != b) is true</td>
+                    </tr>
+                    <tr>
+                        <td>||</td>
+                        <td>Logical OR</td>
+                        <td>(a < b) || (a != b) is true</td>
+                    </tr>
+                    <tr>
+                        <td>!</td>
+                        <td>Logical NOT</td>
+                        <td>!(a == b) is true</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="code-block">
+                <h3>Example: Logical Operators</h3>
+                <pre><span class="comment">/**
+ * Demonstration of C Logical Operators
+ * This program shows how logical operators combine conditions
+ * and demonstrates short-circuit evaluation
+ */</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;stdbool.h&gt;</span>  <span class="comment">// For bool type in C99 and later</span>
+
+<span class="comment">// Function to demonstrate short-circuit evaluation</span>
+<span class="datatype">bool</span> <span class="function">checkCondition</span>(<span class="datatype">const char</span>* name, <span class="datatype">bool</span> returnValue) {
+    <span class="function">printf</span>(<span class="string">"Checking condition %s...\n"</span>, name);
+    <span class="keyword">return</span> returnValue;
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="comment">// Initialize variables</span>
+    <span class="datatype">int</span> a = <span class="number">20</span>, b = <span class="number">10</span>, c = <span class="number">15</span>;
+    <span class="datatype">bool</span> result;
+    
+    <span class="function">printf</span>(<span class="string">"Logical Operators (1=true, 0=false)\n"</span>);
+    <span class="function">printf</span>(<span class="string">"----------------------------------\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Values: a = %d, b = %d, c = %d\n\n"</span>, a, b, c);
+    
+    <span class="comment">// Logical AND (&&)</span>
+    <span class="function">printf</span>(<span class="string">"Logical AND (&&):\n"</span>);
+    result = (a > b) && (a > c);  <span class="comment">// true && true</span>
+    <span class="function">printf</span>(<span class="string">"(a > b) && (a > c): %d\n"</span>, result);  <span class="comment">// 1 (true)</span>
+    
+    result = (a < b) && (a > c);  <span class="comment">// false && true</span>
+    <span class="function">printf</span>(<span class="string">"(a < b) && (a > c): %d\n\n"</span>, result);  <span class="comment">// 0 (false)</span>
+    
+    <span class="comment">// Logical OR (||)</span>
+    <span class="function">printf</span>(<span class="string">"Logical OR (||):\n"</span>);
+    result = (a > b) || (a < c);  <span class="comment">// true || false</span>
+    <span class="function">printf</span>(<span class="string">"(a > b) || (a < c): %d\n"</span>, result);  <span class="comment">// 1 (true)</span>
+    
+    result = (a < b) || (a < c);  <span class="comment">// false || false</span>
+    <span class="function">printf</span>(<span class="string">"(a < b) || (a < c): %d\n\n"</span>, result);  <span class="comment">// 0 (false)</span>
+    
+    <span class="comment">// Logical NOT (!)</span>
+    <span class="function">printf</span>(<span class="string">"Logical NOT (!):\n"</span>);
+    result = !(a > b);  <span class="comment">// !true</span>
+    <span class="function">printf</span>(<span class="string">"!(a > b): %d\n"</span>, result);  <span class="comment">// 0 (false)</span>
+    
+    result = !(a < b);  <span class="comment">// !false</span>
+    <span class="function">printf</span>(<span class="string">"!(a < b): %d\n\n"</span>, result);  <span class="comment">// 1 (true)</span>
+    
+    <span class="comment">// Short-circuit evaluation</span>
+    <span class="function">printf</span>(<span class="string">"\nShort-circuit evaluation:\n"</span>);
+    <span class="function">printf</span>(<span class="string">"\nLogical AND with short-circuit:\n"</span>);
+    
+    <span class="comment">// First condition is false, second won't be evaluated</span>
+    <span class="keyword">if</span> ((a < b) && <span class="function">checkCondition</span>(<span class="string">"second AND condition"</span>, <span class="keyword">true</span>)) {
+        <span class="function">printf</span>(<span class="string">"This won't be printed\n"</span>);
+    } <span class="keyword">else</span> {
+        <span class="function">printf</span>(<span class="string">"AND short-circuit: Second condition was not evaluated\n"</span>);
+    }
+    
+    <span class="function">printf</span>(<span class="string">"\nLogical OR with short-circuit:\n"</span>);
+    
+    <span class="comment">// First condition is true, second won't be evaluated</span>
+    <span class="keyword">if</span> ((a > b) || <span class="function">checkCondition</span>(<span class="string">"second OR condition"</span>, <span class="keyword">true</span>)) {
+        <span class="function">printf</span>(<span class="string">"OR short-circuit: Second condition was not evaluated\n"</span>);
+    }
+    
+    <span class="comment">// Using logical operators in complex conditions</span>
+    <span class="function">printf</span>(<span class="string">"\nComplex condition: (a > b) && (b < c) || (c != a)\n"</span>);
+    result = (a > b) && (b < c) || (c != a);
+    <span class="function">printf</span>(<span class="string">"Result: %d\n"</span>, result);  <span class="comment">// 1 (true)</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+                <p>Output:</p>
+                <pre><code>
+Logical Operators (1=true, 0=false)
+----------------------------------
+Values: a = 20, b = 10, c = 15
+
+Logical AND (&&):
+(a > b) && (a > c): 1
+(a < b) && (a > c): 0
+
+Logical OR (||):
+(a > b) || (a < c): 1
+(a < b) || (a < c): 0
+
+Logical NOT (!):
+!(a > b): 0
+!(a < b): 1
+
+Short-circuit evaluation:
+
+AND short-circuit example:
+Checking d = 0
+Result: 0
+
+OR short-circuit example:
+Checking a = 20
+Result: 1
+
+Practical examples:
+a is the largest of the three values
+b is not the smallest value
+Pointer is NULL or value is not 10
+                </code></pre>
+            </div>
+            
+            <div class="note">
+                <p>Note: The logical AND (&&) operator evaluates the second operand only if the first operand is true. The logical OR (||) operator evaluates the second operand only if the first operand is false. This is called short-circuit evaluation.</p>
+            </div>
+            
+            <p><a href="#top">Back to Top</a></p>
+        </div>
+        
+        <div class="section" id="bitwise-operators">
+            <h2>Bitwise Operators</h2>
+            <p>Bitwise operators perform operations on individual bits of integer values.</p>
+            
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>&</td>
+                        <td>Bitwise AND</td>
+                        <td>a & b = 0 (0000 in binary)</td>
+                    </tr>
+                    <tr>
+                        <td>|</td>
+                        <td>Bitwise OR</td>
+                        <td>a | b = 30 (11110 in binary)</td>
+                    </tr>
+                    <tr>
+                        <td>^</td>
+                        <td>Bitwise XOR (exclusive OR)</td>
+                        <td>a ^ b = 30 (11110 in binary)</td>
+                    </tr>
+                    <tr>
+                        <td>~</td>
+                        <td>Bitwise NOT (one's complement)</td>
+                        <td>~a = -21 (in decimal, assuming 32-bit integer)</td>
+                    </tr>
+                    <tr>
+                        <td><<</td>
+                        <td>Left shift</td>
+                        <td>a << 2 = 80 (shifts bits left by 2 positions)</td>
+                    </tr>
+                    <tr>
+                        <td>>></td>
+                        <td>Right shift</td>
+                        <td>a >> 2 = 5 (shifts bits right by 2 positions)</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="code-block">
+                <h3>Example: Bitwise Operators</h3>
+                <pre><span class="comment">/**
+ * Demonstration of C Bitwise Operators
+ * This program shows how bitwise operators manipulate individual bits
+ * in integer values
+ */</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="comment">// Function to print binary representation of a number</span>
+<span class="datatype">void</span> <span class="function">printBinary</span>(<span class="datatype">unsigned int</span> num) {
+    <span class="datatype">unsigned int</span> mask = <span class="number">1</span> << <span class="number">7</span>; <span class="comment">// Start with the leftmost bit (8-bit display)</span>
+    <span class="function">printf</span>(<span class="string">"Binary: "</span>);
+    
+    <span class="comment">// Print 8 bits for readability</span>
+    <span class="keyword">for</span>(<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">8</span>; i++) {
+        <span class="function">printf</span>(<span class="string">"%d"</span>, (num & mask) ? <span class="number">1</span> : <span class="number">0</span>);
+        
+        <span class="comment">// Add space every 4 bits for readability</span>
+        <span class="keyword">if</span>(i == <span class="number">3</span>) {
+            <span class="function">printf</span>(<span class="string">" "</span>);
+        }
+        
+        mask >>= <span class="number">1</span>; <span class="comment">// Shift the mask to the right</span>
+    }
+    <span class="function">printf</span>(<span class="string">"\n"</span>);
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="comment">// Initialize variables</span>
+    <span class="datatype">unsigned int</span> a = <span class="number">60</span>;  <span class="comment">/* 60 = 0011 1100 in binary */</span>
+    <span class="datatype">unsigned int</span> b = <span class="number">13</span>;  <span class="comment">/* 13 = 0000 1101 in binary */</span>
+    <span class="datatype">unsigned int</span> c;
+    
+    <span class="function">printf</span>(<span class="string">"Bitwise Operators Demonstration\n"</span>);
+    <span class="function">printf</span>(<span class="string">"--------------------------------\n\n"</span>);
+    
+    <span class="function">printf</span>(<span class="string">"Values:\n"</span>);
+    <span class="function">printf</span>(<span class="string">"a = %u (decimal)\n"</span>, a);
+    <span class="function">printBinary</span>(a);       <span class="comment">// 0011 1100</span>
+    <span class="function">printf</span>(<span class="string">"b = %u (decimal)\n"</span>, b);
+    <span class="function">printBinary</span>(b);       <span class="comment">// 0000 1101</span>
+    <span class="function">printf</span>(<span class="string">"\n"</span>);
+    
+    <span class="comment">// Bitwise AND</span>
+    c = a & b;  <span class="comment">/* 12 = 0000 1100 in binary */</span>
+    <span class="function">printf</span>(<span class="string">"Bitwise AND (a & b):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Result = %u\n"</span>, c);
+    <span class="function">printBinary</span>(c);
+    <span class="function">printf</span>(<span class="string">"Explanation: Each bit is 1 only if both corresponding bits are 1\n\n"</span>);
+    
+    <span class="comment">// Bitwise OR</span>
+    c = a | b;  <span class="comment">/* 61 = 0011 1101 in binary */</span>
+    <span class="function">printf</span>(<span class="string">"Bitwise OR (a | b):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Result = %u\n"</span>, c);
+    <span class="function">printBinary</span>(c);
+    <span class="function">printf</span>(<span class="string">"Explanation: Each bit is 1 if at least one corresponding bit is 1\n\n"</span>);
+    
+    <span class="comment">// Bitwise XOR</span>
+    c = a ^ b;  <span class="comment">/* 49 = 0011 0001 in binary */</span>
+    <span class="function">printf</span>(<span class="string">"Bitwise XOR (a ^ b):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Result = %u\n"</span>, c);
+    <span class="function">printBinary</span>(c);
+    <span class="function">printf</span>(<span class="string">"Explanation: Each bit is 1 only if exactly one corresponding bit is 1\n\n"</span>);
+    
+    <span class="comment">// Bitwise NOT (complement)</span>
+    c = ~a;     <span class="comment">/* Inverts all bits of a */</span>
+    <span class="function">printf</span>(<span class="string">"Bitwise NOT (~a):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Result = %d\n"</span>, c);  <span class="comment">// Signed result</span>
+    <span class="function">printBinary</span>((<span class="datatype">unsigned char</span>)c); <span class="comment">// Show just the lowest 8 bits</span>
+    <span class="function">printf</span>(<span class="string">"Explanation: Inverts all bits (0 becomes 1, 1 becomes 0)\n\n"</span>);
+    
+    <span class="comment">// Left Shift</span>
+    c = a << <span class="number">2</span>; <span class="comment">/* 240 = 1111 0000 in binary */</span>
+    <span class="function">printf</span>(<span class="string">"Left Shift (a << 2):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Result = %u\n"</span>, c);
+    <span class="function">printBinary</span>(c);
+    <span class="function">printf</span>(<span class="string">"Explanation: Shifts all bits 2 positions to the left, filling with 0s\n\n"</span>);
+    
+    <span class="comment">// Right Shift</span>
+    c = a >> <span class="number">2</span>; <span class="comment">/* 15 = 0000 1111 in binary */</span>
+    <span class="function">printf</span>(<span class="string">"Right Shift (a >> 2):\n"</span>);
+    <span class="function">printf</span>(<span class="string">"Result = %u\n"</span>, c);
+    <span class="function">printBinary</span>(c);
+    <span class="function">printf</span>(<span class="string">"Explanation: Shifts all bits 2 positions to the right, filling with 0s\n\n"</span>);
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+                <p>Output:</p>
+                <pre><code class="output">
+Bitwise Operators Demonstration
+--------------------------------
+
+Values:
+a = 60 (decimal)
+Binary: 0011 1100
+b = 13 (decimal)
+Binary: 0000 1101
+
+Bitwise AND (a & b):
+Result = 12
+Binary: 0000 1100
+Explanation: Each bit is 1 only if both corresponding bits are 1
+
+Bitwise OR (a | b):
+Result = 61
+Binary: 0011 1101
+Explanation: Each bit is 1 if at least one corresponding bit is 1
+
+Bitwise XOR (a ^ b):
+Result = 49
+Binary: 0011 0001
+Explanation: Each bit is 1 only if exactly one corresponding bit is 1
+
+Bitwise NOT (~a):
+Result = -61
+Binary: 1100 0011
+Explanation: Inverts all bits (0 becomes 1, 1 becomes 0)
+
+Left Shift (a << 2):
+Result = 240
+Binary: 1111 0000
+Explanation: Shifts all bits left by 2 positions, filling with 0s
+
+Right Shift (a >> 2):
+Result = 15
+Binary: 0000 1111
+Explanation: Shifts all bits right by 2 positions, filling with 0s
+
+Practical Examples:
+Setting bit 3 in 0: 8
+Binary: 0000 1000
+Clearing bit 2: 8
+Binary: 0000 1000
+Toggling bit 3: 0
+Binary: 0000 0000
+Bit 3 is set in 8
+                </code></pre>
+            </div>
+            
+            <div class="note">
+                <p>Note: Bitwise operators are commonly used in low-level programming, device drivers, and when working with hardware interfaces. They are also useful for optimizing certain operations and for manipulating individual bits in data.</p>
+{{ ... }}
+            </div>
+            
+            <p><a href="#top">Back to Top</a></p>
+        </div>
+        
+        <div class="section" id="assignment-operators">
+            <h2>Assignment Operators</h2>
+            <p>Assignment operators are used to assign values to variables.</p>
+            
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>=</td>
+                        <td>Simple assignment</td>
+                        <td>c = a + b</td>
+                    </tr>
+                    <tr>
+                        <td>+=</td>
+                        <td>Add and assign</td>
+                        <td>c += a is equivalent to c = c + a</td>
+                    </tr>
+                    <tr>
+                        <td>-=</td>
+                        <td>Subtract and assign</td>
+                        <td>c -= a is equivalent to c = c - a</td>
+                    </tr>
+                    <tr>
+                        <td>*=</td>
+                        <td>Multiply and assign</td>
+                        <td>c *= a is equivalent to c = c * a</td>
+                    </tr>
+                    <tr>
+                        <td>/=</td>
+                        <td>Divide and assign</td>
+                        <td>c /= a is equivalent to c = c / a</td>
+                    </tr>
+                    <tr>
+                        <td>%=</td>
+                        <td>Modulus and assign</td>
+                        <td>c %= a is equivalent to c = c % a</td>
+                    </tr>
+                    <tr>
+                        <td><<=</td>
+                        <td>Left shift and assign</td>
+                        <td>c <<= 2 is equivalent to c = c << 2</td>
+                    </tr>
+                    <tr>
+                        <td>>>=</td>
+                        <td>Right shift and assign</td>
+                        <td>c >>= 2 is equivalent to c = c >> 2</td>
+                    </tr>
+                    <tr>
+                        <td>&=</td>
+                        <td>Bitwise AND and assign</td>
+                        <td>c &= 2 is equivalent to c = c & 2</td>
+                    </tr>
+                    <tr>
+                        <td>^=</td>
+                        <td>Bitwise XOR and assign</td>
+                        <td>c ^= 2 is equivalent to c = c ^ 2</td>
+                    </tr>
+                    <tr>
+                        <td>|=</td>
+                        <td>Bitwise OR and assign</td>
+                        <td>c |= 2 is equivalent to c = c | 2</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="code-block">
+                <h3>Example</h3>
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> a = <span class="number">20</span>;
+    <span class="datatype">int</span> c = <span class="number">100</span>;
+    
+    <span class="comment">// Simple assignment</span>
+    c = a;
+    <span class="function">printf</span>(<span class="string">"c = a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Add AND assignment</span>
+    c += a;
+    <span class="function">printf</span>(<span class="string">"c += a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Subtract AND assignment</span>
+    c -= a;
+    <span class="function">printf</span>(<span class="string">"c -= a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Multiply AND assignment</span>
+    c *= a;
+    <span class="function">printf</span>(<span class="string">"c *= a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Divide AND assignment</span>
+    c /= a;
+    <span class="function">printf</span>(<span class="string">"c /= a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Modulus AND assignment</span>
+    c = <span class="number">100</span>;
+    c %= a;
+    <span class="function">printf</span>(<span class="string">"c %%= a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Bitwise AND assignment</span>
+    c = <span class="number">100</span>;
+    c &= a;
+    <span class="function">printf</span>(<span class="string">"c &= a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Bitwise OR assignment</span>
+    c = <span class="number">100</span>;
+    c |= a;
+    <span class="function">printf</span>(<span class="string">"c |= a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Bitwise XOR assignment</span>
+    c = <span class="number">100</span>;
+    c ^= a;
+    <span class="function">printf</span>(<span class="string">"c ^= a: c = %d\n"</span>, c);
+    
+    <span class="comment">// Left shift assignment</span>
+    c = <span class="number">100</span>;
+    c <<= <span class="number">2</span>;
+    <span class="function">printf</span>(<span class="string">"c <<= 2: c = %d\n"</span>, c);
+    
+    <span class="comment">// Right shift assignment</span>
+    c = <span class="number">100</span>;
+    c >>= <span class="number">2</span>;
+    <span class="function">printf</span>(<span class="string">"c >>= 2: c = %d\n"</span>, c);
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+                <p>Output:</p>
+                <pre><code class="output">
+c = a: c = 20
+c += a: c = 40
+c -= a: c = 20
+c *= a: c = 400
+c /= a: c = 20
+c %= a: c = 0
+c &= a: c = 4
+c |= a: c = 116
+c ^= a: c = 112
+c <<= 2: c = 400
+c >>= 2: c = 25
+                </code></pre>
+            </div>
+            
+            <div class="note">
+                <p>Note: Assignment operators provide a more concise way to update variables and are commonly used in loops and other situations where a variable's value needs to be modified repeatedly.</p>
+            </div>
+            
+            <p><a href="#top">Back to Top</a></p>
+        </div>
+        
+        <div class="section" id="misc-operators">
+            <h2>Miscellaneous Operators</h2>
+            <p>C provides several other operators for various purposes.</p>
+            
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Operator</th>
+                        <th>Description</th>
+                        <th>Example</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>sizeof</td>
+                        <td>Returns the size of a variable or data type in bytes</td>
+                        <td>sizeof(int) returns 4 (on most systems)</td>
+                    </tr>
+                    <tr>
+                        <td>&</td>
+                        <td>Address operator (returns the memory address)</td>
+                        <td>&a returns the address of variable a</td>
+                    </tr>
+                    <tr>
+                        <td>*</td>
+                        <td>Pointer operator (dereferences a pointer)</td>
+                        <td>*ptr returns the value at the address stored in ptr</td>
+                    </tr>
+                    <tr>
+                        <td>?:</td>
+                        <td>Conditional (ternary) operator</td>
+                        <td>condition ? expr1 : expr2</td>
+                    </tr>
+                    <tr>
+                        <td>,</td>
+                        <td>Comma operator (evaluates multiple expressions)</td>
+                        <td>expr1, expr2, expr3</td>
+                    </tr>
+                    <tr>
+                        <td>.</td>
+                        <td>Direct member access operator</td>
+                        <td>struct.member</td>
+                    </tr>
+                    <tr>
+                        <td>-></td>
+                        <td>Indirect member access operator (via pointer)</td>
+                        <td>ptr->member</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="code-block">
+                <h3>Example</h3>
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="keyword">struct</span> <span class="datatype">Person</span> {
+    <span class="datatype">char</span> name[<span class="number">50</span>];
+    <span class="datatype">int</span> age;
+};
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="comment">// Basic variable</span>
+    <span class="datatype">int</span> a = <span class="number">10</span>;
+    
+    <span class="comment">// Address operator (&) and pointer declaration</span>
+    <span class="datatype">int</span> *ptr = &a;
+    
+    <span class="comment">// sizeof operator</span>
+    <span class="datatype">int</span> size = <span class="keyword">sizeof</span>(a);
+    
+    <span class="comment">// Conditional (ternary) operator</span>
+    <span class="datatype">int</span> result = (a > <span class="number">5</span>) ? <span class="number">100</span> : <span class="number">200</span>;
+    
+    <span class="comment">// Structure and direct member access (.)</span>
+    <span class="keyword">struct</span> <span class="datatype">Person</span> person;
+    person.age = <span class="number">30</span>;
+    
+    <span class="comment">// Pointer to structure</span>
+    <span class="keyword">struct</span> <span class="datatype">Person</span> *personPtr = &person;
+    
+    <span class="comment">// Using sizeof operator</span>
+    <span class="function">printf</span>(<span class="string">"Size of int: %d bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    
+    <span class="comment">// Using address operator</span>
+    <span class="function">printf</span>(<span class="string">"Address of a: %p\n"</span>, &a);
+    
+    <span class="comment">// Using dereference operator</span>
+    <span class="function">printf</span>(<span class="string">"Value at ptr: %d\n"</span>, *ptr);
+    
+    <span class="comment">// Result of ternary operator</span>
+    <span class="function">printf</span>(<span class="string">"Ternary result: %d\n"</span>, result);
+    
+    <span class="comment">// Comma operator example</span>
+    <span class="datatype">int</span> x = (a++, a+<span class="number">5</span>, a*<span class="number">2</span>);
+    <span class="function">printf</span>(<span class="string">"x = %d, a = %d\n"</span>, x, a);
+    
+    <span class="comment">// Direct member access</span>
+    <span class="function">printf</span>(<span class="string">"Person age: %d\n"</span>, person.age);
+    
+    <span class="comment">// Indirect member access</span>
+    personPtr->age = <span class="number">35</span>;
+    <span class="function">printf</span>(<span class="string">"Person age via pointer: %d\n"</span>, personPtr->age);
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+                <p>Output:</p>
+                <pre><code class="output">
+Size of int: 4 bytes
+Address of a: 0x7ffd5c3e1a0c (this will vary)
+Value at ptr: 10
+Ternary result: 100
+x = 22, a = 11
+Person age: 30
+Person age via pointer: 35
+                </code></pre>
+            </div>
+            
+            <div class="note">
+                <p>Note: The sizeof operator is evaluated at compile time, not runtime, unless the operand is a variable-length array.</p>
+            </div>
+            
+            <p><a href="#top">Back to Top</a></p>
+        </div>
+        
+        <div class="section" id="operator-precedence">
+            <h2>Operator Precedence</h2>
+            <p>Operator precedence determines the order in which operators are evaluated in an expression. Operators with higher precedence are evaluated before operators with lower precedence.</p>
+            
+            <table class="operator-table">
+                <thead>
+                    <tr>
+                        <th>Category</th>
+                        <th>Operator</th>
+                        <th>Associativity</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Postfix</td>
+                        <td>() [] -> . ++ --</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Unary</td>
+                        <td>+ - ! ~ ++ -- (type) * & sizeof</td>
+                        <td>Right to left</td>
+                    </tr>
+                    <tr>
+                        <td>Multiplicative</td>
+                        <td>* / %</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Additive</td>
+                        <td>+ -</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Shift</td>
+                        <td><< >></td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Relational</td>
+                        <td>< <= > >=</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Equality</td>
+                        <td>== !=</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Bitwise AND</td>
+                        <td>&</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Bitwise XOR</td>
+                        <td>^</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Bitwise OR</td>
+                        <td>|</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Logical AND</td>
+                        <td>&&</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Logical OR</td>
+                        <td>||</td>
+                        <td>Left to right</td>
+                    </tr>
+                    <tr>
+                        <td>Conditional</td>
+                        <td>?:</td>
+                        <td>Right to left</td>
+                    </tr>
+                    <tr>
+                        <td>Assignment</td>
+                        <td>= += -= *= /= %= &= ^= |= <<= >>=</td>
+                        <td>Right to left</td>
+                    </tr>
+                    <tr>
+                        <td>Comma</td>
+                        <td>,</td>
+                        <td>Left to right</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="code-block">
+                <h3>Example</h3>
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> a = <span class="number">20</span>, b = <span class="number">10</span>, c = <span class="number">15</span>, d = <span class="number">5</span>, e;
+    
+    <span class="comment">// Precedence example 1</span>
+    e = a + b * c / d;      <span class="comment">// b * c is evaluated first, then divided by d, then added to a</span>
+    <span class="function">printf</span>(<span class="string">"a + b * c / d = %d\n"</span>, e);
+    
+    <span class="comment">// Precedence example 2</span>
+    e = (a + b) * c / d;    <span class="comment">// a + b is evaluated first due to parentheses</span>
+    <span class="function">printf</span>(<span class="string">"(a + b) * c / d = %d\n"</span>, e);
+    
+    <span class="comment">// Precedence example 3</span>
+    e = a + (b * c) / d;    <span class="comment">// Same as example 1 but with explicit parentheses</span>
+    <span class="function">printf</span>(<span class="string">"a + (b * c) / d = %d\n"</span>, e);
+    
+    <span class="comment">// Precedence example 4</span>
+    e = a + b * (c / d);    <span class="comment">// c / d is evaluated first due to parentheses</span>
+    <span class="function">printf</span>(<span class="string">"a + b * (c / d) = %d\n"</span>, e);
+    
+    <span class="comment">// Associativity example</span>
+    e = a = b = c;          <span class="comment">// Right to left associativity for assignment</span>
+    <span class="function">printf</span>(<span class="string">"a = b = c results in: a = %d, b = %d, c = %d, e = %d\n"</span>, a, b, c, e);
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+                <p>Output:</p>
+                <pre><code class="output">
+a + b * c / d = 50
+(a + b) * c / d = 90
+a + (b * c) / d = 50
+a + b * (c / d) = 50
+a = b = c results in: a = 15, b = 15, c = 15, e = 15
+                </code></pre>
+            </div>
+            
+            <div class="note">
+                <p>Note: When in doubt about operator precedence, use parentheses to make your code more readable and to ensure that operations are performed in the order you intend.</p>
+            </div>
+            
+            <p><a href="#top">Back to Top</a></p>
+        </div>
+        
+        <div class="section" id="summary">
+            <h2>Summary</h2>
+            <p>C provides a rich set of operators for various operations:</p>
+            <ul>
+                <li><strong>Arithmetic operators</strong> for mathematical calculations</li>
+                <li><strong>Relational operators</strong> for comparing values</li>
+                <li><strong>Logical operators</strong> for combining conditions</li>
+                <li><strong>Bitwise operators</strong> for bit-level operations</li>
+                <li><strong>Assignment operators</strong> for assigning values</li>
+                <li><strong>Miscellaneous operators</strong> for various purposes</li>
+            </ul>
+            <p>Understanding operator precedence is crucial for writing correct expressions. When in doubt, use parentheses to clarify the order of operations.</p>
+            
+            <div class="note">
+                <p>Remember that C evaluates expressions from left to right or right to left depending on the operator's associativity, and higher precedence operators are evaluated before lower precedence ones.</p>
+            </div>
+            
+            <p><a href="index.html">Back to Main Page</a></p>
+        </div>
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+    
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>
