@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Strings - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Strings in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="string-basics">
+            <h2>String Basics</h2>
+            <p>In C, a <strong>string</strong> is an array of characters terminated by a null character (<code>'\0'</code>). Unlike many other programming languages, C does not have a built-in string data type.</p>
+            
+            <h3>String Declaration and Initialization</h3>
+            <p>There are several ways to declare and initialize strings in C:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// String declaration and initialization</span>
+<span class="datatype">char</span> greeting[] = <span class="string">"Hello, World!"</span>;  <span class="comment">// Compiler allocates 14 bytes (including null terminator)</span>
+
+<span class="comment">// Equivalent to:</span>
+<span class="datatype">char</span> greeting[] = {'H', 'e', 'l', 'l', 'o', ',', ' ', 'W', 'o', 'r', 'l', 'd', '!', '\0'};
+
+<span class="comment">// Explicit size (must be large enough for the string and null terminator)</span>
+<span class="datatype">char</span> message[<span class="number">20</span>] = <span class="string">"Hello"</span>;  <span class="comment">// Remaining positions are filled with '\0'</span>
+
+<span class="comment">// Declaration without initialization</span>
+<span class="datatype">char</span> buffer[<span class="number">100</span>];  <span class="comment">// Uninitialized array, contains garbage values</span>
+
+<span class="comment">// String pointer</span>
+<span class="datatype">char</span>* str = <span class="string">"Hello"</span>;  <span class="comment">// Points to a string literal (read-only in modern C)</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>In modern C, string literals are stored in read-only memory. Attempting to modify a string through a pointer to a string literal (like <code>char* str = "Hello";</code>) can cause undefined behavior. Use an array if you need to modify the string.</p>
+            </div>
+            
+            <h3>String Input and Output</h3>
+            <p>C provides several functions for reading and writing strings:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="comment">// Output a string</span>
+<span class="datatype">char</span> message[] = <span class="string">"Hello, C!"</span>;
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, message);  <span class="comment">// %s format specifier for strings</span>
+
+<span class="comment">// Input a string (dangerous, can cause buffer overflow)</span>
+<span class="datatype">char</span> name[<span class="number">50</span>];
+<span class="function">printf</span>(<span class="string">"Enter your name: "</span>);
+<span class="function">scanf</span>(<span class="string">"%s"</span>, name);  <span class="comment">// Reads until whitespace, no & needed for arrays</span>
+
+<span class="comment">// Safer input using fgets</span>
+<span class="datatype">char</span> address[<span class="number">100</span>];
+<span class="function">printf</span>(<span class="string">"Enter your address: "</span>);
+<span class="function">fgets</span>(address, <span class="keyword">sizeof</span>(address), stdin);  <span class="comment">// Reads up to sizeof(address)-1 characters</span></pre>
+            </div>
+            
+            <div class="output">
+                <pre>Hello, C!
+Enter your name: John
+Enter your address: 123 Main St, Anytown</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Always use <code>fgets()</code> instead of <code>gets()</code> (which is now deprecated) to avoid buffer overflow vulnerabilities.</p>
+            </div>
+            
+            <h3>String Termination</h3>
+            <p>The null character (<code>'\0'</code>) marks the end of a string. Functions that process strings rely on this terminator to know where the string ends:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Importance of null terminator</span>
+<span class="datatype">char</span> str[<span class="number">6</span>] = {'H', 'e', 'l', 'l', 'o'};  <span class="comment">// Missing null terminator</span>
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, str);  <span class="comment">// Undefined behavior - may print "Hello" followed by garbage</span>
+
+<span class="comment">// Properly terminated string</span>
+<span class="datatype">char</span> str2[<span class="number">6</span>] = {'H', 'e', 'l', 'l', 'o', '\0'};
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, str2);  <span class="comment">// Correctly prints "Hello"</span>
+
+<span class="comment">// Manually adding a null terminator</span>
+<span class="datatype">char</span> buffer[<span class="number">10</span>];
+buffer[<span class="number">0</span>] = 'T';
+buffer[<span class="number">1</span>] = 'e';
+buffer[<span class="number">2</span>] = 's';
+buffer[<span class="number">3</span>] = 't';
+buffer[<span class="number">4</span>] = '\0';  <span class="comment">// Add null terminator</span>
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, buffer);  <span class="comment">// Prints "Test"</span></pre>
+            </div>
+        </div>
+        
+        <div class="section" id="string-functions">
+            <h2>String Functions</h2>
+            <p>The C standard library provides many functions for string manipulation in the <code>&lt;string.h&gt;</code> header.</p>
+            
+            <h3>String Length</h3>
+            <p>The <code>strlen()</code> function returns the length of a string (excluding the null terminator):</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="datatype">char</span> str[] = <span class="string">"Hello, World!"</span>;
+<span class="datatype">size_t</span> length = <span class="function">strlen</span>(str);  <span class="comment">// Returns 13</span>
+
+<span class="function">printf</span>(<span class="string">"Length of \"%s\" is %zu\n"</span>, str, length);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Length of "Hello, World!" is 13</pre>
+            </div>
+            
+            <h3>String Copy</h3>
+            <p>The <code>strcpy()</code> and <code>strncpy()</code> functions copy strings:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="comment">// strcpy (dangerous if destination is too small)</span>
+<span class="datatype">char</span> source[] = <span class="string">"Hello"</span>;
+<span class="datatype">char</span> dest[<span class="number">10</span>];
+<span class="function">strcpy</span>(dest, source);  <span class="comment">// Copies "Hello" to dest</span>
+
+<span class="comment">// strncpy (safer, limits number of characters copied)</span>
+<span class="datatype">char</span> limited[<span class="number">5</span>];
+<span class="function">strncpy</span>(limited, source, <span class="keyword">sizeof</span>(limited));
+<span class="comment">// Note: strncpy doesn't guarantee null-termination if source is too long</span>
+limited[<span class="keyword">sizeof</span>(limited) - <span class="number">1</span>] = '\0';  <span class="comment">// Ensure null-termination</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Always ensure the destination buffer is large enough when using <code>strcpy()</code>. Consider using <code>strncpy()</code> with explicit null termination or safer alternatives like <code>snprintf()</code>.</p>
+            </div>
+            
+            <h3>String Concatenation</h3>
+            <p>The <code>strcat()</code> and <code>strncat()</code> functions append one string to another:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="datatype">char</span> dest[<span class="number">20</span>] = <span class="string">"Hello, "</span>;
+<span class="datatype">char</span> source[] = <span class="string">"World!"</span>;
+
+<span class="comment">// strcat (appends source to dest)</span>
+<span class="function">strcat</span>(dest, source);  <span class="comment">// dest now contains "Hello, World!"</span>
+
+<span class="comment">// strncat (safer, limits characters appended and always null-terminates)</span>
+<span class="datatype">char</span> greeting[<span class="number">20</span>] = <span class="string">"Hi, "</span>;
+<span class="function">strncat</span>(greeting, <span class="string">"everyone"</span>, <span class="number">5</span>);  <span class="comment">// Appends only "every"</span>
+<span class="comment">// greeting now contains "Hi, every"</span></pre>
+            </div>
+            
+            <h3>String Comparison</h3>
+            <p>The <code>strcmp()</code> and <code>strncmp()</code> functions compare strings:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="datatype">char</span> str1[] = <span class="string">"apple"</span>;
+<span class="datatype">char</span> str2[] = <span class="string">"banana"</span>;
+<span class="datatype">char</span> str3[] = <span class="string">"apple"</span>;
+
+<span class="datatype">int</span> result1 = <span class="function">strcmp</span>(str1, str2);  <span class="comment">// Returns negative value (a < b)</span>
+<span class="datatype">int</span> result2 = <span class="function">strcmp</span>(str2, str1);  <span class="comment">// Returns positive value (b > a)</span>
+<span class="datatype">int</span> result3 = <span class="function">strcmp</span>(str1, str3);  <span class="comment">// Returns 0 (strings are equal)</span>
+
+<span class="comment">// Compare only first n characters</span>
+<span class="datatype">int</span> result4 = <span class="function">strncmp</span>(<span class="string">"apple pie"</span>, <span class="string">"apple juice"</span>, <span class="number">5</span>);  <span class="comment">// Returns 0 (first 5 chars match)</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p><code>strcmp()</code> returns 0 if strings are equal, a negative value if the first string is lexicographically less than the second, and a positive value if the first string is greater than the second.</p>
+            </div>
+            
+            <h3>String Searching</h3>
+            <p>Several functions are available for searching within strings:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="datatype">char</span> haystack[] = <span class="string">"The quick brown fox jumps over the lazy dog"</span>;
+
+<span class="comment">// Find first occurrence of a character</span>
+<span class="datatype">char</span>* result1 = <span class="function">strchr</span>(haystack, 'q');
+<span class="keyword">if</span> (result1) {
+    <span class="function">printf</span>(<span class="string">"Found 'q' at position: %ld\n"</span>, result1 - haystack);
+}
+
+<span class="comment">// Find last occurrence of a character</span>
+<span class="datatype">char</span>* result2 = <span class="function">strrchr</span>(haystack, 'o');
+<span class="keyword">if</span> (result2) {
+    <span class="function">printf</span>(<span class="string">"Last 'o' at position: %ld\n"</span>, result2 - haystack);
+}
+
+<span class="comment">// Find first occurrence of a substring</span>
+<span class="datatype">char</span>* result3 = <span class="function">strstr</span>(haystack, <span class="string">"brown"</span>);
+<span class="keyword">if</span> (result3) {
+    <span class="function">printf</span>(<span class="string">"Found \"brown\" at position: %ld\n"</span>, result3 - haystack);
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Found 'q' at position: 4
+Last 'o' at position: 41
+Found "brown" at position: 10</pre>
+            </div>
+            
+            <h3>Other Useful String Functions</h3>
+            <p>The string library provides many other useful functions:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;ctype.h&gt;</span>  <span class="comment">// For character classification functions</span>
+
+<span class="comment">// Convert string to number</span>
+<span class="preprocessor">#include &lt;stdlib.h&gt;</span>
+<span class="datatype">char</span> num_str[] = <span class="string">"12345"</span>;
+<span class="datatype">int</span> num = <span class="function">atoi</span>(num_str);  <span class="comment">// String to integer</span>
+<span class="datatype">float</span> fnum = <span class="function">atof</span>(<span class="string">"123.45"</span>);  <span class="comment">// String to float</span>
+
+<span class="comment">// Find characters from a set</span>
+<span class="datatype">char</span> text[] = <span class="string">"Hello, 123!"</span>;
+<span class="datatype">char</span>* digits = <span class="function">strpbrk</span>(text, <span class="string">"0123456789"</span>);  <span class="comment">// Points to first digit</span>
+<span class="keyword">if</span> (digits) {
+    <span class="function">printf</span>(<span class="string">"First digit: %c\n"</span>, *digits);  <span class="comment">// Prints "First digit: 1"</span>
+}
+
+<span class="comment">// Split string into tokens</span>
+<span class="datatype">char</span> sentence[] = <span class="string">"This is a sample sentence"</span>;
+<span class="datatype">char</span>* token = <span class="function">strtok</span>(sentence, <span class="string">" "</span>);  <span class="comment">// Split by spaces</span>
+
+<span class="keyword">while</span> (token != <span class="keyword">NULL</span>) {
+    <span class="function">printf</span>(<span class="string">"%s\n"</span>, token);
+    token = <span class="function">strtok</span>(<span class="keyword">NULL</span>, <span class="string">" "</span>);  <span class="comment">// Get next token</span>
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>First digit: 1
+This
+is
+a
+sample
+sentence</pre>
+            </div>
+            
+            <div class="warning">
+                <p><code>strtok()</code> modifies the original string by replacing delimiters with null characters. If you need to preserve the original string, make a copy first.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="string-manipulation">
+            <h2>String Manipulation</h2>
+            <p>Beyond the standard library functions, there are many common string manipulation tasks in C programming.</p>
+            
+            <h3>Case Conversion</h3>
+            <p>The <code>&lt;ctype.h&gt;</code> header provides functions for character-by-character case conversion:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;ctype.h&gt;</span>
+<span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="comment">// Convert string to uppercase</span>
+<span class="datatype">void</span> <span class="function">to_upper</span>(<span class="datatype">char</span>* str) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; str[i]; i++) {
+        str[i] = <span class="function">toupper</span>(str[i]);
+    }
+}
+
+<span class="comment">// Convert string to lowercase</span>
+<span class="datatype">void</span> <span class="function">to_lower</span>(<span class="datatype">char</span>* str) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; str[i]; i++) {
+        str[i] = <span class="function">tolower</span>(str[i]);
+    }
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">char</span> text[] = <span class="string">"Hello, World!"</span>;
+<span class="function">to_upper</span>(text);
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, text);  <span class="comment">// HELLO, WORLD!</span>
+
+<span class="function">to_lower</span>(text);
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, text);  <span class="comment">// hello, world!</span></pre>
+            </div>
+            
+            <div class="output">
+                <pre>HELLO, WORLD!
+hello, world!</pre>
+            </div>
+            
+            <h3>String Trimming</h3>
+            <p>Removing leading and trailing whitespace is a common operation:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;ctype.h&gt;</span>
+<span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="comment">// Trim leading and trailing whitespace</span>
+<span class="datatype">char</span>* <span class="function">trim</span>(<span class="datatype">char</span>* str) {
+    <span class="keyword">if</span> (str == <span class="keyword">NULL</span>) <span class="keyword">return</span> <span class="keyword">NULL</span>;
+    
+    <span class="comment">// Trim leading space</span>
+    <span class="keyword">while</span>(<span class="function">isspace</span>(*str)) str++;
+    
+    <span class="keyword">if</span>(*str == <span class="number">0</span>) <span class="keyword">return</span> str;  <span class="comment">// All spaces</span>
+    
+    <span class="comment">// Trim trailing space</span>
+    <span class="datatype">char</span>* end = str + <span class="function">strlen</span>(str) - <span class="number">1</span>;
+    <span class="keyword">while</span>(end > str && <span class="function">isspace</span>(*end)) end--;
+    
+    <span class="comment">// Write new null terminator</span>
+    *(end + <span class="number">1</span>) = <span class="number">0</span>;
+    
+    <span class="keyword">return</span> str;
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">char</span> text[] = <span class="string">"   Hello, World!   "</span>;
+<span class="datatype">char</span>* trimmed = <span class="function">trim</span>(text);
+<span class="function">printf</span>(<span class="string">"[%s]\n"</span>, trimmed);  <span class="comment">// [Hello, World!]</span></pre>
+            </div>
+            
+            <div class="output">
+                <pre>[Hello, World!]</pre>
+            </div>
+            
+            <h3>String Reversal</h3>
+            <p>Reversing a string in-place:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="datatype">void</span> <span class="function">reverse_string</span>(<span class="datatype">char</span>* str) {
+    <span class="datatype">int</span> length = <span class="function">strlen</span>(str);
+    <span class="datatype">int</span> i, j;
+    <span class="datatype">char</span> temp;
+    
+    <span class="keyword">for</span> (i = <span class="number">0</span>, j = length - <span class="number">1</span>; i < j; i++, j--) {
+        temp = str[i];
+        str[i] = str[j];
+        str[j] = temp;
+    }
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">char</span> text[] = <span class="string">"Hello"</span>;
+<span class="function">reverse_string</span>(text);
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, text);  <span class="comment">// olleH</span></pre>
+            </div>
+            
+            <div class="output">
+                <pre>olleH</pre>
+            </div>
+            
+            <h3>Safe String Functions (C11)</h3>
+            <p>The C11 standard introduced safer string handling functions in the <code>&lt;string.h&gt;</code> header:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="comment">// Safe string copy (C11)</span>
+<span class="datatype">char</span> dest[<span class="number">10</span>];
+<span class="datatype">errno_t</span> err = <span class="function">strcpy_s</span>(dest, <span class="keyword">sizeof</span>(dest), <span class="string">"Hello"</span>);
+<span class="keyword">if</span> (err != <span class="number">0</span>) {
+    <span class="comment">// Handle error</span>
+}
+
+<span class="comment">// Safe string concatenation (C11)</span>
+<span class="datatype">char</span> buffer[<span class="number">10</span>] = <span class="string">"Hello"</span>;
+err = <span class="function">strcat_s</span>(buffer, <span class="keyword">sizeof</span>(buffer), <span class="string">" World"</span>);
+<span class="keyword">if</span> (err != <span class="number">0</span>) {
+    <span class="comment">// Handle error (in this case, buffer too small)</span>
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>The C11 bounds-checking functions like <code>strcpy_s()</code> are optional features that may not be available in all compilers. Many developers use alternative safe string handling libraries or functions like <code>snprintf()</code>.</p>
+            </div>
+            
+            <h3>String Formatting</h3>
+            <p>The <code>sprintf()</code> and <code>snprintf()</code> functions from <code>&lt;stdio.h&gt;</code> are useful for formatting strings:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="comment">// Format a string (unsafe)</span>
+<span class="datatype">char</span> buffer[<span class="number">50</span>];
+<span class="datatype">int</span> age = <span class="number">30</span>;
+<span class="datatype">float</span> height = <span class="number">175.5f</span>;
+<span class="function">sprintf</span>(buffer, <span class="string">"Age: %d, Height: %.1f cm"</span>, age, height);
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, buffer);
+
+<span class="comment">// Format a string (safe)</span>
+<span class="datatype">char</span> safe_buffer[<span class="number">20</span>];
+<span class="function">snprintf</span>(safe_buffer, <span class="keyword">sizeof</span>(safe_buffer), <span class="string">"Age: %d"</span>, age);
+<span class="function">printf</span>(<span class="string">"%s\n"</span>, safe_buffer);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Age: 30, Height: 175.5 cm
+Age: 30</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Always use <code>snprintf()</code> instead of <code>sprintf()</code> to prevent buffer overflows.</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#strings">Back to Strings</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unions - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Unions in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="union-basics">
+            <h2>Union Basics</h2>
+            <p>A <strong>union</strong> is a special data type in C that allows storing different data types in the same memory location. Unlike structures, where each member has its own memory location, all members of a union share the same memory space.</p>
+            
+            <h3>Union Declaration and Definition</h3>
+            <p>The syntax for declaring a union is similar to that of a structure:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Union declaration</span>
+<span class="keyword">union</span> Data {
+    <span class="datatype">int</span> i;
+    <span class="datatype">float</span> f;
+    <span class="datatype">char</span> str[<span class="number">20</span>];
+};
+
+<span class="comment">// Creating union variables</span>
+<span class="keyword">union</span> Data data;          <span class="comment">// Uninitialized union variable</span>
+<span class="keyword">union</span> Data data2 = {<span class="number">10</span>};  <span class="comment">// Initialize first member (i)</span>
+
+<span class="comment">// C99 designated initializer</span>
+<span class="keyword">union</span> Data data3 = {.f = <span class="number">3.14</span>};  <span class="comment">// Initialize specific member</span></pre>
+            </div>
+            
+            <h3>Accessing Union Members</h3>
+            <p>Union members are accessed using the dot (.) operator for union variables and the arrow (->) operator for union pointers, just like with structures:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">union</span> Data data;
+
+<span class="comment">// Accessing and modifying members</span>
+data.i = <span class="number">10</span>;
+<span class="function">printf</span>(<span class="string">"data.i: %d\n"</span>, data.i);
+
+data.f = <span class="number">220.5</span>;
+<span class="function">printf</span>(<span class="string">"data.f: %.1f\n"</span>, data.f);
+
+<span class="function">strcpy</span>(data.str, <span class="string">"C Programming"</span>);
+<span class="function">printf</span>(<span class="string">"data.str: %s\n"</span>, data.str);
+
+<span class="comment">// Using pointer to union</span>
+<span class="keyword">union</span> Data* ptr = &data;
+ptr->i = <span class="number">20</span>;
+<span class="function">printf</span>(<span class="string">"ptr->i: %d\n"</span>, ptr->i);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>data.i: 10
+data.f: 220.5
+data.str: C Programming
+ptr->i: 20</pre>
+            </div>
+            
+            <div class="warning">
+                <p>When you assign a value to a union member, it overwrites the memory used by all other members. Only one member can hold a valid value at a time.</p>
+            </div>
+            
+            <h3>Memory Layout of Unions</h3>
+            <p>The size of a union is determined by its largest member. All members share the same starting address:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">union</span> Data {
+    <span class="datatype">int</span> i;           <span class="comment">// 4 bytes</span>
+    <span class="datatype">float</span> f;         <span class="comment">// 4 bytes</span>
+    <span class="datatype">char</span> str[<span class="number">20</span>];   <span class="comment">// 20 bytes</span>
+};
+
+<span class="function">printf</span>(<span class="string">"Size of union Data: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">union</span> Data));
+<span class="comment">// Output: Size of union Data: 20 bytes</span>
+
+<span class="comment">// Memory addresses of members</span>
+<span class="keyword">union</span> Data data;
+<span class="function">printf</span>(<span class="string">"Address of data: %p\n"</span>, (<span class="datatype">void</span>*)&data);
+<span class="function">printf</span>(<span class="string">"Address of data.i: %p\n"</span>, (<span class="datatype">void</span>*)&data.i);
+<span class="function">printf</span>(<span class="string">"Address of data.f: %p\n"</span>, (<span class="datatype">void</span>*)&data.f);
+<span class="function">printf</span>(<span class="string">"Address of data.str: %p\n"</span>, (<span class="datatype">void</span>*)&data.str);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Size of union Data: 20 bytes
+Address of data: 0x7ffd123456a0
+Address of data.i: 0x7ffd123456a0
+Address of data.f: 0x7ffd123456a0
+Address of data.str: 0x7ffd123456a0</pre>
+            </div>
+            
+            <div class="note">
+                <p>Notice that all members share the same starting address, unlike structures where each member has its own distinct address.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="union-vs-structure">
+            <h2>Unions vs. Structures</h2>
+            <p>While both unions and structures are user-defined data types in C, they have fundamental differences in memory allocation and usage:</p>
+            
+            <h3>Key Differences</h3>
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Union</th>
+                    <th>Structure</th>
+                </tr>
+                <tr>
+                    <td>Memory Allocation</td>
+                    <td>All members share the same memory space</td>
+                    <td>Each member has its own memory space</td>
+                </tr>
+                <tr>
+                    <td>Size</td>
+                    <td>Size of the largest member</td>
+                    <td>Sum of sizes of all members (plus padding)</td>
+                </tr>
+                <tr>
+                    <td>Member Access</td>
+                    <td>Only one member can hold a valid value at a time</td>
+                    <td>All members can hold valid values simultaneously</td>
+                </tr>
+                <tr>
+                    <td>Memory Efficiency</td>
+                    <td>More memory-efficient when only one member is used at a time</td>
+                    <td>Less memory-efficient when members are mutually exclusive</td>
+                </tr>
+            </table>
+            
+            <h3>Visual Comparison</h3>
+            <p>Consider the following structure and union with the same members:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">struct</span> StructExample {
+    <span class="datatype">int</span> i;           <span class="comment">// 4 bytes</span>
+    <span class="datatype">float</span> f;         <span class="comment">// 4 bytes</span>
+    <span class="datatype">char</span> c;          <span class="comment">// 1 byte (+ 3 bytes padding)</span>
+};  <span class="comment">// Total: 12 bytes</span>
+
+<span class="keyword">union</span> UnionExample {
+    <span class="datatype">int</span> i;           <span class="comment">// 4 bytes</span>
+    <span class="datatype">float</span> f;         <span class="comment">// 4 bytes</span>
+    <span class="datatype">char</span> c;          <span class="comment">// 1 byte</span>
+};  <span class="comment">// Total: 4 bytes (size of largest member)</span>
+
+<span class="function">printf</span>(<span class="string">"Size of struct: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">struct</span> StructExample));
+<span class="function">printf</span>(<span class="string">"Size of union: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">union</span> UnionExample));</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Size of struct: 12 bytes
+Size of union: 4 bytes</pre>
+            </div>
+            
+            <h3>When to Use Unions</h3>
+            <p>Unions are particularly useful in the following scenarios:</p>
+            <ul>
+                <li><strong>Type Punning:</strong> Interpreting the same data in different ways</li>
+                <li><strong>Memory Conservation:</strong> When memory is limited and members are mutually exclusive</li>
+                <li><strong>Variant Records:</strong> When a data structure can have different forms</li>
+            </ul>
+            
+            <h3>Practical Example: Tagged Union</h3>
+            <p>A common pattern is to use a "tagged union" where a separate field indicates which member of the union is currently valid:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">enum</span> ValueType {
+    TYPE_INT,
+    TYPE_FLOAT,
+    TYPE_STRING
+};
+
+<span class="keyword">struct</span> Value {
+    <span class="keyword">enum</span> ValueType type;
+    <span class="keyword">union</span> {
+        <span class="datatype">int</span> i;
+        <span class="datatype">float</span> f;
+        <span class="datatype">char</span>* s;
+    } data;
+};
+
+<span class="datatype">void</span> <span class="function">printValue</span>(<span class="keyword">struct</span> Value val) {
+    <span class="keyword">switch</span> (val.type) {
+        <span class="keyword">case</span> TYPE_INT:
+            <span class="function">printf</span>(<span class="string">"Integer: %d\n"</span>, val.data.i);
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> TYPE_FLOAT:
+            <span class="function">printf</span>(<span class="string">"Float: %.2f\n"</span>, val.data.f);
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> TYPE_STRING:
+            <span class="function">printf</span>(<span class="string">"String: %s\n"</span>, val.data.s);
+            <span class="keyword">break</span>;
+    }
+}
+
+<span class="comment">// Usage</span>
+<span class="keyword">struct</span> Value v1 = {TYPE_INT, {.i = <span class="number">42</span>}};
+<span class="keyword">struct</span> Value v2 = {TYPE_FLOAT, {.f = <span class="number">3.14</span>}};
+<span class="keyword">struct</span> Value v3 = {TYPE_STRING, {.s = <span class="string">"Hello"</span>}};
+
+<span class="function">printValue</span>(v1);
+<span class="function">printValue</span>(v2);
+<span class="function">printValue</span>(v3);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Integer: 42
+Float: 3.14
+String: Hello</pre>
+            </div>
+            
+            <div class="tip">
+                <p>This pattern is the foundation of many variant data types in C and is similar to the concept of "sum types" in functional programming languages.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="union-applications">
+            <h2>Union Applications</h2>
+            <p>Unions have several practical applications in C programming:</p>
+            
+            <h3>Type Conversion</h3>
+            <p>Unions can be used to convert between different data types without explicit casting:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">union</span> Converter {
+    <span class="datatype">float</span> f;
+    <span class="datatype">int</span> i;
+    <span class="datatype">unsigned</span> <span class="datatype">char</span> bytes[<span class="number">4</span>];  <span class="comment">// Assuming float and int are 4 bytes</span>
+};
+
+<span class="comment">// Float to integer bits</span>
+<span class="keyword">union</span> Converter conv;
+conv.f = <span class="number">3.14</span>;
+<span class="function">printf</span>(<span class="string">"Float value: %f\n"</span>, conv.f);
+<span class="function">printf</span>(<span class="string">"As integer bits: %d\n"</span>, conv.i);
+
+<span class="comment">// View individual bytes</span>
+<span class="function">printf</span>(<span class="string">"Bytes: "</span>);
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">4</span>; i++) {
+    <span class="function">printf</span>(<span class="string">"%02X "</span>, conv.bytes[i]);
+}
+<span class="function">printf</span>(<span class="string">"\n"</span>);</pre>
+            </div>
+            
+            <div class="warning">
+                <p>This type of type punning can lead to undefined behavior in some cases due to strict aliasing rules. In modern C, consider using <code>memcpy()</code> for safer type conversions.</p>
+            </div>
+            
+            <h3>Memory-Efficient Data Structures</h3>
+            <p>Unions can help create memory-efficient data structures when fields are mutually exclusive:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Node for a tree that can store different types of data</span>
+<span class="keyword">struct</span> TreeNode {
+    <span class="datatype">int</span> type;  <span class="comment">// 0 for leaf, 1 for internal node</span>
+    <span class="keyword">union</span> {
+        <span class="keyword">struct</span> {  <span class="comment">// For leaf nodes</span>
+            <span class="datatype">int</span> value;
+        } leaf;
+        <span class="keyword">struct</span> {  <span class="comment">// For internal nodes</span>
+            <span class="keyword">struct</span> TreeNode* left;
+            <span class="keyword">struct</span> TreeNode* right;
+        } internal;
+    } data;
+};</pre>
+            </div>
+            
+            <h3>Bit Manipulation</h3>
+            <p>Unions can be used to access individual bits or bytes of larger data types:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">union</span> IPv4Address {
+    <span class="datatype">uint32_t</span> full_addr;  <span class="comment">// Full 32-bit address</span>
+    <span class="datatype">uint8_t</span> octets[<span class="number">4</span>];   <span class="comment">// Individual octets</span>
+};
+
+<span class="keyword">union</span> IPv4Address ip;
+ip.full_addr = <span class="number">0xC0A80102</span>;  <span class="comment">// 192.168.1.2 in hex</span>
+
+<span class="function">printf</span>(<span class="string">"IP Address: %d.%d.%d.%d\n"</span>, 
+       ip.octets[<span class="number">3</span>], ip.octets[<span class="number">2</span>], ip.octets[<span class="number">1</span>], ip.octets[<span class="number">0</span>]);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>IP Address: 192.168.1.2</pre>
+            </div>
+            
+            <div class="note">
+                <p>The byte order in the output depends on the endianness of your system. The example assumes little-endian architecture.</p>
+            </div>
+            
+            <h3>Bit Fields in Unions</h3>
+            <p>Combining unions with bit fields allows for even more precise control over memory layout:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">union</span> FlagRegister {
+    <span class="datatype">uint8_t</span> byte;  <span class="comment">// Access as a full byte</span>
+    <span class="keyword">struct</span> {
+        <span class="datatype">uint8_t</span> flag0 : <span class="number">1</span>;
+        <span class="datatype">uint8_t</span> flag1 : <span class="number">1</span>;
+        <span class="datatype">uint8_t</span> flag2 : <span class="number">1</span>;
+        <span class="datatype">uint8_t</span> flag3 : <span class="number">1</span>;
+        <span class="datatype">uint8_t</span> flag4 : <span class="number">1</span>;
+        <span class="datatype">uint8_t</span> flag5 : <span class="number">1</span>;
+        <span class="datatype">uint8_t</span> flag6 : <span class="number">1</span>;
+        <span class="datatype">uint8_t</span> flag7 : <span class="number">1</span>;
+    } flags;  <span class="comment">// Access as individual bits</span>
+};
+
+<span class="keyword">union</span> FlagRegister reg;
+reg.byte = <span class="number">0</span>;  <span class="comment">// Clear all flags</span>
+
+<span class="comment">// Set specific flags</span>
+reg.flags.flag0 = <span class="number">1</span>;
+reg.flags.flag3 = <span class="number">1</span>;
+reg.flags.flag7 = <span class="number">1</span>;
+
+<span class="function">printf</span>(<span class="string">"Flag register: 0x%02X\n"</span>, reg.byte);
+
+<span class="comment">// Check individual flags</span>
+<span class="function">printf</span>(<span class="string">"Flag 0: %d\n"</span>, reg.flags.flag0);
+<span class="function">printf</span>(<span class="string">"Flag 1: %d\n"</span>, reg.flags.flag1);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Flag register: 0x89
+Flag 0: 1
+Flag 1: 0</pre>
+            </div>
+        </div>
+        
+        <p><a href="index.html#unions">Back to Unions</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

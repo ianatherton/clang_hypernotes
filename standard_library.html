@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Standard Library - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>C Standard Library</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="standard-library-intro">
+            <h2>Introduction to the C Standard Library</h2>
+            <p>The <strong>C Standard Library</strong> is a collection of header files and library routines used to implement common operations, such as input/output, string handling, mathematical computations, memory management, and more. It provides a standardized set of functions that are portable across different platforms.</p>
+            
+            <div class="definition">
+                <h3>Key Characteristics of the C Standard Library</h3>
+                <ul>
+                    <li><strong>Portability</strong>: Functions work consistently across different platforms.</li>
+                    <li><strong>Efficiency</strong>: Implementations are typically highly optimized.</li>
+                    <li><strong>Standardization</strong>: Defined by the C standard (C89/C90, C99, C11, C17).</li>
+                    <li><strong>Modularity</strong>: Organized into different header files by functionality.</li>
+                </ul>
+            </div>
+            
+            <div class="note">
+                <p>The C Standard Library is not part of the C language itself but is specified by the C standard and is available in all standard-conforming C implementations.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="standard-library-headers">
+            <h2>Standard Library Headers</h2>
+            <p>The C Standard Library is organized into header files, each containing declarations for related functions, macros, and types. Here are some of the most commonly used headers:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Common C Standard Library Headers</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>    <span class="comment">// Input/output functions</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdlib.h&gt;</span>   <span class="comment">// General utilities</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;string.h&gt;</span>   <span class="comment">// String handling functions</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;math.h&gt;</span>     <span class="comment">// Mathematical functions</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;time.h&gt;</span>     <span class="comment">// Date and time functions</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;ctype.h&gt;</span>    <span class="comment">// Character handling functions</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;assert.h&gt;</span>   <span class="comment">// Diagnostics</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;limits.h&gt;</span>   <span class="comment">// Size limits of integral types</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;float.h&gt;</span>    <span class="comment">// Characteristics of floating-point types</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stddef.h&gt;</span>   <span class="comment">// Common definitions</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;errno.h&gt;</span>    <span class="comment">// Error codes</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;signal.h&gt;</span>   <span class="comment">// Signal handling</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;locale.h&gt;</span>   <span class="comment">// Localization</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;setjmp.h&gt;</span>   <span class="comment">// Non-local jumps</span></pre>
+            </div>
+            
+            <h3>C99 and Later Headers</h3>
+            <p>C99 introduced several new headers:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Headers introduced in C99</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdbool.h&gt;</span>  <span class="comment">// Boolean type and values</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;complex.h&gt;</span>  <span class="comment">// Complex number arithmetic</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;tgmath.h&gt;</span>   <span class="comment">// Type-generic math macros</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;inttypes.h&gt;</span> <span class="comment">// Format conversion of integer types</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdint.h&gt;</span>   <span class="comment">// Fixed-width integer types</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;fenv.h&gt;</span>     <span class="comment">// Floating-point environment</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>When using C99 features in older compilers, you may need to specify the C99 standard explicitly (e.g., <code>gcc -std=c99</code>).</p>
+            </div>
+        </div>
+        
+        <div class="section" id="standard-library-functions">
+            <h2>Standard Library Functions</h2>
+            <p>Let's explore some of the most commonly used functions from various headers:</p>
+            
+            <h3>Input/Output Functions (stdio.h)</h3>
+            <p>The <code>stdio.h</code> header provides functions for input and output operations:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// File operations</span>
+<span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"example.txt"</span>, <span class="string">"r"</span>);  <span class="comment">// Open file for reading</span>
+<span class="function">fclose</span>(file);  <span class="comment">// Close file</span>
+
+<span class="comment">// Formatted input/output</span>
+<span class="function">printf</span>(<span class="string">"Hello, %s! You are %d years old.\n"</span>, name, age);
+<span class="function">scanf</span>(<span class="string">"%d %f"</span>, &num, &decimal);
+
+<span class="comment">// Character input/output</span>
+<span class="datatype">int</span> c = <span class="function">getchar</span>();  <span class="comment">// Read a character from stdin</span>
+<span class="function">putchar</span>(c);  <span class="comment">// Write a character to stdout</span>
+
+<span class="comment">// String input/output</span>
+<span class="function">fputs</span>(<span class="string">"Hello, World!"</span>, stdout);  <span class="comment">// Write string to stream</span>
+<span class="function">fgets</span>(buffer, <span class="number">100</span>, stdin);  <span class="comment">// Read string from stream</span></pre>
+            </div>
+            
+            <h3>General Utilities (stdlib.h)</h3>
+            <p>The <code>stdlib.h</code> header provides general utility functions:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Dynamic memory management</span>
+<span class="datatype">int</span>* arr = (<span class="datatype">int</span>*)<span class="function">malloc</span>(<span class="number">10</span> * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));  <span class="comment">// Allocate memory</span>
+<span class="function">free</span>(arr);  <span class="comment">// Free allocated memory</span>
+
+<span class="comment">// Random number generation</span>
+<span class="function">srand</span>((<span class="datatype">unsigned</span>) <span class="function">time</span>(<span class="keyword">NULL</span>));  <span class="comment">// Seed random number generator</span>
+<span class="datatype">int</span> random_num = <span class="function">rand</span>() % <span class="number">100</span>;  <span class="comment">// Generate random number between 0 and 99</span>
+
+<span class="comment">// String conversion</span>
+<span class="datatype">int</span> num = <span class="function">atoi</span>(<span class="string">"123"</span>);  <span class="comment">// Convert string to integer</span>
+<span class="datatype">double</span> dbl = <span class="function">atof</span>(<span class="string">"123.45"</span>);  <span class="comment">// Convert string to double</span>
+
+<span class="comment">// Sorting and searching</span>
+<span class="function">qsort</span>(array, size, <span class="keyword">sizeof</span>(<span class="datatype">int</span>), compare_func);  <span class="comment">// Sort array</span>
+<span class="datatype">void</span>* found = <span class="function">bsearch</span>(key, array, size, <span class="keyword">sizeof</span>(<span class="datatype">int</span>), compare_func);  <span class="comment">// Binary search</span>
+
+<span class="comment">// Program termination</span>
+<span class="function">exit</span>(<span class="number">0</span>);  <span class="comment">// Terminate program normally</span>
+<span class="function">abort</span>();  <span class="comment">// Abnormal program termination</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Always check the return value of <code>malloc()</code> to ensure memory allocation was successful. It returns <code>NULL</code> if allocation fails.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="standard-library-macros">
+            <h2>Standard Library Macros</h2>
+            <p>The C Standard Library defines various macros for common constants and operations:</p>
+            
+            <h3>Common Macros</h3>
+            <div class="code-block">
+                <pre><span class="comment">// NULL pointer constant</span>
+<span class="datatype">int</span>* ptr = <span class="keyword">NULL</span>;  <span class="comment">// From stddef.h</span>
+
+<span class="comment">// Size of an object</span>
+<span class="datatype">size_t</span> size = <span class="keyword">sizeof</span>(<span class="datatype">int</span>);  <span class="comment">// Operator, not a macro, but related</span>
+
+<span class="comment">// Maximum and minimum values for numeric types</span>
+<span class="function">printf</span>(<span class="string">"Maximum int value: %d\n"</span>, <span class="preprocessor">INT_MAX</span>);  <span class="comment">// From limits.h</span>
+<span class="function">printf</span>(<span class="string">"Minimum int value: %d\n"</span>, <span class="preprocessor">INT_MIN</span>);
+
+<span class="comment">// Error handling</span>
+<span class="keyword">if</span> (error_occurred) {
+    <span class="function">perror</span>(<span class="string">"Error"</span>);  <span class="comment">// Print error message based on errno</span>
+    <span class="function">printf</span>(<span class="string">"Error code: %d\n"</span>, <span class="preprocessor">errno</span>);  <span class="comment">// From errno.h</span>
+}
+
+<span class="comment">// Boolean values (C99)</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdbool.h&gt;</span>
+<span class="datatype">bool</span> flag = <span class="keyword">true</span>;  <span class="comment">// Instead of: int flag = 1;</span></pre>
+            </div>
+            
+            <h3>Mathematical Constants and Functions</h3>
+            <div class="code-block">
+                <pre><span class="preprocessor">#include</span> <span class="string">&lt;math.h&gt;</span>
+
+<span class="comment">// Mathematical constants</span>
+<span class="datatype">double</span> pi_value = <span class="preprocessor">M_PI</span>;  <span class="comment">// π (3.14159...)</span>
+<span class="datatype">double</span> e_value = <span class="preprocessor">M_E</span>;   <span class="comment">// e (2.71828...)</span>
+
+<span class="comment">// Mathematical functions</span>
+<span class="datatype">double</span> square_root = <span class="function">sqrt</span>(<span class="number">16.0</span>);  <span class="comment">// Square root: 4.0</span>
+<span class="datatype">double</span> power = <span class="function">pow</span>(<span class="number">2.0</span>, <span class="number">3.0</span>);    <span class="comment">// Power: 8.0</span>
+<span class="datatype">double</span> sine = <span class="function">sin</span>(<span class="preprocessor">M_PI</span> / <span class="number">2</span>);     <span class="comment">// Sine: 1.0</span></pre>
+            </div>
+            
+            <div class="note">
+                <p>Some mathematical constants like <code>M_PI</code> are not part of the C standard but are commonly provided as extensions. For standard-compliant code, you may need to define these constants yourself.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="practical-examples">
+            <h2>Practical Examples</h2>
+            <p>Let's look at some practical examples of using the C Standard Library:</p>
+            
+            <h3>Example 1: File Processing</h3>
+            <div class="code-block">
+                <pre><span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdlib.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"data.txt"</span>, <span class="string">"r"</span>);
+    
+    <span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+        <span class="function">perror</span>(<span class="string">"Error opening file"</span>);
+        <span class="keyword">return</span> <span class="number">1</span>;
+    }
+    
+    <span class="datatype">char</span> line[<span class="number">100</span>];
+    <span class="keyword">while</span> (<span class="function">fgets</span>(line, <span class="keyword">sizeof</span>(line), file) != <span class="keyword">NULL</span>) {
+        <span class="function">printf</span>(<span class="string">"%s"</span>, line);
+    }
+    
+    <span class="function">fclose</span>(file);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <h3>Example 2: String Manipulation</h3>
+            <div class="code-block">
+                <pre><span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;string.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;ctype.h&gt;</span>
+
+<span class="datatype">void</span> <span class="function">to_upper</span>(<span class="datatype">char</span>* str) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; str[i] != <span class="string">'\0'</span>; i++) {
+        str[i] = <span class="function">toupper</span>(str[i]);
+    }
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">char</span> str1[<span class="number">50</span>] = <span class="string">"Hello"</span>;
+    <span class="datatype">char</span> str2[<span class="number">50</span>] = <span class="string">" World!"</span>;
+    
+    <span class="comment">// Concatenate strings</span>
+    <span class="function">strcat</span>(str1, str2);
+    <span class="function">printf</span>(<span class="string">"Concatenated: %s\n"</span>, str1);
+    
+    <span class="comment">// Convert to uppercase</span>
+    <span class="function">to_upper</span>(str1);
+    <span class="function">printf</span>(<span class="string">"Uppercase: %s\n"</span>, str1);
+    
+    <span class="comment">// Find substring</span>
+    <span class="datatype">char</span>* found = <span class="function">strstr</span>(str1, <span class="string">"WORLD"</span>);
+    <span class="keyword">if</span> (found != <span class="keyword">NULL</span>) {
+        <span class="function">printf</span>(<span class="string">"Found 'WORLD' at position: %ld\n"</span>, found - str1);
+    }
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+        </div>
+        
+        <p><a href="index.html#standard-library">Back to Standard Library</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+    
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

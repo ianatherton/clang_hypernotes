@@ -1,0 +1,544 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enumerations - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Enumerations in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="enum-basics">
+            <h2>Enumeration Basics</h2>
+            <p>An <strong>enumeration</strong> (or <strong>enum</strong>) is a user-defined data type in C that consists of integral constants. Enumerations make programs more readable and maintainable by giving names to sets of integer constants.</p>
+            
+            <h3>Declaring Enumerations</h3>
+            <p>The basic syntax for declaring an enumeration is:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Basic enum declaration</span>
+<span class="keyword">enum</span> Day {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY
+};
+
+<span class="comment">// Declaring enum variables</span>
+<span class="keyword">enum</span> Day today;
+today = WEDNESDAY;
+
+<span class="comment">// Declaration and variable definition in one statement</span>
+<span class="keyword">enum</span> Month {
+    JANUARY, FEBRUARY, MARCH, APRIL, MAY, JUNE,
+    JULY, AUGUST, SEPTEMBER, OCTOBER, NOVEMBER, DECEMBER
+} current_month;
+
+<span class="comment">// Anonymous enum</span>
+<span class="keyword">enum</span> {
+    RED,
+    GREEN,
+    BLUE
+} color;</pre>
+            </div>
+            
+            <h3>Assigning Values to Enum Constants</h3>
+            <p>By default, enum constants are assigned integer values starting from 0. However, you can explicitly assign specific values:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Explicit values</span>
+<span class="keyword">enum</span> Status {
+    ERROR = -<span class="number">1</span>,
+    SUCCESS = <span class="number">0</span>,
+    PENDING = <span class="number">1</span>,
+    PROCESSING = <span class="number">2</span>
+};
+
+<span class="comment">// Auto-incremented values</span>
+<span class="keyword">enum</span> Permissions {
+    READ = <span class="number">1</span>,      <span class="comment">// 1</span>
+    WRITE = <span class="number">2</span>,     <span class="comment">// 2</span>
+    EXECUTE = <span class="number">4</span>,   <span class="comment">// 4</span>
+    ALL = READ | WRITE | EXECUTE  <span class="comment">// 7 (bitwise OR)</span>
+};
+
+<span class="comment">// Mixed assignment</span>
+<span class="keyword">enum</span> Levels {
+    LOW = <span class="number">10</span>,
+    MEDIUM,     <span class="comment">// 11 (previous value + 1)</span>
+    HIGH,       <span class="comment">// 12</span>
+    CRITICAL = <span class="number">20</span>  <span class="comment">// 20</span>
+};</pre>
+            </div>
+            
+            <div class="note">
+                <p>When you don't explicitly assign a value to an enum constant, it takes the value of the previous constant plus one. The first constant defaults to 0 if not explicitly assigned.</p>
+            </div>
+            
+            <h3>Using Enumerations</h3>
+            <p>Enumerations can be used in various contexts:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+
+<span class="keyword">enum</span> Direction {
+    NORTH,
+    EAST,
+    SOUTH,
+    WEST
+};
+
+<span class="datatype">void</span> <span class="function">move</span>(<span class="keyword">enum</span> Direction dir) {
+    <span class="keyword">switch</span> (dir) {
+        <span class="keyword">case</span> NORTH:
+            <span class="function">printf</span>(<span class="string">"Moving North\n"</span>);
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> EAST:
+            <span class="function">printf</span>(<span class="string">"Moving East\n"</span>);
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> SOUTH:
+            <span class="function">printf</span>(<span class="string">"Moving South\n"</span>);
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> WEST:
+            <span class="function">printf</span>(<span class="string">"Moving West\n"</span>);
+            <span class="keyword">break</span>;
+    }
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="keyword">enum</span> Direction dir = EAST;
+    <span class="function">move</span>(dir);
+    
+    <span class="comment">// Enums in conditions</span>
+    <span class="keyword">if</span> (dir == EAST) {
+        <span class="function">printf</span>(<span class="string">"Heading East\n"</span>);
+    }
+    
+    <span class="comment">// Enum as array index</span>
+    <span class="datatype">const</span> <span class="datatype">char</span>* dir_names[] = {"North", "East", "South", "West"};
+    <span class="function">printf</span>(<span class="string">"Current direction: %s\n"</span>, dir_names[dir]);
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Moving East
+Heading East
+Current direction: East</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Enumerations make code more readable by replacing magic numbers with meaningful names. They also provide type checking, making the code less error-prone.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="enum-vs-define">
+            <h2>Enums vs. #define Constants</h2>
+            <p>Both enumerations and preprocessor macros can be used to define constants, but they have important differences:</p>
+            
+            <h3>Key Differences</h3>
+            <table>
+                <tr>
+                    <th>Feature</th>
+                    <th>Enum</th>
+                    <th>#define</th>
+                </tr>
+                <tr>
+                    <td>Type Checking</td>
+                    <td>Yes (enum type)</td>
+                    <td>No (simple text substitution)</td>
+                </tr>
+                <tr>
+                    <td>Scope</td>
+                    <td>Block scope (C99)</td>
+                    <td>From definition to end of file</td>
+                </tr>
+                <tr>
+                    <td>Debugging</td>
+                    <td>Appears in debugger</td>
+                    <td>Not visible (replaced before compilation)</td>
+                </tr>
+                <tr>
+                    <td>Namespace</td>
+                    <td>Grouped in enum type</td>
+                    <td>Global preprocessor namespace</td>
+                </tr>
+            </table>
+            
+            <h3>Comparison Example</h3>
+            <p>Here's a comparison of defining constants with enums versus #define:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Using #define</span>
+<span class="preprocessor">#define COLOR_RED 0</span>
+<span class="preprocessor">#define COLOR_GREEN 1</span>
+<span class="preprocessor">#define COLOR_BLUE 2</span>
+
+<span class="comment">// Using enum</span>
+<span class="keyword">enum</span> Color {
+    COLOR_RED_ENUM,    <span class="comment">// 0</span>
+    COLOR_GREEN_ENUM,  <span class="comment">// 1</span>
+    COLOR_BLUE_ENUM    <span class="comment">// 2</span>
+};
+
+<span class="comment">// Usage</span>
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> define_color = COLOR_RED;  <span class="comment">// Simple int</span>
+    <span class="keyword">enum</span> Color enum_color = COLOR_RED_ENUM;  <span class="comment">// Enum type</span>
+    
+    <span class="comment">// This works (no type checking)</span>
+    define_color = <span class="number">999</span>;  <span class="comment">// Any integer value</span>
+    
+    <span class="comment">// This works too, but at least it's clear we're using an enum</span>
+    enum_color = <span class="number">999</span>;  <span class="comment">// Any integer value, but with enum type</span>
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>While enums provide better type safety than #define macros, C still allows assigning any integer value to an enum variable. For strict type checking, consider using other techniques like wrapper functions.</p>
+            </div>
+            
+            <h3>When to Use Enums vs. #define</h3>
+            <ul>
+                <li><strong>Use enums when:</strong>
+                    <ul>
+                        <li>You need a related set of constants</li>
+                        <li>You want type checking</li>
+                        <li>You want to see the constants in a debugger</li>
+                        <li>You want to organize constants in a namespace</li>
+                    </ul>
+                </li>
+                <li><strong>Use #define when:</strong>
+                    <ul>
+                        <li>You need a single, isolated constant</li>
+                        <li>You need string constants</li>
+                        <li>You need constants for preprocessor directives</li>
+                        <li>You need macro functions</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+        
+        <div class="section" id="enum-best-practices">
+            <h2>Enumeration Best Practices</h2>
+            <p>Here are some best practices for using enumerations in C:</p>
+            
+            <h3>Naming Conventions</h3>
+            <p>Use consistent naming conventions for enum types and constants:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// PascalCase for enum type, UPPER_CASE for constants</span>
+<span class="keyword">enum</span> ColorCode {
+    COLOR_RED,
+    COLOR_GREEN,
+    COLOR_BLUE
+};
+
+<span class="comment">// Adding a prefix to avoid name conflicts</span>
+<span class="keyword">enum</span> AnimalType {
+    ANIMAL_DOG,
+    ANIMAL_CAT,
+    ANIMAL_BIRD
+};</pre>
+            </div>
+            
+            <h3>Using Enums for State Machines</h3>
+            <p>Enumerations are excellent for implementing state machines:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">enum</span> TrafficLightState {
+    LIGHT_RED,
+    LIGHT_YELLOW,
+    LIGHT_GREEN
+};
+
+<span class="datatype">void</span> <span class="function">update_traffic_light</span>(<span class="keyword">enum</span> TrafficLightState* state) {
+    <span class="keyword">switch</span> (*state) {
+        <span class="keyword">case</span> LIGHT_RED:
+            <span class="function">printf</span>(<span class="string">"Red light - Stop\n"</span>);
+            *state = LIGHT_GREEN;
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> LIGHT_YELLOW:
+            <span class="function">printf</span>(<span class="string">"Yellow light - Caution\n"</span>);
+            *state = LIGHT_RED;
+            <span class="keyword">break</span>;
+        <span class="keyword">case</span> LIGHT_GREEN:
+            <span class="function">printf</span>(<span class="string">"Green light - Go\n"</span>);
+            *state = LIGHT_YELLOW;
+            <span class="keyword">break</span>;
+    }
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="keyword">enum</span> TrafficLightState light = LIGHT_RED;
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">6</span>; i++) {
+        <span class="function">update_traffic_light</span>(&light);
+    }
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Red light - Stop
+Green light - Go
+Yellow light - Caution
+Red light - Stop
+Green light - Go
+Yellow light - Caution</pre>
+            </div>
+            
+            <h3>Bitflags with Enumerations</h3>
+            <p>Enumerations can be used to define bitflags for compact representation of multiple boolean options:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">enum</span> FilePermission {
+    NONE    = <span class="number">0</span>,
+    READ    = <span class="number">1</span> << <span class="number">0</span>,  <span class="comment">// 1</span>
+    WRITE   = <span class="number">1</span> << <span class="number">1</span>,  <span class="comment">// 2</span>
+    EXECUTE = <span class="number">1</span> << <span class="number">2</span>   <span class="comment">// 4</span>
+};
+
+<span class="datatype">void</span> <span class="function">check_permissions</span>(<span class="datatype">int</span> perms) {
+    <span class="function">printf</span>(<span class="string">"Permissions: "</span>);
+    
+    <span class="keyword">if</span> (perms & READ) {
+        <span class="function">printf</span>(<span class="string">"READ "</span>);
+    }
+    <span class="keyword">if</span> (perms & WRITE) {
+        <span class="function">printf</span>(<span class="string">"WRITE "</span>);
+    }
+    <span class="keyword">if</span> (perms & EXECUTE) {
+        <span class="function">printf</span>(<span class="string">"EXECUTE"</span>);
+    }
+    <span class="keyword">if</span> (perms == NONE) {
+        <span class="function">printf</span>(<span class="string">"NONE"</span>);
+    }
+    
+    <span class="function">printf</span>(<span class="string">"\n"</span>);
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span> user_perms = READ | WRITE;  <span class="comment">// Combine flags with bitwise OR</span>
+    <span class="function">check_permissions</span>(user_perms);
+    
+    <span class="datatype">int</span> admin_perms = READ | WRITE | EXECUTE;
+    <span class="function">check_permissions</span>(admin_perms);
+    
+    <span class="comment">// Add a permission</span>
+    user_perms |= EXECUTE;
+    <span class="function">check_permissions</span>(user_perms);
+    
+    <span class="comment">// Remove a permission</span>
+    user_perms &= ~WRITE;
+    <span class="function">check_permissions</span>(user_perms);
+    
+    <span class="comment">// Check for a specific permission</span>
+    <span class="keyword">if</span> (user_perms & READ) {
+        <span class="function">printf</span>(<span class="string">"User has READ permission\n"</span>);
+    }
+    
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Permissions: READ WRITE 
+Permissions: READ WRITE EXECUTE
+Permissions: READ WRITE EXECUTE
+Permissions: READ EXECUTE
+User has READ permission</pre>
+            </div>
+            
+            <div class="tip">
+                <p>When using enums as bitflags, always use powers of 2 for the values to ensure each bit represents a unique flag.</p>
+            </div>
+            
+            <h3>Enum Size and Portability</h3>
+            <p>The size of an enum type is implementation-defined in C. For portability, you can specify the underlying type in C99:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdint.h&gt;</span>
+
+<span class="comment">// C99 feature: specify the underlying type</span>
+<span class="keyword">enum</span> Status : <span class="datatype">uint8_t</span> {
+    OK,
+    WARNING,
+    ERROR
+};
+
+<span class="function">printf</span>(<span class="string">"Size of enum Status: %zu bytes\n"</span>, <span class="keyword">sizeof</span>(<span class="keyword">enum</span> Status));</pre>
+            </div>
+            
+            <div class="note">
+                <p>Not all compilers support specifying the underlying type for enums. For maximum portability, you might need to use typedefs with specific integer types.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="enum-advanced">
+            <h2>Advanced Enumeration Techniques</h2>
+            <p>Here are some advanced techniques for working with enumerations in C:</p>
+            
+            <h3>Enum to String Conversion</h3>
+            <p>Converting enum values to strings for debugging or display:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">enum</span> LogLevel {
+    DEBUG,
+    INFO,
+    WARNING,
+    ERROR,
+    CRITICAL
+};
+
+<span class="comment">// Method 1: Array of strings</span>
+<span class="datatype">const</span> <span class="datatype">char</span>* <span class="datatype">const</span> log_level_names[] = {
+    "DEBUG",
+    "INFO",
+    "WARNING",
+    "ERROR",
+    "CRITICAL"
+};
+
+<span class="comment">// Method 2: Switch statement</span>
+<span class="datatype">const</span> <span class="datatype">char</span>* <span class="function">get_log_level_name</span>(<span class="keyword">enum</span> LogLevel level) {
+    <span class="keyword">switch</span> (level) {
+        <span class="keyword">case</span> DEBUG:    <span class="keyword">return</span> <span class="string">"DEBUG"</span>;
+        <span class="keyword">case</span> INFO:     <span class="keyword">return</span> <span class="string">"INFO"</span>;
+        <span class="keyword">case</span> WARNING:  <span class="keyword">return</span> <span class="string">"WARNING"</span>;
+        <span class="keyword">case</span> ERROR:    <span class="keyword">return</span> <span class="string">"ERROR"</span>;
+        <span class="keyword">case</span> CRITICAL: <span class="keyword">return</span> <span class="string">"CRITICAL"</span>;
+        <span class="keyword">default</span>:       <span class="keyword">return</span> <span class="string">"UNKNOWN"</span>;
+    }
+}
+
+<span class="comment">// Usage</span>
+<span class="keyword">enum</span> LogLevel level = WARNING;
+<span class="function">printf</span>(<span class="string">"Log level (array): %s\n"</span>, log_level_names[level]);
+<span class="function">printf</span>(<span class="string">"Log level (function): %s\n"</span>, <span class="function">get_log_level_name</span>(level));</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Log level (array): WARNING
+Log level (function): WARNING</pre>
+            </div>
+            
+            <h3>String to Enum Conversion</h3>
+            <p>Converting strings back to enum values:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;string.h&gt;</span>
+
+<span class="keyword">enum</span> Color {
+    RED,
+    GREEN,
+    BLUE,
+    YELLOW,
+    COLOR_UNKNOWN
+};
+
+<span class="keyword">enum</span> Color <span class="function">string_to_color</span>(<span class="datatype">const</span> <span class="datatype">char</span>* color_name) {
+    <span class="keyword">if</span> (<span class="function">strcmp</span>(color_name, <span class="string">"red"</span>) == <span class="number">0</span>) <span class="keyword">return</span> RED;
+    <span class="keyword">if</span> (<span class="function">strcmp</span>(color_name, <span class="string">"green"</span>) == <span class="number">0</span>) <span class="keyword">return</span> GREEN;
+    <span class="keyword">if</span> (<span class="function">strcmp</span>(color_name, <span class="string">"blue"</span>) == <span class="number">0</span>) <span class="keyword">return</span> BLUE;
+    <span class="keyword">if</span> (<span class="function">strcmp</span>(color_name, <span class="string">"yellow"</span>) == <span class="number">0</span>) <span class="keyword">return</span> YELLOW;
+    <span class="keyword">return</span> COLOR_UNKNOWN;
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">const</span> <span class="datatype">char</span>* input = <span class="string">"blue"</span>;
+<span class="keyword">enum</span> Color color = <span class="function">string_to_color</span>(input);
+
+<span class="keyword">if</span> (color != COLOR_UNKNOWN) {
+    <span class="function">printf</span>(<span class="string">"Recognized color: %d\n"</span>, color);
+} <span class="keyword">else</span> {
+    <span class="function">printf</span>(<span class="string">"Unknown color: %s\n"</span>, input);
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Recognized color: 2</pre>
+            </div>
+            
+            <h3>Iterating Through Enum Values</h3>
+            <p>Enumerations can be used in loops to iterate through all possible values:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">enum</span> Weekday {
+    MONDAY,
+    TUESDAY,
+    WEDNESDAY,
+    THURSDAY,
+    FRIDAY,
+    SATURDAY,
+    SUNDAY,
+    WEEKDAY_COUNT  <span class="comment">// Special value to mark the end</span>
+};
+
+<span class="datatype">const</span> <span class="datatype">char</span>* weekday_names[] = {
+    "Monday", "Tuesday", "Wednesday", "Thursday",
+    "Friday", "Saturday", "Sunday"
+};
+
+<span class="comment">// Iterate through all weekdays</span>
+<span class="keyword">for</span> (<span class="keyword">enum</span> Weekday day = MONDAY; day < WEEKDAY_COUNT; day++) {
+    <span class="function">printf</span>(<span class="string">"Day %d: %s\n"</span>, day, weekday_names[day]);
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Day 0: Monday
+Day 1: Tuesday
+Day 2: Wednesday
+Day 3: Thursday
+Day 4: Friday
+Day 5: Saturday
+Day 6: Sunday</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Adding a COUNT or MAX value at the end of an enum is a common pattern to facilitate iteration and array sizing.</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#enumerations">Back to Enumerations</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

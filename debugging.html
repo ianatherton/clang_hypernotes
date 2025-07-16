@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Debugging - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Debugging in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a> | <a href="best_practices.html" class="toc">Best Practices Overview</a></p>
+        
+        <div class="section" id="debugging-basics">
+            <h2>Debugging Basics</h2>
+            <p>Debugging is the process of finding and fixing errors (bugs) in your code. Effective debugging is a crucial skill for C programmers.</p>
+            
+            <h3>Common Types of Bugs</h3>
+            <p>Understanding the types of bugs you might encounter helps you identify and fix them:</p>
+            
+            <div class="definition">
+                <h4>Bug Categories</h4>
+                <ul>
+                    <li><strong>Syntax errors:</strong> Caught by the compiler (missing semicolons, mismatched braces)</li>
+                    <li><strong>Semantic errors:</strong> Code compiles but doesn't do what you intended</li>
+                    <li><strong>Runtime errors:</strong> Program crashes during execution (segmentation faults, null pointer dereferences)</li>
+                    <li><strong>Logic errors:</strong> Program runs but produces incorrect results</li>
+                    <li><strong>Memory errors:</strong> Memory leaks, buffer overflows, use-after-free</li>
+                </ul>
+            </div>
+            
+            <h3>Debugging Process</h3>
+            <p>Follow these general steps when debugging:</p>
+            
+            <div class="definition">
+                <h4>Debugging Workflow</h4>
+                <ol>
+                    <li><strong>Reproduce the bug:</strong> Find a reliable way to make the bug occur</li>
+                    <li><strong>Isolate the problem:</strong> Narrow down where the bug is happening</li>
+                    <li><strong>Inspect the state:</strong> Examine variables and program flow</li>
+                    <li><strong>Fix the bug:</strong> Make the necessary code changes</li>
+                    <li><strong>Test the fix:</strong> Verify the bug is gone and no new bugs were introduced</li>
+                </ol>
+            </div>
+            
+            <div class="tip">
+                <p>When debugging, change only one thing at a time. Making multiple changes simultaneously makes it difficult to determine which change fixed the problem.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="print-debugging">
+            <h2>Print Debugging</h2>
+            <p>The simplest debugging technique is to add print statements to your code to track program flow and variable values.</p>
+            
+            <h3>Using printf for Debugging</h3>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">calculate_sum</span>(<span class="datatype">int</span>* array, <span class="datatype">int</span> size) {
+    <span class="function">printf</span>(<span class="string">"Entering calculate_sum with size = %d\n"</span>, size);
+    
+    <span class="datatype">int</span> sum = 0;
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = 0; i < size; i++) {
+        <span class="function">printf</span>(<span class="string">"Processing index %d, value = %d\n"</span>, i, array[i]);
+        sum += array[i];
+        <span class="function">printf</span>(<span class="string">"Current sum = %d\n"</span>, sum);
+    }
+    
+    <span class="function">printf</span>(<span class="string">"Exiting calculate_sum, final sum = %d\n"</span>, sum);
+    <span class="keyword">return</span> sum;
+}</pre>
+            </div>
+            
+            <h3>Conditional Debugging Output</h3>
+            <p>Use preprocessor macros to enable or disable debug output:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#define</span> <span class="preprocessor">DEBUG</span> 1  <span class="comment">// Set to 0 to disable debug output</span>
+
+<span class="preprocessor">#if</span> <span class="preprocessor">DEBUG</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">DEBUG_PRINT</span>(fmt, ...) <span class="function">fprintf</span>(stderr, fmt, ##__VA_ARGS__)
+<span class="preprocessor">#else</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">DEBUG_PRINT</span>(fmt, ...) <span class="comment">/* do nothing */</span>
+<span class="preprocessor">#endif</span>
+
+<span class="datatype">void</span> <span class="function">process_data</span>(<span class="datatype">int</span>* data, <span class="datatype">int</span> size) {
+    <span class="preprocessor">DEBUG_PRINT</span>(<span class="string">"Processing data of size %d\n"</span>, size);
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = 0; i < size; i++) {
+        <span class="preprocessor">DEBUG_PRINT</span>(<span class="string">"data[%d] = %d\n"</span>, i, data[i]);
+        <span class="comment">// Process data...</span>
+    }
+    
+    <span class="preprocessor">DEBUG_PRINT</span>(<span class="string">"Data processing complete\n"</span>);
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Use <code>stderr</code> for debug output so it can be separated from normal program output. You can redirect <code>stderr</code> to a file using <code>2> debug.log</code> when running your program.</p>
+            </div>
+            
+            <h3>Pros and Cons of Print Debugging</h3>
+            
+            <div class="definition">
+                <h4>Advantages</h4>
+                <ul>
+                    <li>Simple and requires no special tools</li>
+                    <li>Works in any environment</li>
+                    <li>Provides a log of program execution</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h4>Disadvantages</h4>
+                <ul>
+                    <li>Can clutter code and output</li>
+                    <li>Requires recompilation for changes</li>
+                    <li>May change program timing (potentially hiding race conditions)</li>
+                    <li>Limited for interactive debugging</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section" id="using-gdb">
+            <h2>Using GDB</h2>
+            <p>The GNU Debugger (GDB) is a powerful tool for debugging C programs interactively.</p>
+            
+            <h3>Compiling for Debugging</h3>
+            <p>To use GDB effectively, compile your program with debugging symbols:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Compile with debugging symbols</span>
+gcc -g -o myprogram myprogram.c</pre>
+            </div>
+            
+            <h3>Basic GDB Commands</h3>
+            <p>Here are some essential GDB commands:</p>
+            
+            <div class="definition">
+                <h4>Starting and Stopping</h4>
+                <ul>
+                    <li><code>gdb ./myprogram</code> - Start GDB with your program</li>
+                    <li><code>run [args]</code> - Run the program with optional arguments</li>
+                    <li><code>quit</code> - Exit GDB</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h4>Breakpoints</h4>
+                <ul>
+                    <li><code>break function_name</code> - Set breakpoint at function</li>
+                    <li><code>break filename:line_number</code> - Set breakpoint at line</li>
+                    <li><code>info breakpoints</code> - List all breakpoints</li>
+                    <li><code>delete breakpoint_number</code> - Remove a breakpoint</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h4>Execution Control</h4>
+                <ul>
+                    <li><code>continue</code> - Continue execution until next breakpoint</li>
+                    <li><code>next</code> - Execute next line (step over function calls)</li>
+                    <li><code>step</code> - Execute next line (step into function calls)</li>
+                    <li><code>finish</code> - Run until current function returns</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h4>Examining State</h4>
+                <ul>
+                    <li><code>print variable</code> - Display variable value</li>
+                    <li><code>display variable</code> - Display variable value after each step</li>
+                    <li><code>backtrace</code> - Show call stack</li>
+                    <li><code>info locals</code> - Show local variables</li>
+                    <li><code>examine /format address</code> - Examine memory at address</li>
+                </ul>
+            </div>
+            
+            <h3>GDB Example Session</h3>
+            <p>Here's an example debugging session with GDB:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Start GDB with your program</span>
+$ gdb ./myprogram
+
+<span class="comment">// Set a breakpoint at the main function</span>
+(gdb) break main
+Breakpoint 1 at 0x400567: file myprogram.c, line 10.
+
+<span class="comment">// Run the program</span>
+(gdb) run
+Starting program: /home/user/myprogram 
+Breakpoint 1, main () at myprogram.c:10
+
+<span class="comment">// Show the current line and surrounding code</span>
+(gdb) list
+5       #include &lt;stdlib.h&gt;
+6       
+7       int sum(int a, int b);
+8       
+9       int main() {
+10          int x = 5;
+11          int y = 0;
+12          int result = sum(x, y);
+13          printf("Result: %d\n", result);
+14          return 0;
+
+<span class="comment">// Execute the next line</span>
+(gdb) next
+11          int y = 0;
+
+<span class="comment">// Print the value of a variable</span>
+(gdb) print x
+$1 = 5
+
+<span class="comment">// Set a new breakpoint</span>
+(gdb) break sum
+Breakpoint 2 at 0x400540: file myprogram.c, line 17.
+
+<span class="comment">// Continue execution until the next breakpoint</span>
+(gdb) continue
+Continuing.
+Breakpoint 2, sum (a=5, b=0) at myprogram.c:17
+17          return a / b;  // Division by zero bug!
+
+<span class="comment">// Examine the values of function parameters</span>
+(gdb) info args
+a = 5
+b = 0
+
+<span class="comment">// Continue and see the crash</span>
+(gdb) continue
+Continuing.
+
+Program received signal SIGFPE, Arithmetic exception.
+0x0000000000400540 in sum (a=5, b=0) at myprogram.c:17
+17          return a / b;  // Division by zero bug!
+
+<span class="comment">// Show the call stack</span>
+(gdb) backtrace
+#0  0x0000000000400540 in sum (a=5, b=0) at myprogram.c:17
+#1  0x0000000000400587 in main () at myprogram.c:12</pre>
+            </div>
+            
+            <div class="tip">
+                <p>GDB has many more advanced features, including conditional breakpoints, watchpoints (break when a variable changes), and the ability to modify variables during execution. Consult the GDB documentation for more details.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="memory-debugging">
+            <h2>Memory Debugging Tools</h2>
+            <p>Memory errors are common in C programs. Specialized tools can help detect and diagnose them.</p>
+            
+            <h3>Valgrind</h3>
+            <p>Valgrind is a powerful tool for detecting memory leaks, buffer overflows, and other memory errors:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Run your program with Valgrind</span>
+valgrind --leak-check=full ./myprogram
+
+<span class="comment">// Sample output for a program with memory leaks</span>
+==12345== Memcheck, a memory error detector
+==12345== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==12345== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==12345== Command: ./myprogram
+==12345== 
+==12345== HEAP SUMMARY:
+==12345==     in use at exit: 40 bytes in 1 blocks
+==12345==   total heap usage: 2 allocs, 1 frees, 1,064 bytes allocated
+==12345== 
+==12345== 40 bytes in 1 blocks are definitely lost in loss record 1 of 1
+==12345==    at 0x483B7F3: malloc (in /usr/lib/x86_64-linux-gnu/valgrind/vgpreload_memcheck-amd64-linux.so)
+==12345==    by 0x109182: allocate_buffer (myprogram.c:15)
+==12345==    by 0x109199: main (myprogram.c:25)
+==12345== 
+==12345== LEAK SUMMARY:
+==12345==    definitely lost: 40 bytes in 1 blocks
+==12345==    indirectly lost: 0 bytes in 0 blocks
+==12345==      possibly lost: 0 bytes in 0 blocks
+==12345==    still reachable: 0 bytes in 0 blocks
+==12345==         suppressed: 0 bytes in 0 blocks
+==12345== 
+==12345== For lists of detected and suppressed errors, rerun with: -s
+==12345== ERROR SUMMARY: 1 errors from 1 contexts (suppressed: 0 from 0)</pre>
+            </div>
+            
+            <h3>AddressSanitizer (ASan)</h3>
+            <p>AddressSanitizer is a fast memory error detector built into GCC and Clang:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Compile with AddressSanitizer</span>
+gcc -fsanitize=address -g -o myprogram myprogram.c
+
+<span class="comment">// Run the program normally</span>
+./myprogram
+
+<span class="comment">// Sample output for a buffer overflow</span>
+==12346==ERROR: AddressSanitizer: heap-buffer-overflow on address 0x603e0000df44 at pc 0x55d392d3f1c9 bp 0x7ffd39a81b50 sp 0x7ffd39a81b48
+WRITE of size 4 at 0x603e0000df44 thread T0
+    #0 0x55d392d3f1c8 in main myprogram.c:12
+    #1 0x7f99d7bb8bf6 in __libc_start_main (/lib/x86_64-linux-gnu/libc.so.6+0x21bf6)
+    #2 0x55d392d3f099 in _start (/home/user/myprogram+0x1099)
+
+0x603e0000df44 is located 0 bytes to the right of 20-byte region [0x603e0000df30,0x603e0000df44)
+allocated by thread T0 here:
+    #0 0x7f99d8138bc8 in malloc (/usr/lib/x86_64-linux-gnu/libasan.so.4+0xdebc8)
+    #1 0x55d392d3f19a in main myprogram.c:10
+
+SUMMARY: AddressSanitizer: heap-buffer-overflow myprogram.c:12 in main</pre>
+            </div>
+            
+            <div class="tip">
+                <p>AddressSanitizer is faster than Valgrind but requires recompilation. It's excellent for catching buffer overflows, use-after-free, and other memory errors during development and testing.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="debugging-strategies">
+            <h2>Debugging Strategies</h2>
+            <p>Effective debugging requires a systematic approach.</p>
+            
+            <h3>Binary Search Debugging</h3>
+            <p>For hard-to-find bugs, use a binary search approach:</p>
+            
+            <div class="definition">
+                <h4>Binary Search Process</h4>
+                <ol>
+                    <li>Identify a point where the program works correctly</li>
+                    <li>Identify a point where the program fails</li>
+                    <li>Check a point halfway between these two points</li>
+                    <li>Repeat the process, narrowing down the search area</li>
+                </ol>
+            </div>
+            
+            <p>This approach is particularly useful for finding the exact line or function where a bug is introduced.</p>
+            
+            <h3>Rubber Duck Debugging</h3>
+            <p>Explain your code line by line to an inanimate object (like a rubber duck):</p>
+            
+            <div class="tip">
+                <p>The process of explaining your code forces you to think about what each line does and often reveals the bug. This technique works because verbalizing the problem helps you see it from a different perspective.</p>
+            </div>
+            
+            <h3>Simplify and Isolate</h3>
+            <p>Reduce your code to the minimum needed to reproduce the bug:</p>
+            
+            <div class="definition">
+                <h4>Simplification Techniques</h4>
+                <ul>
+                    <li>Comment out sections of code to isolate the problem</li>
+                    <li>Create a minimal test case that reproduces the bug</li>
+                    <li>Replace complex data with simple data</li>
+                    <li>Remove features one by one until the bug disappears</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <p>A simplified test case not only helps you find the bug faster but also makes it easier to fix and verify the solution.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="common-bugs">
+            <h2>Common C Bugs and How to Find Them</h2>
+            <p>Certain types of bugs are particularly common in C programs.</p>
+            
+            <h3>Off-by-One Errors</h3>
+            <p>These occur when loop bounds or array indices are miscalculated by one:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Bug: Array index out of bounds</span>
+<span class="datatype">int</span> array[10];
+<span class="keyword">for</span> (<span class="datatype">int</span> i = 0; i <= 10; i++) {  <span class="comment">// Should be i < 10</span>
+    array[i] = i;  <span class="comment">// Writes beyond array bounds when i = 10</span>
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Be careful with loop conditions. For zero-indexed arrays of size N, valid indices are 0 to N-1.</p>
+            </div>
+            
+            <h3>Uninitialized Variables</h3>
+            <p>Using variables before they're initialized leads to unpredictable behavior:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Bug: Uninitialized variable</span>
+<span class="datatype">int</span> sum;  <span class="comment">// Not initialized</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = 0; i < 10; i++) {
+    sum += i;  <span class="comment">// Using sum before initialization</span>
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Always initialize variables before using them. Compile with warnings enabled (<code>-Wall</code>) to catch many uninitialized variable issues.</p>
+            </div>
+            
+            <h3>Memory Leaks</h3>
+            <p>Forgetting to free allocated memory:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Bug: Memory leak</span>
+<span class="datatype">void</span> <span class="function">process_data</span>() {
+    <span class="datatype">char</span>* buffer = (<span class="datatype">char</span>*)<span class="function">malloc</span>(1024);
+    <span class="keyword">if</span> (buffer == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span>;  <span class="comment">// Early return without freeing</span>
+    }
+    
+    <span class="comment">// Process data...</span>
+    
+    <span class="keyword">if</span> (error_condition) {
+        <span class="keyword">return</span>;  <span class="comment">// Another early return without freeing</span>
+    }
+    
+    <span class="function">free</span>(buffer);  <span class="comment">// Only reached in some cases</span>
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Use tools like Valgrind to detect memory leaks. Consider using a cleanup pattern with <code>goto</code> or ensure all exit paths properly free resources.</p>
+            </div>
+            
+            <h3>Null Pointer Dereferences</h3>
+            <p>Accessing memory through a NULL pointer:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Bug: Null pointer dereference</span>
+<span class="keyword">struct</span> Person* <span class="function">find_person</span>(<span class="datatype">const</span> <span class="datatype">char</span>* name) {
+    <span class="comment">// Search for person...</span>
+    <span class="keyword">return</span> <span class="keyword">NULL</span>;  <span class="comment">// Person not found</span>
+}
+
+<span class="datatype">void</span> <span class="function">greet_person</span>(<span class="datatype">const</span> <span class="datatype">char</span>* name) {
+    <span class="keyword">struct</span> Person* person = <span class="function">find_person</span>(name);
+    <span class="function">printf</span>(<span class="string">"Hello, %s!\n"</span>, person->name);  <span class="comment">// Crash if person is NULL</span>
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Always check pointers before dereferencing them. This is especially important for pointers returned from functions that might fail.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="debugging-tips">
+            <h2>General Debugging Tips</h2>
+            <p>Here are some general tips to make debugging more effective:</p>
+            
+            <div class="definition">
+                <h4>Debugging Best Practices</h4>
+                <ul>
+                    <li><strong>Enable compiler warnings:</strong> Use <code>-Wall -Wextra -Werror</code> to catch many issues at compile time</li>
+                    <li><strong>Use assertions:</strong> Add <code>assert()</code> statements to verify assumptions</li>
+                    <li><strong>Keep a debugging log:</strong> Document what you've tried and what you've learned</li>
+                    <li><strong>Take breaks:</strong> Fresh eyes often spot problems you've been overlooking</li>
+                    <li><strong>Use version control:</strong> Make it easy to revert changes that don't fix the bug</li>
+                    <li><strong>Write tests:</strong> Create tests that reproduce the bug to verify your fix</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <p>Remember that debugging is a skill that improves with practice. Don't get discouraged if finding a bug takes time—even experienced programmers spend significant time debugging.</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#best-practices">Back to Best Practices</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+    
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

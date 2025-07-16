@@ -1,0 +1,342 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrays - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Arrays in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="array-declaration">
+            <h2>Declaration & Initialization</h2>
+            <p>An <strong>array</strong> is a collection of elements of the same data type stored in contiguous memory locations. Arrays in C are zero-indexed, meaning the first element is at index 0.</p>
+            
+            <h3>Array Declaration</h3>
+            <p>To declare an array, specify the data type of its elements and the array size:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Array declaration</span>
+<span class="datatype">int</span> numbers[<span class="number">5</span>];  <span class="comment">// Declares an integer array with 5 elements</span>
+<span class="datatype">float</span> prices[<span class="number">10</span>];  <span class="comment">// Declares a float array with 10 elements</span>
+<span class="datatype">char</span> name[<span class="number">20</span>];  <span class="comment">// Declares a character array with 20 elements</span></pre>
+            </div>
+            
+            <h3>Array Initialization</h3>
+            <p>Arrays can be initialized at declaration time:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Initialize with values</span>
+<span class="datatype">int</span> numbers[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+
+<span class="comment">// Partial initialization (remaining elements are set to 0)</span>
+<span class="datatype">int</span> partial[<span class="number">5</span>] = {<span class="number">1</span>, <span class="number">2</span>};  <span class="comment">// Equivalent to {1, 2, 0, 0, 0}</span>
+
+<span class="comment">// Let compiler determine the size</span>
+<span class="datatype">int</span> auto_sized[] = {<span class="number">5</span>, <span class="number">10</span>, <span class="number">15</span>, <span class="number">20</span>};  <span class="comment">// Size is 4</span>
+
+<span class="comment">// Initialize all elements to zero</span>
+<span class="datatype">int</span> zeros[<span class="number">10</span>] = {<span class="number">0</span>};  <span class="comment">// All elements are 0</span>
+
+<span class="comment">// Character array (string) initialization</span>
+<span class="datatype">char</span> greeting[] = <span class="string">"Hello"</span>;  <span class="comment">// Equivalent to {'H','e','l','l','o','\0'}</span></pre>
+            </div>
+            
+            <div class="note">
+                <p>When initializing a character array with a string literal, C automatically adds a null terminator (<code>'\0'</code>) at the end.</p>
+            </div>
+            
+            <h3>Accessing Array Elements</h3>
+            <p>Array elements are accessed using their index (position) in square brackets:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> numbers[<span class="number">5</span>] = {<span class="number">10</span>, <span class="number">20</span>, <span class="number">30</span>, <span class="number">40</span>, <span class="number">50</span>};
+
+<span class="comment">// Accessing elements</span>
+<span class="datatype">int</span> first = numbers[<span class="number">0</span>];  <span class="comment">// Gets the first element (10)</span>
+<span class="datatype">int</span> third = numbers[<span class="number">2</span>];  <span class="comment">// Gets the third element (30)</span>
+
+<span class="comment">// Modifying elements</span>
+numbers[<span class="number">1</span>] = <span class="number">25</span>;  <span class="comment">// Changes the second element from 20 to 25</span>
+
+<span class="function">printf</span>(<span class="string">"First element: %d\n"</span>, numbers[<span class="number">0</span>]);
+<span class="function">printf</span>(<span class="string">"Modified array: %d %d %d %d %d\n"</span>, 
+       numbers[<span class="number">0</span>], numbers[<span class="number">1</span>], numbers[<span class="number">2</span>], numbers[<span class="number">3</span>], numbers[<span class="number">4</span>]);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>First element: 10
+Modified array: 10 25 30 40 50</pre>
+            </div>
+            
+            <div class="warning">
+                <p>C does not perform bounds checking on array accesses. Accessing elements outside the array bounds leads to undefined behavior.</p>
+            </div>
+            
+            <h3>C99 Designated Initializers</h3>
+            <p>C99 introduced designated initializers, allowing specific array elements to be initialized:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Initialize specific elements</span>
+<span class="datatype">int</span> sparse[<span class="number">10</span>] = {[<span class="number">0</span>] = <span class="number">1</span>, [<span class="number">5</span>] = <span class="number">10</span>, [<span class="number">9</span>] = <span class="number">20</span>};
+<span class="comment">// Equivalent to {1, 0, 0, 0, 0, 10, 0, 0, 0, 20}</span>
+
+<span class="comment">// Range initialization</span>
+<span class="datatype">int</span> range[<span class="number">10</span>] = {[<span class="number">0</span> ... <span class="number">3</span>] = <span class="number">1</span>, [<span class="number">6</span> ... <span class="number">9</span>] = <span class="number">5</span>};
+<span class="comment">// Equivalent to {1, 1, 1, 1, 0, 0, 5, 5, 5, 5}</span></pre>
+            </div>
+            
+            <h3>Variable-Length Arrays (C99)</h3>
+            <p>C99 introduced variable-length arrays (VLAs), which allow array sizes to be determined at runtime:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">void</span> <span class="function">processData</span>(<span class="datatype">int</span> size) {
+    <span class="comment">// Size determined at runtime</span>
+    <span class="datatype">int</span> dynamic[size];  <span class="comment">// VLA - size is not a constant</span>
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < size; i++) {
+        dynamic[i] = i * <span class="number">2</span>;
+    }
+    
+    <span class="comment">// Process the array...</span>
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>VLAs are allocated on the stack, which has limited size. Large VLAs can cause stack overflow. Also, VLAs cannot be initialized at declaration.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="multi-dimensional-arrays">
+            <h2>Multi-dimensional Arrays</h2>
+            <p>C supports multi-dimensional arrays, which are essentially arrays of arrays.</p>
+            
+            <h3>Two-dimensional Arrays</h3>
+            <p>A two-dimensional array is like a table with rows and columns:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Declaration of a 3x4 array (3 rows, 4 columns)</span>
+<span class="datatype">int</span> matrix[<span class="number">3</span>][<span class="number">4</span>];
+
+<span class="comment">// Initialization</span>
+<span class="datatype">int</span> grid[<span class="number">3</span>][<span class="number">4</span>] = {
+    {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>},  <span class="comment">// Row 0</span>
+    {<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>},  <span class="comment">// Row 1</span>
+    {<span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>}  <span class="comment">// Row 2</span>
+};
+
+<span class="comment">// Accessing elements</span>
+<span class="datatype">int</span> element = grid[<span class="number">1</span>][<span class="number">2</span>];  <span class="comment">// Row 1, Column 2 (value: 7)</span>
+
+<span class="comment">// Modifying elements</span>
+grid[<span class="number">0</span>][<span class="number">3</span>] = <span class="number">100</span>;  <span class="comment">// Changes the value at Row 0, Column 3</span></pre>
+            </div>
+            
+            <h3>Traversing Multi-dimensional Arrays</h3>
+            <p>Multi-dimensional arrays are typically traversed using nested loops:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> grid[<span class="number">3</span>][<span class="number">4</span>] = {
+    {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>},
+    {<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>},
+    {<span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>}
+};
+
+<span class="comment">// Print all elements</span>
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">3</span>; i++) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> j = <span class="number">0</span>; j < <span class="number">4</span>; j++) {
+        <span class="function">printf</span>(<span class="string">"%3d "</span>, grid[i][j]);
+    }
+    <span class="function">printf</span>(<span class="string">"\n"</span>);
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>  1   2   3   4 
+  5   6   7   8 
+  9  10  11  12 </pre>
+            </div>
+            
+            <h3>Higher-dimensional Arrays</h3>
+            <p>C supports arrays with more than two dimensions:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// 3D array (2x3x4)</span>
+<span class="datatype">int</span> cube[<span class="number">2</span>][<span class="number">3</span>][<span class="number">4</span>];
+
+<span class="comment">// Initialization</span>
+<span class="datatype">int</span> cube[<span class="number">2</span>][<span class="number">3</span>][<span class="number">2</span>] = {
+    {  <span class="comment">// First 2D array</span>
+        {<span class="number">1</span>, <span class="number">2</span>},
+        {<span class="number">3</span>, <span class="number">4</span>},
+        {<span class="number">5</span>, <span class="number">6</span>}
+    },
+    {  <span class="comment">// Second 2D array</span>
+        {<span class="number">7</span>, <span class="number">8</span>},
+        {<span class="number">9</span>, <span class="number">10</span>},
+        {<span class="number">11</span>, <span class="number">12</span>}
+    }
+};
+
+<span class="comment">// Accessing elements</span>
+<span class="datatype">int</span> value = cube[<span class="number">1</span>][<span class="number">2</span>][<span class="number">0</span>];  <span class="comment">// Value: 11</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>While C supports arrays of any dimension, arrays beyond 3 dimensions can be difficult to visualize and manage. Consider using alternative data structures for complex data relationships.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="arrays-and-functions">
+            <h2>Arrays & Functions</h2>
+            <p>When arrays are passed to functions, C passes a pointer to the first element, not a copy of the entire array.</p>
+            
+            <h3>Passing One-dimensional Arrays</h3>
+            <p>There are several ways to declare a function that accepts an array:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// These three declarations are equivalent for one-dimensional arrays</span>
+<span class="datatype">void</span> <span class="function">processArray</span>(<span class="datatype">int</span> arr[], <span class="datatype">int</span> size);
+<span class="datatype">void</span> <span class="function">processArray</span>(<span class="datatype">int</span> *arr, <span class="datatype">int</span> size);
+<span class="datatype">void</span> <span class="function">processArray</span>(<span class="datatype">int</span> arr[<span class="number">10</span>], <span class="datatype">int</span> size);  <span class="comment">// Size in brackets is ignored</span>
+
+<span class="comment">// Implementation</span>
+<span class="datatype">void</span> <span class="function">processArray</span>(<span class="datatype">int</span> arr[], <span class="datatype">int</span> size) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < size; i++) {
+        arr[i] *= <span class="number">2</span>;  <span class="comment">// Multiply each element by 2</span>
+    }
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">int</span> numbers[<span class="number">5</span>] = {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>, <span class="number">5</span>};
+<span class="function">processArray</span>(numbers, <span class="number">5</span>);  <span class="comment">// numbers becomes {2, 4, 6, 8, 10}</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Since arrays are passed by reference (as pointers), changes made to array elements inside a function affect the original array.</p>
+            </div>
+            
+            <h3>Passing Multi-dimensional Arrays</h3>
+            <p>When passing multi-dimensional arrays, all dimensions except the first must be specified:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// For a 2D array</span>
+<span class="datatype">void</span> <span class="function">process2DArray</span>(<span class="datatype">int</span> arr[][<span class="number">4</span>], <span class="datatype">int</span> rows);
+
+<span class="comment">// Implementation</span>
+<span class="datatype">void</span> <span class="function">process2DArray</span>(<span class="datatype">int</span> arr[][<span class="number">4</span>], <span class="datatype">int</span> rows) {
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < rows; i++) {
+        <span class="keyword">for</span> (<span class="datatype">int</span> j = <span class="number">0</span>; j < <span class="number">4</span>; j++) {
+            arr[i][j] += <span class="number">10</span>;  <span class="comment">// Add 10 to each element</span>
+        }
+    }
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">int</span> matrix[<span class="number">3</span>][<span class="number">4</span>] = {
+    {<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>, <span class="number">4</span>},
+    {<span class="number">5</span>, <span class="number">6</span>, <span class="number">7</span>, <span class="number">8</span>},
+    {<span class="number">9</span>, <span class="number">10</span>, <span class="number">11</span>, <span class="number">12</span>}
+};
+<span class="function">process2DArray</span>(matrix, <span class="number">3</span>);</pre>
+            </div>
+            
+            <h3>Returning Arrays from Functions</h3>
+            <p>C functions cannot directly return arrays, but they can return pointers to arrays:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Return a pointer to a static array</span>
+<span class="datatype">int</span>* <span class="function">getSequence</span>(<span class="datatype">int</span> size) {
+    <span class="keyword">static</span> <span class="datatype">int</span> sequence[<span class="number">10</span>];  <span class="comment">// Static ensures the array persists after function returns</span>
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < size && i < <span class="number">10</span>; i++) {
+        sequence[i] = i * <span class="number">10</span>;
+    }
+    
+    <span class="keyword">return</span> sequence;
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">int</span>* result = <span class="function">getSequence</span>(<span class="number">5</span>);
+<span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">5</span>; i++) {
+    <span class="function">printf</span>(<span class="string">"%d "</span>, result[i]);  <span class="comment">// Outputs: 0 10 20 30 40</span>
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Returning a pointer to a local (non-static) array is dangerous, as the array's memory is deallocated when the function returns, leading to undefined behavior.</p>
+            </div>
+            
+            <h3>Dynamic Arrays</h3>
+            <p>For arrays whose size is determined at runtime, dynamic memory allocation is often used:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdlib.h&gt;</span>
+
+<span class="datatype">int</span>* <span class="function">createDynamicArray</span>(<span class="datatype">int</span> size) {
+    <span class="datatype">int</span>* arr = (<span class="datatype">int</span>*)<span class="function">malloc</span>(size * <span class="keyword">sizeof</span>(<span class="datatype">int</span>));
+    
+    <span class="keyword">if</span> (arr == <span class="keyword">NULL</span>) {
+        <span class="function">printf</span>(<span class="string">"Memory allocation failed\n"</span>);
+        <span class="keyword">return</span> <span class="keyword">NULL</span>;
+    }
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < size; i++) {
+        arr[i] = i;
+    }
+    
+    <span class="keyword">return</span> arr;
+}
+
+<span class="comment">// Usage</span>
+<span class="datatype">int</span>* dynamic = <span class="function">createDynamicArray</span>(<span class="number">10</span>);
+<span class="keyword">if</span> (dynamic != <span class="keyword">NULL</span>) {
+    <span class="comment">// Use the array</span>
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = <span class="number">0</span>; i < <span class="number">10</span>; i++) {
+        <span class="function">printf</span>(<span class="string">"%d "</span>, dynamic[i]);
+    }
+    
+    <span class="comment">// Free the memory when done</span>
+    <span class="function">free</span>(dynamic);
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Always free dynamically allocated memory when it's no longer needed to prevent memory leaks.</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#arrays">Back to Arrays</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script src="script.js"></script>
+</body>
+</html>

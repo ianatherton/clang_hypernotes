@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Preprocessor Directives - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Preprocessor Directives in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="preprocessor-intro">
+            <h2>Introduction to Preprocessor Directives</h2>
+            <p>The <strong>C preprocessor</strong> is a text substitution tool that runs before the actual compilation. It processes directives that begin with a hash symbol (<code>#</code>) and modifies the source code before it's passed to the compiler.</p>
+            
+            <div class="definition">
+                <h3>Key Characteristics of the Preprocessor</h3>
+                <ul>
+                    <li><strong>Text Substitution</strong>: The preprocessor performs text-based substitution without understanding C syntax.</li>
+                    <li><strong>File Inclusion</strong>: It can include the contents of other files.</li>
+                    <li><strong>Conditional Compilation</strong>: It can include or exclude blocks of code based on conditions.</li>
+                    <li><strong>Macro Expansion</strong>: It can replace macros with their definitions.</li>
+                </ul>
+            </div>
+            
+            <div class="note">
+                <p>Preprocessor directives are executed before compilation, so they are not part of the C language itself but rather a separate layer that modifies the source code.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="include">
+            <h2>#include Directive</h2>
+            <p>The <code>#include</code> directive is used to include the contents of another file in the current file. This is commonly used to include header files that contain function declarations, macros, and type definitions.</p>
+            
+            <h3>Syntax and Usage</h3>
+            <p>There are two forms of the <code>#include</code> directive:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Including standard library headers</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>  <span class="comment">// Angle brackets for system headers</span>
+
+<span class="comment">// Including user-defined headers</span>
+<span class="preprocessor">#include</span> <span class="string">"myheader.h"</span>  <span class="comment">// Double quotes for user-defined headers</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>Angle brackets (<code>&lt;...&gt;</code>) tell the preprocessor to look for the file in the system include directories, while double quotes (<code>"..."</code>) tell it to look first in the current directory, then in the system include directories.</p>
+            </div>
+            
+            <h3>Example of File Inclusion</h3>
+            <p>Consider a project with the following files:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// myheader.h</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">MYHEADER_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">MYHEADER_H</span>
+
+<span class="datatype">void</span> <span class="function">print_message</span>(<span class="datatype">const</span> <span class="datatype">char</span>* message);
+
+<span class="preprocessor">#endif</span> <span class="comment">// MYHEADER_H</span>
+
+<span class="comment">// myheader.c</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">"myheader.h"</span>
+
+<span class="datatype">void</span> <span class="function">print_message</span>(<span class="datatype">const</span> <span class="datatype">char</span>* message) {
+    <span class="function">printf</span>(<span class="string">"%s\n"</span>, message);
+}
+
+<span class="comment">// main.c</span>
+<span class="preprocessor">#include</span> <span class="string">"myheader.h"</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">print_message</span>(<span class="string">"Hello from the preprocessor!"</span>);
+    <span class="keyword">return</span> <span class="number">0</span>;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Be careful with circular includes, where file A includes file B, and file B includes file A. This can cause compilation errors. Use include guards (as shown above with <code>#ifndef</code>, <code>#define</code>, and <code>#endif</code>) to prevent this.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="define">
+            <h2>#define Directive</h2>
+            <p>The <code>#define</code> directive is used to define macros, which are identifiers that are replaced with their definition during preprocessing.</p>
+            
+            <h3>Object-like Macros</h3>
+            <p>Object-like macros are simple text substitutions:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Simple constant definitions</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">PI</span> <span class="number">3.14159</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">MAX_BUFFER_SIZE</span> <span class="number">1024</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">DEBUG_MODE</span>  <span class="comment">// No value, just defined</span>
+
+<span class="comment">// Usage</span>
+<span class="datatype">double</span> area = <span class="preprocessor">PI</span> * radius * radius;
+<span class="datatype">char</span> buffer[<span class="preprocessor">MAX_BUFFER_SIZE</span>];</pre>
+            </div>
+            
+            <h3>Function-like Macros</h3>
+            <p>Function-like macros take parameters and are expanded with the arguments substituted:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Function-like macros</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">SQUARE</span>(x) ((x) * (x))
+<span class="preprocessor">#define</span> <span class="preprocessor">MAX</span>(a, b) ((a) > (b) ? (a) : (b))
+
+<span class="comment">// Usage</span>
+<span class="datatype">int</span> squared = <span class="preprocessor">SQUARE</span>(5);  <span class="comment">// Expands to: ((5) * (5))</span>
+<span class="datatype">int</span> max_value = <span class="preprocessor">MAX</span>(10, 20);  <span class="comment">// Expands to: ((10) > (20) ? (10) : (20))</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Be cautious with function-like macros. Always enclose parameters in parentheses to avoid operator precedence issues. Consider the following problematic example:</p>
+                
+                <pre><span class="preprocessor">#define</span> <span class="preprocessor">BAD_SQUARE</span>(x) x * x
+
+<span class="datatype">int</span> result = <span class="preprocessor">BAD_SQUARE</span>(2 + 3);  <span class="comment">// Expands to: 2 + 3 * 2 + 3 = 11, not 25!</span></pre>
+            </div>
+            
+            <h3>Stringification and Token Concatenation</h3>
+            <p>The preprocessor provides special operators for macros:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// # operator: Stringification (converts to string literal)</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">STRINGIFY</span>(x) #x
+
+<span class="comment">// ## operator: Token concatenation</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">CONCAT</span>(a, b) a##b
+
+<span class="comment">// Usage</span>
+<span class="datatype">char</span>* str = <span class="preprocessor">STRINGIFY</span>(Hello);  <span class="comment">// Expands to: "Hello"</span>
+<span class="datatype">int</span> var12 = 42;
+<span class="datatype">int</span> value = <span class="preprocessor">CONCAT</span>(var, 12);  <span class="comment">// Expands to: var12</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>The <code>#</code> operator converts a macro parameter to a string literal, while the <code>##</code> operator concatenates two tokens into a single token.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="conditional-compilation">
+            <h2>Conditional Compilation</h2>
+            <p>Conditional compilation directives allow you to include or exclude blocks of code based on certain conditions.</p>
+            
+            <h3>Basic Conditionals</h3>
+            <p>The basic conditional directives are <code>#if</code>, <code>#else</code>, <code>#elif</code>, and <code>#endif</code>:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#define</span> <span class="preprocessor">VERSION</span> <span class="number">2</span>
+
+<span class="preprocessor">#if</span> <span class="preprocessor">VERSION</span> == <span class="number">1</span>
+    <span class="function">printf</span>(<span class="string">"Version 1 features\n"</span>);
+<span class="preprocessor">#elif</span> <span class="preprocessor">VERSION</span> == <span class="number">2</span>
+    <span class="function">printf</span>(<span class="string">"Version 2 features\n"</span>);
+<span class="preprocessor">#else</span>
+    <span class="function">printf</span>(<span class="string">"Unknown version\n"</span>);
+<span class="preprocessor">#endif</span></pre>
+            </div>
+            
+            <h3>Checking if Macros are Defined</h3>
+            <p>The <code>#ifdef</code>, <code>#ifndef</code>, and <code>#defined</code> directives check if macros are defined:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Check if DEBUG is defined</span>
+<span class="preprocessor">#ifdef</span> <span class="preprocessor">DEBUG</span>
+    <span class="function">printf</span>(<span class="string">"Debug mode is enabled\n"</span>);
+<span class="preprocessor">#endif</span>
+
+<span class="comment">// Check if DEBUG is not defined</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">DEBUG</span>
+    <span class="function">printf</span>(<span class="string">"Debug mode is disabled\n"</span>);
+<span class="preprocessor">#endif</span>
+
+<span class="comment">// Alternative using #if defined</span>
+<span class="preprocessor">#if</span> <span class="preprocessor">defined</span>(<span class="preprocessor">DEBUG</span>)
+    <span class="function">printf</span>(<span class="string">"Debug mode is enabled\n"</span>);
+<span class="preprocessor">#endif</span></pre>
+            </div>
+            
+            <h3>Platform-Specific Code</h3>
+            <p>Conditional compilation is often used for platform-specific code:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#if</span> <span class="preprocessor">defined</span>(<span class="preprocessor">_WIN32</span>) || <span class="preprocessor">defined</span>(<span class="preprocessor">_WIN64</span>)
+    <span class="preprocessor">#include</span> <span class="string">&lt;windows.h&gt;</span>
+    <span class="datatype">void</span> <span class="function">sleep_ms</span>(<span class="datatype">int</span> ms) {
+        <span class="function">Sleep</span>(ms);
+    }
+<span class="preprocessor">#elif</span> <span class="preprocessor">defined</span>(<span class="preprocessor">__unix__</span>) || <span class="preprocessor">defined</span>(<span class="preprocessor">__APPLE__</span>)
+    <span class="preprocessor">#include</span> <span class="string">&lt;unistd.h&gt;</span>
+    <span class="datatype">void</span> <span class="function">sleep_ms</span>(<span class="datatype">int</span> ms) {
+        <span class="function">usleep</span>(ms * <span class="number">1000</span>);
+    }
+<span class="preprocessor">#else</span>
+    <span class="preprocessor">#error</span> <span class="string">"Unsupported platform"</span>
+<span class="preprocessor">#endif</span></pre>
+            </div>
+            
+            <div class="note">
+                <p>Compilers often predefine macros that identify the platform, compiler, and other environment characteristics, which can be used in conditional compilation.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="macros">
+            <h2>Advanced Macro Techniques</h2>
+            <p>Macros can be used for more advanced techniques beyond simple substitution.</p>
+            
+            <h3>Variadic Macros</h3>
+            <p>C99 introduced variadic macros, which can take a variable number of arguments:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Variadic macro for debugging</span>
+<span class="preprocessor">#ifdef</span> <span class="preprocessor">DEBUG</span>
+    <span class="preprocessor">#define</span> <span class="preprocessor">DEBUG_LOG</span>(format, ...) <span class="function">printf</span>(<span class="string">"DEBUG: "</span> format <span class="string">"\n"</span>, ##__VA_ARGS__)
+<span class="preprocessor">#else</span>
+    <span class="preprocessor">#define</span> <span class="preprocessor">DEBUG_LOG</span>(format, ...) <span class="comment">/* do nothing */</span>
+<span class="preprocessor">#endif</span>
+
+<span class="comment">// Usage</span>
+<span class="preprocessor">DEBUG_LOG</span>(<span class="string">"Value of x: %d"</span>, x);
+<span class="preprocessor">DEBUG_LOG</span>(<span class="string">"Function called"</span>);</pre>
+            </div>
+            
+            <div class="tip">
+                <p>The <code>##__VA_ARGS__</code> is a GNU extension that allows the comma before <code>__VA_ARGS__</code> to be omitted when no arguments are provided.</p>
+            </div>
+            
+            <h3>Macro Expansion Process</h3>
+            <p>Understanding how macros are expanded can help avoid common pitfalls:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#define</span> <span class="preprocessor">A</span> <span class="number">1</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">B</span> <span class="preprocessor">A</span> + <span class="number">2</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">C</span> <span class="preprocessor">B</span> * <span class="number">3</span>
+
+<span class="datatype">int</span> result = <span class="preprocessor">C</span>;  <span class="comment">// Expands to: A + 2 * 3 = 1 + 2 * 3 = 7, not 9!</span></pre>
+            </div>
+            
+            <div class="warning">
+                <p>Macros are expanded recursively, but a macro is not expanded within its own replacement text. This prevents infinite recursion.</p>
+            </div>
+            
+            <h3>Predefined Macros</h3>
+            <p>C provides several predefined macros that can be useful for debugging and conditional compilation:</p>
+            
+            <div class="code-block">
+                <pre><span class="function">printf</span>(<span class="string">"File: %s\n"</span>, <span class="preprocessor">__FILE__</span>);  <span class="comment">// Current file name</span>
+<span class="function">printf</span>(<span class="string">"Line: %d\n"</span>, <span class="preprocessor">__LINE__</span>);  <span class="comment">// Current line number</span>
+<span class="function">printf</span>(<span class="string">"Function: %s\n"</span>, <span class="preprocessor">__func__</span>);  <span class="comment">// Current function name (C99)</span>
+<span class="function">printf</span>(<span class="string">"Date: %s\n"</span>, <span class="preprocessor">__DATE__</span>);  <span class="comment">// Compilation date</span>
+<span class="function">printf</span>(<span class="string">"Time: %s\n"</span>, <span class="preprocessor">__TIME__</span>);  <span class="comment">// Compilation time</span>
+<span class="function">printf</span>(<span class="string">"ANSI C: %d\n"</span>, <span class="preprocessor">__STDC__</span>);  <span class="comment">// 1 if compiler conforms to ANSI C</span></pre>
+            </div>
+        </div>
+        
+        <div class="section" id="best-practices">
+            <h2>Preprocessor Best Practices</h2>
+            <p>Here are some best practices for using preprocessor directives effectively:</p>
+            
+            <div class="definition">
+                <h3>Preprocessor Do's and Don'ts</h3>
+                <h4>Do:</h4>
+                <ul>
+                    <li>Use include guards in header files to prevent multiple inclusion.</li>
+                    <li>Use parentheses in macro definitions to avoid operator precedence issues.</li>
+                    <li>Use inline functions (C99) instead of function-like macros when possible.</li>
+                    <li>Use <code>const</code> variables instead of object-like macros for constants when possible.</li>
+                    <li>Document complex macros with comments.</li>
+                </ul>
+                <h4>Don't:</h4>
+                <ul>
+                    <li>Use macros for complex code that could be better implemented as functions.</li>
+                    <li>Use side effects in macro arguments (e.g., <code>SQUARE(i++)</code>).</li>
+                    <li>Create macros with common names that might conflict with other code.</li>
+                    <li>Rely on implementation-defined behavior in preprocessor directives.</li>
+                </ul>
+            </div>
+            
+            <h3>Include Guards Example</h3>
+            <p>Always use include guards in header files to prevent multiple inclusion:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// myheader.h</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">MYHEADER_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">MYHEADER_H</span>
+
+<span class="comment">// Header contents go here</span>
+
+<span class="preprocessor">#endif</span> <span class="comment">// MYHEADER_H</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>Some compilers also support the <code>#pragma once</code> directive, which serves the same purpose as include guards but is not part of the C standard.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="practical-examples">
+            <h2>Practical Examples</h2>
+            
+            <h3>Debug Macro System</h3>
+            <p>A comprehensive debug logging system using macros:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#define</span> <span class="preprocessor">LOG_LEVEL_NONE</span>    <span class="number">0</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">LOG_LEVEL_ERROR</span>   <span class="number">1</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">LOG_LEVEL_WARN</span>    <span class="number">2</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">LOG_LEVEL_INFO</span>    <span class="number">3</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">LOG_LEVEL_DEBUG</span>   <span class="number">4</span>
+
+<span class="preprocessor">#define</span> <span class="preprocessor">CURRENT_LOG_LEVEL</span> <span class="preprocessor">LOG_LEVEL_INFO</span>
+
+<span class="preprocessor">#define</span> <span class="preprocessor">LOG_ERROR</span>(format, ...) \
+    <span class="keyword">do</span> { \
+        <span class="keyword">if</span> (<span class="preprocessor">CURRENT_LOG_LEVEL</span> >= <span class="preprocessor">LOG_LEVEL_ERROR</span>) { \
+            <span class="function">fprintf</span>(stderr, <span class="string">"[ERROR] [%s:%d] "</span> format <span class="string">"\n"</span>, \
+                    <span class="preprocessor">__FILE__</span>, <span class="preprocessor">__LINE__</span>, ##__VA_ARGS__); \
+        } \
+    } <span class="keyword">while</span>(<span class="number">0</span>)
+
+<span class="preprocessor">#define</span> <span class="preprocessor">LOG_WARN</span>(format, ...) \
+    <span class="keyword">do</span> { \
+        <span class="keyword">if</span> (<span class="preprocessor">CURRENT_LOG_LEVEL</span> >= <span class="preprocessor">LOG_LEVEL_WARN</span>) { \
+            <span class="function">fprintf</span>(stderr, <span class="string">"[WARN] [%s:%d] "</span> format <span class="string">"\n"</span>, \
+                    <span class="preprocessor">__FILE__</span>, <span class="preprocessor">__LINE__</span>, ##__VA_ARGS__); \
+        } \
+    } <span class="keyword">while</span>(<span class="number">0</span>)
+
+<span class="comment">// Usage</span>
+<span class="preprocessor">LOG_ERROR</span>(<span class="string">"Failed to open file: %s"</span>, filename);
+<span class="preprocessor">LOG_WARN</span>(<span class="string">"Performance warning: operation took %d ms"</span>, time_ms);</pre>
+            </div>
+            
+            <div class="note">
+                <p>The <code>do { ... } while(0)</code> construct is a common idiom for multi-statement macros, ensuring they work correctly in all contexts, including in <code>if</code> statements without braces.</p>
+            </div>
+            
+            <h3>Feature Toggles</h3>
+            <p>Using preprocessor directives to enable or disable features:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">// Feature toggles</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">ENABLE_FEATURE_A</span>
+<span class="comment">// #define ENABLE_FEATURE_B</span>
+
+<span class="datatype">void</span> <span class="function">initialize_system</span>() {
+<span class="preprocessor">#ifdef</span> <span class="preprocessor">ENABLE_FEATURE_A</span>
+    <span class="function">initialize_feature_a</span>();
+<span class="preprocessor">#endif</span>
+
+<span class="preprocessor">#ifdef</span> <span class="preprocessor">ENABLE_FEATURE_B</span>
+    <span class="function">initialize_feature_b</span>();
+<span class="preprocessor">#endif</span>
+}</pre>
+            </div>
+        </div>
+        
+        <p><a href="index.html#preprocessor">Back to Preprocessor Directives</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+    
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

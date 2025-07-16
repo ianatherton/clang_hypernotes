@@ -1,0 +1,442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Error Handling - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Error Handling in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a> | <a href="best_practices.html" class="toc">Best Practices Overview</a></p>
+        
+        <div class="section" id="error-handling-basics">
+            <h2>Error Handling Basics</h2>
+            <p>Error handling is a critical aspect of robust C programming. Since C doesn't have built-in exception handling like some higher-level languages, developers must implement explicit error checking and handling.</p>
+            
+            <h3>Common Error Handling Approaches</h3>
+            <p>C programs typically use these approaches for error handling:</p>
+            
+            <div class="definition">
+                <h4>Error Handling Techniques</h4>
+                <ul>
+                    <li><strong>Return codes:</strong> Functions return values indicating success or failure</li>
+                    <li><strong>Error codes:</strong> Global variables like <code>errno</code> store error information</li>
+                    <li><strong>Error messages:</strong> Functions like <code>perror()</code> or <code>strerror()</code> provide human-readable error descriptions</li>
+                    <li><strong>Callbacks:</strong> Functions that are called when errors occur</li>
+                    <li><strong>Assertions:</strong> Runtime checks that terminate the program if conditions are violated</li>
+                </ul>
+            </div>
+        </div>
+        
+        <div class="section" id="return-codes">
+            <h2>Return Codes</h2>
+            <p>The most common error handling technique in C is using return codes to indicate success or failure.</p>
+            
+            <h3>Common Return Code Patterns</h3>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* Integer return codes */</span>
+<span class="datatype">int</span> <span class="function">process_data</span>(<span class="datatype">const</span> <span class="datatype">char</span>* data) {
+    <span class="keyword">if</span> (data == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span> -1;  <span class="comment">// Error: NULL input</span>
+    }
+    
+    <span class="comment">// Process data...</span>
+    
+    <span class="keyword">return</span> 0;   <span class="comment">// Success</span>
+}
+
+<span class="comment">/* Pointer return with NULL for errors */</span>
+<span class="datatype">char</span>* <span class="function">duplicate_string</span>(<span class="datatype">const</span> <span class="datatype">char</span>* str) {
+    <span class="keyword">if</span> (str == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span> <span class="keyword">NULL</span>;  <span class="comment">// Error: NULL input</span>
+    }
+    
+    <span class="datatype">char</span>* copy = <span class="function">malloc</span>(<span class="function">strlen</span>(str) + 1);
+    <span class="keyword">if</span> (copy == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span> <span class="keyword">NULL</span>;  <span class="comment">// Error: Memory allocation failed</span>
+    }
+    
+    <span class="function">strcpy</span>(copy, str);
+    <span class="keyword">return</span> copy;  <span class="comment">// Success</span>
+}</pre>
+            </div>
+            
+            <h3>Checking Return Codes</h3>
+            <p>Always check return codes from functions that can fail:</p>
+            
+            <div class="good-practice">
+                <h4>Good Practice</h4>
+                <pre><span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"data.txt"</span>, <span class="string">"r"</span>);
+<span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+    <span class="function">fprintf</span>(stderr, <span class="string">"Error opening file\n"</span>);
+    <span class="keyword">return</span> 1;
+}
+
+<span class="datatype">int</span> result = <span class="function">process_data</span>(input);
+<span class="keyword">if</span> (result != 0) {
+    <span class="function">fprintf</span>(stderr, <span class="string">"Error processing data: %d\n"</span>, result);
+    <span class="keyword">return</span> result;
+}</pre>
+            </div>
+            
+            <div class="bad-practice">
+                <h4>Bad Practice</h4>
+                <pre><span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"data.txt"</span>, <span class="string">"r"</span>);  <span class="comment">// No error check!</span>
+<span class="function">process_data</span>(input);  <span class="comment">// Return value ignored!</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>Be consistent with your return code conventions. For example, use 0 for success and negative values for different error types, or use boolean returns where appropriate.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="errno">
+            <h2>Using errno</h2>
+            <p>Many standard library functions set the global <code>errno</code> variable when errors occur.</p>
+            
+            <h3>Basic errno Usage</h3>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;errno.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;string.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"nonexistent.txt"</span>, <span class="string">"r"</span>);
+    
+    <span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+        <span class="function">printf</span>(<span class="string">"Error code: %d\n"</span>, errno);
+        <span class="function">printf</span>(<span class="string">"Error message: %s\n"</span>, <span class="function">strerror</span>(errno));
+        <span class="function">perror</span>(<span class="string">"fopen failed"</span>);
+        <span class="keyword">return</span> 1;
+    }
+    
+    <span class="function">fclose</span>(file);
+    <span class="keyword">return</span> 0;
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Error code: 2
+Error message: No such file or directory
+fopen failed: No such file or directory</pre>
+            </div>
+            
+            <h3>Common errno Values</h3>
+            <p>Some common <code>errno</code> values defined in <code>&lt;errno.h&gt;</code>:</p>
+            
+            <div class="definition">
+                <h4>Common errno Constants</h4>
+                <ul>
+                    <li><code>ENOENT</code> - No such file or directory</li>
+                    <li><code>EACCES</code> - Permission denied</li>
+                    <li><code>EINVAL</code> - Invalid argument</li>
+                    <li><code>ENOMEM</code> - Out of memory</li>
+                    <li><code>EEXIST</code> - File exists</li>
+                    <li><code>EAGAIN</code> - Resource temporarily unavailable</li>
+                </ul>
+            </div>
+            
+            <div class="warning">
+                <p>Always check <code>errno</code> immediately after a function call that might set it. Some functions might reset or change <code>errno</code> even on success.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="error-functions">
+            <h2>Error Reporting Functions</h2>
+            <p>C provides several functions for reporting errors in a user-friendly way.</p>
+            
+            <h3>perror()</h3>
+            <p>The <code>perror()</code> function prints a description of the last error to <code>stderr</code>:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"nonexistent.txt"</span>, <span class="string">"r"</span>);
+<span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+    <span class="function">perror</span>(<span class="string">"Error opening file"</span>);
+    <span class="keyword">return</span> 1;
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Error opening file: No such file or directory</pre>
+            </div>
+            
+            <h3>strerror()</h3>
+            <p>The <code>strerror()</code> function returns a string describing the error code:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">FILE</span>* file = <span class="function">fopen</span>(<span class="string">"nonexistent.txt"</span>, <span class="string">"r"</span>);
+<span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+    <span class="function">fprintf</span>(stderr, <span class="string">"Error: %s\n"</span>, <span class="function">strerror</span>(errno));
+    <span class="keyword">return</span> 1;
+}</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Error: No such file or directory</pre>
+            </div>
+            
+            <h3>Custom Error Messages</h3>
+            <p>For more complex applications, consider creating a custom error reporting system:</p>
+            
+            <div class="code-block">
+                <pre><span class="keyword">typedef</span> <span class="keyword">enum</span> {
+    ERR_NONE,
+    ERR_FILE_NOT_FOUND,
+    ERR_PERMISSION_DENIED,
+    ERR_OUT_OF_MEMORY,
+    ERR_INVALID_INPUT
+} ErrorCode;
+
+<span class="datatype">const</span> <span class="datatype">char</span>* <span class="function">get_error_message</span>(ErrorCode code) {
+    <span class="keyword">switch</span> (code) {
+        <span class="keyword">case</span> ERR_NONE:
+            <span class="keyword">return</span> <span class="string">"No error"</span>;
+        <span class="keyword">case</span> ERR_FILE_NOT_FOUND:
+            <span class="keyword">return</span> <span class="string">"File not found"</span>;
+        <span class="keyword">case</span> ERR_PERMISSION_DENIED:
+            <span class="keyword">return</span> <span class="string">"Permission denied"</span>;
+        <span class="keyword">case</span> ERR_OUT_OF_MEMORY:
+            <span class="keyword">return</span> <span class="string">"Out of memory"</span>;
+        <span class="keyword">case</span> ERR_INVALID_INPUT:
+            <span class="keyword">return</span> <span class="string">"Invalid input"</span>;
+        <span class="keyword">default</span>:
+            <span class="keyword">return</span> <span class="string">"Unknown error"</span>;
+    }
+}
+
+<span class="datatype">void</span> <span class="function">report_error</span>(ErrorCode code, <span class="datatype">const</span> <span class="datatype">char</span>* context) {
+    <span class="function">fprintf</span>(stderr, <span class="string">"Error in %s: %s\n"</span>, context, <span class="function">get_error_message</span>(code));
+}
+
+<span class="comment">// Usage</span>
+<span class="function">report_error</span>(ERR_FILE_NOT_FOUND, <span class="string">"config loader"</span>);</pre>
+            </div>
+            
+            <div class="output">
+                <pre>Error in config loader: File not found</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="error-propagation">
+            <h2>Error Propagation</h2>
+            <p>Properly propagating errors up the call stack is essential for robust error handling.</p>
+            
+            <h3>Basic Error Propagation</h3>
+            <p>When a function encounters an error it can't handle, it should clean up and return an error code to the caller:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">read_config</span>(<span class="datatype">const</span> <span class="datatype">char</span>* filename, Config* config) {
+    <span class="datatype">FILE</span>* file = <span class="function">fopen</span>(filename, <span class="string">"r"</span>);
+    <span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+        <span class="keyword">return</span> -1;  <span class="comment">// Propagate error to caller</span>
+    }
+    
+    <span class="comment">// Read configuration...</span>
+    <span class="datatype">int</span> result = <span class="function">parse_config</span>(file, config);
+    <span class="keyword">if</span> (result != 0) {
+        <span class="function">fclose</span>(file);  <span class="comment">// Clean up before returning</span>
+        <span class="keyword">return</span> result;  <span class="comment">// Propagate error from parse_config</span>
+    }
+    
+    <span class="function">fclose</span>(file);
+    <span class="keyword">return</span> 0;  <span class="comment">// Success</span>
+}</pre>
+            </div>
+            
+            <h3>Error Handling at Different Levels</h3>
+            <p>Different levels of your program should handle errors appropriately:</p>
+            
+            <div class="definition">
+                <h4>Error Handling Levels</h4>
+                <ul>
+                    <li><strong>Low-level functions:</strong> Detect and report errors, clean up resources</li>
+                    <li><strong>Mid-level functions:</strong> Propagate errors or handle them if possible</li>
+                    <li><strong>High-level functions:</strong> Present user-friendly error messages, attempt recovery</li>
+                    <li><strong>Main function:</strong> Handle unrecoverable errors, ensure clean program termination</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <p>Document the error codes your functions can return and what they mean. This helps other developers properly handle errors from your code.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="resource-cleanup">
+            <h2>Resource Cleanup on Errors</h2>
+            <p>Proper resource cleanup is crucial when errors occur to prevent memory leaks and resource exhaustion.</p>
+            
+            <h3>Cleanup Pattern</h3>
+            <p>A common pattern is to clean up resources in reverse order of acquisition:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">process_file</span>(<span class="datatype">const</span> <span class="datatype">char</span>* filename) {
+    <span class="datatype">FILE</span>* file = <span class="keyword">NULL</span>;
+    <span class="datatype">char</span>* buffer = <span class="keyword">NULL</span>;
+    <span class="datatype">int</span> result = -1;
+    
+    <span class="comment">// Open file</span>
+    file = <span class="function">fopen</span>(filename, <span class="string">"r"</span>);
+    <span class="keyword">if</span> (file == <span class="keyword">NULL</span>) {
+        <span class="function">perror</span>(<span class="string">"Error opening file"</span>);
+        <span class="keyword">goto</span> cleanup;  <span class="comment">// Jump to cleanup section</span>
+    }
+    
+    <span class="comment">// Allocate buffer</span>
+    buffer = <span class="function">malloc</span>(1024);
+    <span class="keyword">if</span> (buffer == <span class="keyword">NULL</span>) {
+        <span class="function">perror</span>(<span class="string">"Error allocating memory"</span>);
+        <span class="keyword">goto</span> cleanup;
+    }
+    
+    <span class="comment">// Process file...</span>
+    <span class="keyword">while</span> (<span class="function">fgets</span>(buffer, 1024, file) != <span class="keyword">NULL</span>) {
+        <span class="comment">// Process line...</span>
+    }
+    
+    result = 0;  <span class="comment">// Success</span>
+    
+cleanup:
+    <span class="comment">// Clean up resources in reverse order</span>
+    <span class="keyword">if</span> (buffer != <span class="keyword">NULL</span>) {
+        <span class="function">free</span>(buffer);
+    }
+    <span class="keyword">if</span> (file != <span class="keyword">NULL</span>) {
+        <span class="function">fclose</span>(file);
+    }
+    
+    <span class="keyword">return</span> result;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>While the <code>goto</code> statement is generally discouraged, it can be useful for error handling and cleanup in C. Use it judiciously and only for jumping to cleanup sections at the end of functions.</p>
+            </div>
+            
+            <h3>Alternative Cleanup Approach</h3>
+            <p>An alternative approach is to use nested if statements for cleanup:</p>
+            
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">process_file</span>(<span class="datatype">const</span> <span class="datatype">char</span>* filename) {
+    <span class="datatype">FILE</span>* file = <span class="function">fopen</span>(filename, <span class="string">"r"</span>);
+    <span class="keyword">if</span> (file != <span class="keyword">NULL</span>) {
+        <span class="datatype">char</span>* buffer = <span class="function">malloc</span>(1024);
+        <span class="keyword">if</span> (buffer != <span class="keyword">NULL</span>) {
+            <span class="comment">// Process file...</span>
+            
+            <span class="function">free</span>(buffer);
+            <span class="function">fclose</span>(file);
+            <span class="keyword">return</span> 0;  <span class="comment">// Success</span>
+        } <span class="keyword">else</span> {
+            <span class="function">perror</span>(<span class="string">"Error allocating memory"</span>);
+            <span class="function">fclose</span>(file);
+            <span class="keyword">return</span> -1;
+        }
+    } <span class="keyword">else</span> {
+        <span class="function">perror</span>(<span class="string">"Error opening file"</span>);
+        <span class="keyword">return</span> -1;
+    }
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>For complex functions with many resources, the <code>goto</code> approach is often cleaner and less error-prone than deeply nested if statements.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="assertions">
+            <h2>Assertions</h2>
+            <p>Assertions are runtime checks that verify assumptions about your program's state.</p>
+            
+            <h3>Using assert()</h3>
+            <p>The <code>assert()</code> macro from <code>&lt;assert.h&gt;</code> checks if an expression is true and terminates the program if it's false:</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include</span> <span class="string">&lt;assert.h&gt;</span>
+
+<span class="datatype">void</span> <span class="function">process_array</span>(<span class="datatype">int</span>* array, <span class="datatype">size_t</span> size) {
+    <span class="comment">// Verify preconditions</span>
+    <span class="function">assert</span>(array != <span class="keyword">NULL</span>);  <span class="comment">// Terminate if array is NULL</span>
+    <span class="function">assert</span>(size > 0);       <span class="comment">// Terminate if size is 0</span>
+    
+    <span class="comment">// Process array...</span>
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Assertions are typically disabled in release builds by defining <code>NDEBUG</code> before including <code>&lt;assert.h&gt;</code>. Don't use assertions for error handling that should occur in production code.</p>
+            </div>
+            
+            <h3>When to Use Assertions</h3>
+            
+            <div class="good-practice">
+                <h4>Good Uses of Assertions</h4>
+                <ul>
+                    <li>Verifying function preconditions (input validation)</li>
+                    <li>Checking invariants (conditions that should always be true)</li>
+                    <li>Validating assumptions about the program's state</li>
+                    <li>Catching programming errors during development</li>
+                </ul>
+            </div>
+            
+            <div class="bad-practice">
+                <h4>Bad Uses of Assertions</h4>
+                <ul>
+                    <li>Handling expected runtime errors (use proper error handling instead)</li>
+                    <li>Validating user input (should be handled gracefully)</li>
+                    <li>Checking conditions that might legitimately fail in production</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <p>Use assertions for programmer errors (bugs) and regular error handling for runtime errors (like file not found).</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#best-practices">Back to Best Practices</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+    
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>

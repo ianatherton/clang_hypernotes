@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Code Organization - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Code Organization Best Practices</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a> | <a href="best_practices.html" class="toc">Best Practices Overview</a></p>
+        
+        <div class="section" id="file-structure">
+            <h2>File Structure</h2>
+            <p>Proper file organization is essential for maintainable C code. Here are some best practices for organizing your C project files:</p>
+            
+            <h3>Separate Header and Source Files</h3>
+            <p>Split your code into header (.h) and implementation (.c) files:</p>
+            
+            <div class="definition">
+                <h4>Header Files (.h)</h4>
+                <ul>
+                    <li>Contain function declarations, type definitions, and constants</li>
+                    <li>Include only what's necessary for the interface</li>
+                    <li>Use include guards to prevent multiple inclusion</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h4>Source Files (.c)</h4>
+                <ul>
+                    <li>Contain function implementations</li>
+                    <li>Include their corresponding header file first</li>
+                    <li>Group related functions together</li>
+                </ul>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* math_utils.h */</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">MATH_UTILS_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">MATH_UTILS_H</span>
+
+<span class="comment">/* Function declarations */</span>
+<span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b);
+<span class="datatype">int</span> <span class="function">subtract</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b);
+
+<span class="preprocessor">#endif</span> <span class="comment">/* MATH_UTILS_H */</span></pre>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* math_utils.c */</span>
+<span class="preprocessor">#include</span> <span class="string">"math_utils.h"</span>
+
+<span class="comment">/* Function implementations */</span>
+<span class="datatype">int</span> <span class="function">add</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> a + b;
+}
+
+<span class="datatype">int</span> <span class="function">subtract</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> a - b;
+}</pre>
+            </div>
+            
+            <h3>Project Directory Structure</h3>
+            <p>Organize your project files into logical directories:</p>
+            
+            <div class="code-block">
+                <pre>project/
+├── include/          <span class="comment">/* Public header files */</span>
+├── src/              <span class="comment">/* Source files */</span>
+├── lib/              <span class="comment">/* Third-party libraries */</span>
+├── tests/            <span class="comment">/* Test files */</span>
+├── docs/             <span class="comment">/* Documentation */</span>
+├── build/            <span class="comment">/* Build artifacts (often in .gitignore) */</span>
+├── Makefile          <span class="comment">/* Build instructions */</span>
+└── README.md         <span class="comment">/* Project overview */</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>Keep related files together. For larger projects, consider organizing source files into subdirectories based on functionality or modules.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="modular-design">
+            <h2>Modular Design</h2>
+            <p>Breaking your code into logical modules improves maintainability and reusability.</p>
+            
+            <h3>Single Responsibility Principle</h3>
+            <p>Each module should have a single responsibility or purpose:</p>
+            
+            <div class="good-practice">
+                <h4>Good Practice</h4>
+                <p>Separate modules for distinct functionality:</p>
+                <ul>
+                    <li><code>file_io.c</code> - File operations</li>
+                    <li><code>string_utils.c</code> - String manipulation</li>
+                    <li><code>data_processor.c</code> - Data processing logic</li>
+                </ul>
+            </div>
+            
+            <div class="bad-practice">
+                <h4>Bad Practice</h4>
+                <p>Mixing unrelated functionality in one file:</p>
+                <ul>
+                    <li><code>utils.c</code> - Contains file operations, string manipulation, and data processing</li>
+                </ul>
+            </div>
+            
+            <h3>Cohesion and Coupling</h3>
+            <p>Aim for high cohesion (related functionality grouped together) and low coupling (minimal dependencies between modules):</p>
+            
+            <div class="definition">
+                <h4>High Cohesion</h4>
+                <p>Functions within a module should be closely related and work together to achieve a specific purpose.</p>
+            </div>
+            
+            <div class="definition">
+                <h4>Low Coupling</h4>
+                <p>Modules should have minimal dependencies on other modules, making them easier to maintain and test independently.</p>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* High cohesion example - string_utils.h */</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">STRING_UTILS_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">STRING_UTILS_H</span>
+
+<span class="comment">/* All functions related to string manipulation */</span>
+<span class="datatype">char</span>* <span class="function">str_duplicate</span>(<span class="datatype">const</span> <span class="datatype">char</span>* str);
+<span class="datatype">void</span> <span class="function">str_reverse</span>(<span class="datatype">char</span>* str);
+<span class="datatype">int</span> <span class="function">str_count_char</span>(<span class="datatype">const</span> <span class="datatype">char</span>* str, <span class="datatype">char</span> c);
+
+<span class="preprocessor">#endif</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>When designing modules, ask yourself: "Does this function logically belong with the others in this file?" If not, consider moving it to a more appropriate module.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="function-organization">
+            <h2>Function Organization</h2>
+            <p>Well-organized functions improve code readability and maintainability.</p>
+            
+            <h3>Function Length</h3>
+            <p>Keep functions short and focused on a single task:</p>
+            
+            <div class="good-practice">
+                <h4>Good Practice</h4>
+                <p>Short functions that do one thing well:</p>
+                <pre><span class="datatype">bool</span> <span class="function">is_valid_email</span>(<span class="datatype">const</span> <span class="datatype">char</span>* email) {
+    <span class="keyword">if</span> (!<span class="function">contains_at_symbol</span>(email)) {
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    
+    <span class="keyword">if</span> (!<span class="function">has_valid_domain</span>(email)) {
+        <span class="keyword">return</span> <span class="keyword">false</span>;
+    }
+    
+    <span class="keyword">return</span> <span class="function">has_valid_format</span>(email);
+}</pre>
+            </div>
+            
+            <div class="bad-practice">
+                <h4>Bad Practice</h4>
+                <p>Long functions that do multiple things:</p>
+                <pre><span class="datatype">bool</span> <span class="function">is_valid_email</span>(<span class="datatype">const</span> <span class="datatype">char</span>* email) {
+    <span class="comment">/* 50+ lines of code checking various aspects of the email */</span>
+    <span class="comment">/* with multiple levels of nesting and complex logic */</span>
+}</pre>
+            </div>
+            
+            <div class="tip">
+                <p>A good rule of thumb: if a function doesn't fit on your screen without scrolling, it's probably too long. Consider breaking it into smaller, more focused functions.</p>
+            </div>
+            
+            <h3>Function Order</h3>
+            <p>Organize functions in a logical order within source files:</p>
+            
+            <div class="definition">
+                <h4>Common Ordering Approaches</h4>
+                <ul>
+                    <li><strong>Top-down:</strong> Higher-level functions first, followed by helper functions</li>
+                    <li><strong>Bottom-up:</strong> Helper functions first, followed by higher-level functions</li>
+                    <li><strong>Alphabetical:</strong> Functions ordered alphabetically (useful for large files)</li>
+                    <li><strong>Functional grouping:</strong> Related functions grouped together</li>
+                </ul>
+            </div>
+            
+            <div class="tip">
+                <p>Be consistent with your chosen ordering approach throughout your codebase.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="code-comments">
+            <h2>Code Comments</h2>
+            <p>Effective commenting helps others (and your future self) understand your code.</p>
+            
+            <h3>Comment Types</h3>
+            <p>Use different comment styles for different purposes:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* 
+ * File header comment: Describes the purpose of the file,
+ * author information, and version history.
+ */</span>
+
+<span class="comment">/**
+ * Function header comment: Describes what the function does,
+ * its parameters, return value, and any side effects.
+ *
+ * @param x The input value
+ * @return The processed result
+ */</span>
+<span class="datatype">int</span> <span class="function">process_data</span>(<span class="datatype">int</span> x) {
+    <span class="comment">// Inline comment: Explains non-obvious code</span>
+    <span class="datatype">int</span> result = x * 2;  <span class="comment">/* Another inline comment style */</span>
+    
+    <span class="keyword">return</span> result;
+}</pre>
+            </div>
+            
+            <h3>Comment Best Practices</h3>
+            
+            <div class="good-practice">
+                <h4>Good Comment Practices</h4>
+                <ul>
+                    <li>Comment on <em>why</em> code does something, not just what it does</li>
+                    <li>Keep comments up-to-date with code changes</li>
+                    <li>Use clear, concise language</li>
+                    <li>Document non-obvious behavior and edge cases</li>
+                    <li>Add comments for complex algorithms or business logic</li>
+                </ul>
+            </div>
+            
+            <div class="bad-practice">
+                <h4>Bad Comment Practices</h4>
+                <ul>
+                    <li>Commenting obvious code</li>
+                    <li>Outdated comments that don't match the code</li>
+                    <li>Excessive commenting that clutters the code</li>
+                    <li>Using comments to "comment out" old code (use version control instead)</li>
+                </ul>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* Bad - states the obvious */</span>
+i++; <span class="comment">// Increment i</span>
+
+<span class="comment">/* Good - explains why */</span>
+i++; <span class="comment">// Move to the next array element</span>
+
+<span class="comment">/* Bad - commented-out code */</span>
+<span class="comment">/*
+if (x > 10) {
+    do_something();
+}
+*/</span>
+
+<span class="comment">/* Good - explains complex logic */</span>
+<span class="comment">/* Apply Gaussian elimination with partial pivoting
+ * to solve the system of linear equations */</span>
+<span class="keyword">for</span> (i = 0; i < n; i++) {
+    <span class="comment">// Find pivot row</span>
+    max_row = i;
+    <span class="keyword">for</span> (j = i + 1; j < n; j++) {
+        <span class="keyword">if</span> (<span class="function">fabs</span>(a[j][i]) > <span class="function">fabs</span>(a[max_row][i])) {
+            max_row = j;
+        }
+    }
+    <span class="comment">// Rest of algorithm...</span>
+}</pre>
+            </div>
+        </div>
+        
+        <div class="section" id="header-file-organization">
+            <h2>Header File Organization</h2>
+            <p>Well-organized header files make your code more maintainable and prevent common issues.</p>
+            
+            <h3>Include Guards</h3>
+            <p>Always use include guards to prevent multiple inclusion:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* utils.h */</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">UTILS_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">UTILS_H</span>
+
+<span class="comment">/* Header content goes here */</span>
+
+<span class="preprocessor">#endif</span> <span class="comment">/* UTILS_H */</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>Use unique names for include guards to avoid naming conflicts. A common convention is to use the filename in uppercase with underscores.</p>
+            </div>
+            
+            <h3>Header File Structure</h3>
+            <p>Organize header files in a consistent manner:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* 
+ * File: utils.h
+ * Description: Utility functions for the project
+ * Author: Your Name
+ */</span>
+
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">UTILS_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">UTILS_H</span>
+
+<span class="comment">/* Include standard libraries */</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdlib.h&gt;</span>
+
+<span class="comment">/* Include project headers */</span>
+<span class="preprocessor">#include</span> <span class="string">"common.h"</span>
+
+<span class="comment">/* Constants and macros */</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">MAX_BUFFER_SIZE</span> 1024
+
+<span class="comment">/* Type definitions */</span>
+<span class="keyword">typedef</span> <span class="keyword">struct</span> {
+    <span class="datatype">int</span> x;
+    <span class="datatype">int</span> y;
+} Point;
+
+<span class="comment">/* Function declarations */</span>
+<span class="datatype">void</span> <span class="function">init_point</span>(Point* p, <span class="datatype">int</span> x, <span class="datatype">int</span> y);
+<span class="datatype">float</span> <span class="function">distance</span>(<span class="datatype">const</span> Point* p1, <span class="datatype">const</span> Point* p2);
+
+<span class="preprocessor">#endif</span> <span class="comment">/* UTILS_H */</span></pre>
+            </div>
+            
+            <h3>Include Order</h3>
+            <p>Use a consistent order for include statements:</p>
+            
+            <div class="definition">
+                <h4>Recommended Include Order</h4>
+                <ol>
+                    <li>The corresponding header file (in .c files)</li>
+                    <li>Standard library headers</li>
+                    <li>Third-party library headers</li>
+                    <li>Project-specific headers</li>
+                </ol>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* utils.c */</span>
+<span class="preprocessor">#include</span> <span class="string">"utils.h"</span>      <span class="comment">/* Corresponding header first */</span>
+
+<span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>     <span class="comment">/* Standard library headers */</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdlib.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;math.h&gt;</span>
+
+<span class="preprocessor">#include</span> <span class="string">&lt;SDL2/SDL.h&gt;</span>  <span class="comment">/* Third-party library headers */</span>
+
+<span class="preprocessor">#include</span> <span class="string">"common.h"</span>     <span class="comment">/* Project-specific headers */</span>
+<span class="preprocessor">#include</span> <span class="string">"config.h"</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>This ordering helps identify and resolve circular dependencies and ensures that headers are self-contained.</p>
+            </div>
+        </div>
+        
+        <p><a href="index.html#best-practices">Back to Best Practices</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+    </script>
+    
+    <!-- Include HyperNotes enhanced functionality -->
+    <script src="hypernotes.js"></script>
+</body>
+</html>
