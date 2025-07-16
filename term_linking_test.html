@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Term Linking Test - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>C Term Linking Test</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="test-keywords">
+            <h2>C Keywords</h2>
+            <p>This section tests linking of C keywords.</p>
+            
+            <ul>
+                <li>Storage classes: <code>auto</code>, <code>extern</code>, <code>register</code>, <code>static</code></li>
+                <li>Type specifiers: <code>char</code>, <code>double</code>, <code>float</code>, <code>int</code>, <code>long</code>, <code>short</code>, <code>void</code></li>
+                <li>Type qualifiers: <code>const</code>, <code>volatile</code></li>
+                <li>Control flow: <code>break</code>, <code>case</code>, <code>continue</code>, <code>default</code>, <code>do</code>, <code>else</code>, <code>for</code>, <code>goto</code>, <code>if</code>, <code>return</code>, <code>switch</code>, <code>while</code></li>
+                <li>Other keywords: <code>enum</code>, <code>sizeof</code>, <code>struct</code>, <code>typedef</code>, <code>union</code></li>
+            </ul>
+            
+            <p>The <code>sizeof</code> operator is used to determine the size in bytes of a type or variable.</p>
+        </div>
+        
+        <div class="section" id="test-functions">
+            <h2>C Library Functions</h2>
+            <p>This section tests linking of C library functions.</p>
+            
+            <ul>
+                <li>Memory management: <code>malloc</code>, <code>free</code>, <code>calloc</code>, <code>realloc</code>, <code>memcpy</code>, <code>memset</code></li>
+                <li>String functions: <code>strlen</code>, <code>strcpy</code>, <code>strcat</code>, <code>strcmp</code></li>
+                <li>I/O functions: <code>printf</code>, <code>scanf</code>, <code>fprintf</code>, <code>fscanf</code>, <code>fopen</code>, <code>fclose</code>, <code>fread</code>, <code>fwrite</code></li>
+                <li>Error handling: <code>perror</code>, <code>strerror</code>, <code>assert</code></li>
+                <li>Program control: <code>exit</code></li>
+            </ul>
+            
+            <p>The <code>malloc</code> function is used to allocate memory on the heap.</p>
+        </div>
+        
+        <div class="section" id="test-preprocessor">
+            <h2>C Preprocessor Directives</h2>
+            <p>This section tests linking of C preprocessor directives.</p>
+            
+            <ul>
+                <li>File inclusion: <code>#include</code></li>
+                <li>Macro definition: <code>#define</code>, <code>#undef</code></li>
+                <li>Conditional compilation: <code>#if</code>, <code>#ifdef</code>, <code>#ifndef</code>, <code>#else</code>, <code>#elif</code>, <code>#endif</code></li>
+                <li>Other directives: <code>#pragma</code>, <code>#error</code>, <code>#line</code></li>
+            </ul>
+            
+            <p>The <code>#include</code> directive is used to include header files in your program.</p>
+        </div>
+        
+        <div class="section" id="test-concepts">
+            <h2>C Programming Concepts</h2>
+            <p>This section tests linking of general C programming concepts in regular text.</p>
+            
+            <p>In C, a pointer is a variable that stores the memory address of another variable. Arrays are used to store multiple values of the same type in a contiguous block of memory. Strings in C are represented as arrays of characters terminated by a null character.</p>
+            
+            <p>A structure is a user-defined data type that allows you to combine data items of different kinds. Functions are reusable blocks of code that perform a specific task. Parameters are variables in a function declaration, while arguments are the values passed to a function when it is called.</p>
+            
+            <p>Memory management is crucial in C programming. A memory leak occurs when allocated memory is not freed, leading to resource exhaustion. A buffer overflow happens when a program writes data beyond the end of a buffer, potentially causing security vulnerabilities.</p>
+            
+            <p>Error handling is important for robust C programs. Debugging techniques help identify and fix issues in your code.</p>
+        </div>
+        
+        <div class="section" id="test-code-blocks">
+            <h2>Code Blocks</h2>
+            <p>This section tests that terms inside code blocks are not linked.</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include</span> <span class="string">&lt;stdio.h&gt;</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;stdlib.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="datatype">int</span>* ptr = (<span class="datatype">int</span>*)<span class="function">malloc</span>(<span class="keyword">sizeof</span>(<span class="datatype">int</span>) * 10);
+    
+    <span class="keyword">if</span> (ptr == <span class="keyword">NULL</span>) {
+        <span class="function">perror</span>(<span class="string">"Memory allocation failed"</span>);
+        <span class="keyword">return</span> 1;
+    }
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = 0; i < 10; i++) {
+        ptr[i] = i * 2;
+    }
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = 0; i < 10; i++) {
+        <span class="function">printf</span>(<span class="string">"%d "</span>, ptr[i]);
+    }
+    <span class="function">printf</span>(<span class="string">"\n"</span>);
+    
+    <span class="function">free</span>(ptr);
+    <span class="keyword">return</span> 0;
+}</pre>
+            </div>
+            
+            <p>The code above demonstrates memory allocation, array manipulation, and proper cleanup.</p>
+        </div>
+        
+        <p><a href="index.html">Back to Main Page</a></p>
+        
+        <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    </div>
+
+    <!-- Include C Terms Mapping and HyperNotes enhanced functionality -->
+    <script src="c_terms_mapping.js"></script>
+    <script src="hypernotes.js"></script>
+</body>
+</html>

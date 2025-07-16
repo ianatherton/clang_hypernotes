@@ -483,70 +483,203 @@ function initHeaderManagement() {
 }
 
 /**
- * Reserved Word Linking Functionality
+ * C Term Linking Functionality
  * 
- * Prepares C language reserved words for future linking to their definitions.
- * This functionality will scan the document for C keywords and other reserved words,
- * and prepare them for interactive linking to their respective documentation sections.
+ * Links C language terms to their definitions throughout the documentation.
+ * This functionality scans the document for C keywords, library functions, and other terms,
+ * and converts them into hyperlinks to their respective documentation sections.
  */
 function initReservedWordLinking() {
-    // List of C reserved keywords to be linked
-    const cKeywords = [
-        'auto', 'break', 'case', 'char', 'const', 'continue', 'default', 'do', 'double', 
-        'else', 'enum', 'extern', 'float', 'for', 'goto', 'if', 'int', 'long', 'register', 
-        'return', 'short', 'signed', 'sizeof', 'static', 'struct', 'switch', 'typedef', 
-        'union', 'unsigned', 'void', 'volatile', 'while'
-    ];
-    
-    // List of common C library functions that might be documented
-    const cLibraryFunctions = [
-        'printf', 'scanf', 'malloc', 'free', 'calloc', 'realloc', 'strlen', 'strcpy', 
-        'strcat', 'strcmp', 'memcpy', 'memset', 'fopen', 'fclose', 'fread', 'fwrite', 
-        'fprintf', 'fscanf', 'exit'
-    ];
-    
-    // List of C preprocessor directives
-    const cPreprocessor = [
-        '#include', '#define', '#ifdef', '#ifndef', '#endif', '#if', '#else', '#elif', 
-        '#pragma', '#undef', '#error', '#line'
-    ];
-    
     /**
-     * Identifies all code elements that contain reserved words
-     * This is a preparation step for future linking functionality
+     * Check if the C_TERMS_MAPPING is available, if not, load it dynamically
      */
-    function identifyReservedWords() {
-        // Find all code elements that might contain reserved words
-        const codeElements = document.querySelectorAll('code, .keyword, .function, .preprocessor');
-        
-        codeElements.forEach(element => {
-            const text = element.textContent.trim();
+    function ensureTermsMappingLoaded() {
+        return new Promise((resolve, reject) => {
+            if (typeof C_TERMS_MAPPING !== 'undefined') {
+                resolve(C_TERMS_MAPPING);
+                return;
+            }
             
-            // Check if the element contains a C keyword
-            if (cKeywords.includes(text)) {
-                element.dataset.reservedType = 'keyword';
-                element.dataset.reserved = 'true';
-                console.log(`Found keyword: ${text}`);
-            }
-            // Check if the element contains a C library function
-            else if (cLibraryFunctions.includes(text)) {
-                element.dataset.reservedType = 'function';
-                element.dataset.reserved = 'true';
-                console.log(`Found function: ${text}`);
-            }
-            // Check if the element contains a preprocessor directive
-            else if (cPreprocessor.some(directive => text.startsWith(directive))) {
-                element.dataset.reservedType = 'preprocessor';
-                element.dataset.reserved = 'true';
-                console.log(`Found preprocessor: ${text}`);
-            }
+            // If mapping isn't loaded, load it dynamically
+            const script = document.createElement('script');
+            script.src = 'c_terms_mapping.js';
+            script.onload = () => {
+                if (typeof C_TERMS_MAPPING !== 'undefined') {
+                    resolve(C_TERMS_MAPPING);
+                } else {
+                    reject(new Error('C_TERMS_MAPPING not found after loading script'));
+                }
+            };
+            script.onerror = () => reject(new Error('Failed to load c_terms_mapping.js'));
+            document.head.appendChild(script);
         });
-        
-        // Log the total count of identified reserved words
-        const reservedElements = document.querySelectorAll('[data-reserved="true"]');
-        console.log(`Identified ${reservedElements.length} reserved words for future linking`);
     }
     
-    // Run the identification process after a short delay to ensure DOM is ready
-    setTimeout(identifyReservedWords, 200);
+    /**
+     * Creates a hyperlink for a term
+     * @param {Element} element - The DOM element containing the term
+     * @param {string} term - The term to link
+     * @param {Object} mapping - The mapping information for the term
+     */
+    function createTermLink(element, term, mapping) {
+        // Don't link if element is already a link or inside a link
+        if (element.tagName === 'A' || element.closest('a')) {
+            return;
+        }
+        
+        // Don't link if element is inside a code block
+        if (element.closest('.code-block')) {
+            return;
+        }
+        
+        // Create the link
+        const link = document.createElement('a');
+        link.href = `${mapping.page}#${mapping.anchor}`;
+        link.title = mapping.title;
+        link.className = 'term-link';
+        link.dataset.term = term;
+        link.textContent = element.textContent;
+        
+        // Replace the element with the link
+        element.parentNode.replaceChild(link, element);
+        
+        return link;
+    }
+    
+    /**
+     * Identifies and links all code elements and text nodes that contain C terms
+     */
+    async function linkCTerms() {
+        try {
+            // Get the terms mapping
+            const termsMapping = await ensureTermsMappingLoaded();
+            
+            // Track statistics
+            let linkedCount = 0;
+            
+            // First, handle elements with specific classes that are likely to contain C terms
+            const codeElements = document.querySelectorAll('code, .keyword, .function, .preprocessor, .datatype');
+            
+            codeElements.forEach(element => {
+                const text = element.textContent.trim();
+                
+                // Skip if empty or too long (likely not a simple term)
+                if (!text || text.length > 30) return;
+                
+                // Check if this term is in our mapping
+                if (termsMapping[text]) {
+                    const link = createTermLink(element, text, termsMapping[text]);
+                    if (link) linkedCount++;
+                }
+            });
+            
+            // Now look for terms in paragraph text (more selective to avoid over-linking)
+            const paragraphs = document.querySelectorAll('p, li, td, th, h1, h2, h3, h4, h5, h6');
+            
+            // List of important concept terms to find in regular text
+            // We're more selective here to avoid over-linking
+            const importantConcepts = [
+                'pointer', 'array', 'string', 'structure', 'function', 'macro',
+                'recursion', 'parameter', 'argument', 'prototype', 'memory leak',
+                'buffer overflow', 'null pointer', 'dangling pointer', 'segmentation fault',
+                'undefined behavior', 'stack', 'heap', 'function pointer', 'callback',
+                'errno', 'file pointer', 'stream', 'binary file', 'text file'
+            ];
+            
+            // For each paragraph, look for these important terms
+            paragraphs.forEach(paragraph => {
+                // Skip if inside a code block
+                if (paragraph.closest('.code-block')) return;
+                
+                // Get all text nodes in this paragraph
+                const textNodes = getTextNodesInElement(paragraph);
+                
+                textNodes.forEach(textNode => {
+                    const text = textNode.nodeValue;
+                    
+                    // Look for each important concept in this text node
+                    importantConcepts.forEach(concept => {
+                        if (!termsMapping[concept]) return;
+                        
+                        // Look for the concept with word boundaries
+                        const regex = new RegExp(`\\b${concept}\\b`, 'i');
+                        const match = text.match(regex);
+                        
+                        if (match) {
+                            // Split the text node at the match
+                            const index = match.index;
+                            const matchedText = match[0];
+                            
+                            // Create text nodes for before and after the match
+                            const beforeNode = document.createTextNode(text.substring(0, index));
+                            const afterNode = document.createTextNode(text.substring(index + matchedText.length));
+                            
+                            // Create a span for the matched text
+                            const matchSpan = document.createElement('span');
+                            matchSpan.textContent = matchedText;
+                            
+                            // Create a link for the matched text
+                            const link = createTermLink(matchSpan, concept, termsMapping[concept]);
+                            if (link) linkedCount++;
+                            
+                            // Replace the text node with the new nodes
+                            const parent = textNode.parentNode;
+                            parent.insertBefore(beforeNode, textNode);
+                            parent.insertBefore(link || matchSpan, textNode);
+                            parent.insertBefore(afterNode, textNode);
+                            parent.removeChild(textNode);
+                        }
+                    });
+                });
+            });
+            
+            console.log(`Linked ${linkedCount} C terms to their definitions`);
+            
+            // Add CSS for term links if not already present
+            if (!document.getElementById('term-link-styles')) {
+                const style = document.createElement('style');
+                style.id = 'term-link-styles';
+                style.textContent = `
+                    .term-link {
+                        color: #0066cc;
+                        text-decoration: none;
+                        border-bottom: 1px dotted #0066cc;
+                        cursor: help;
+                    }
+                    .term-link:hover {
+                        color: #004499;
+                        border-bottom: 1px solid #004499;
+                    }
+                `;
+                document.head.appendChild(style);
+            }
+        } catch (error) {
+            console.error('Error linking C terms:', error);
+        }
+    }
+    
+    /**
+     * Gets all text nodes within an element
+     * @param {Element} element - The element to search within
+     * @returns {Array} - Array of text nodes
+     */
+    function getTextNodesInElement(element) {
+        const textNodes = [];
+        const walker = document.createTreeWalker(
+            element,
+            NodeFilter.SHOW_TEXT,
+            { acceptNode: node => node.nodeValue.trim() ? NodeFilter.FILTER_ACCEPT : NodeFilter.FILTER_REJECT },
+            false
+        );
+        
+        let node;
+        while (node = walker.nextNode()) {
+            textNodes.push(node);
+        }
+        
+        return textNodes;
+    }
+    
+    // Run the linking process after a short delay to ensure DOM is ready
+    setTimeout(linkCTerms, 500);
 }
