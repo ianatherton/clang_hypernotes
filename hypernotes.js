@@ -540,6 +540,30 @@ function initReservedWordLinking() {
         link.dataset.term = term;
         link.textContent = element.textContent;
         
+        // Add click event listener to populate search box with the term
+        link.addEventListener('click', function(e) {
+            // Prevent default navigation if Ctrl/Cmd key is not pressed
+            if (!e.ctrlKey && !e.metaKey) {
+                e.preventDefault();
+                
+                // Populate search box with the term
+                const searchInput = document.getElementById('search-input');
+                if (searchInput) {
+                    searchInput.value = term;
+                    searchInput.focus();
+                    
+                    // Trigger search
+                    const searchEvent = new Event('input', { bubbles: true });
+                    searchInput.dispatchEvent(searchEvent);
+                }
+                
+                // Still navigate to the link's destination
+                setTimeout(() => {
+                    window.location.href = link.href;
+                }, 100);
+            }
+        });
+        
         // Replace the element with the link
         element.parentNode.replaceChild(link, element);
         
@@ -640,15 +664,26 @@ function initReservedWordLinking() {
                 const style = document.createElement('style');
                 style.id = 'term-link-styles';
                 style.textContent = `
-                    .term-link {
-                        color: #0066cc;
-                        text-decoration: none;
-                        border-bottom: 1px dotted #0066cc;
-                        cursor: help;
+                    /* Increased specificity to override global link styles */
+                    html body a.term-link, 
+                    html .container a.term-link, 
+                    html .section a.term-link, 
+                    html .toc a.term-link, 
+                    a.term-link {
+                        color: #00cccc !important;
+                        text-decoration: none !important;
+                        border-bottom: 1px dotted #00cccc !important;
+                        font-style: italic !important;
+                        cursor: help !important;
                     }
-                    .term-link:hover {
-                        color: #004499;
-                        border-bottom: 1px solid #004499;
+                    html body a.term-link:hover, 
+                    html .container a.term-link:hover, 
+                    html .section a.term-link:hover, 
+                    html .toc a.term-link:hover, 
+                    a.term-link:hover {
+                        color: #009999 !important;
+                        border-bottom: 1px solid #009999 !important;
+                        font-style: italic !important;
                     }
                 `;
                 document.head.appendChild(style);

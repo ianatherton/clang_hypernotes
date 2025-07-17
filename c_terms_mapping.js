@@ -33,7 +33,7 @@ const C_TERMS_MAPPING = {
     'static': { page: 'data_types.html', anchor: 'storage-classes', title: 'Storage Class: static' },
     'struct': { page: 'structures.html', anchor: 'struct-basics', title: 'Structure Type' },
     'switch': { page: 'control_flow.html', anchor: 'switch', title: 'Switch Statement' },
-    'typedef': { page: 'data_types.html', anchor: 'typedef', title: 'Type Definition' },
+    'typedef': { page: 'code_organization.html', anchor: 'typedef-in-headers', title: 'Using typedef in Header Files' },
     'union': { page: 'unions.html', anchor: 'union-basics', title: 'Union Type' },
     'unsigned': { page: 'data_types.html', anchor: 'primitive-types', title: 'Unsigned Type Modifier' },
     'void': { page: 'data_types.html', anchor: 'primitive-types', title: 'Void Type' },

@@ -105,6 +105,170 @@
             </div>
         </div>
         
+        <div class="section" id="multi-file-projects">
+            <h2>Multi-File Project Organization</h2>
+            <p>Understanding how to structure multi-file projects is essential for beginner and intermediate C programmers. This section covers the key concepts and best practices.</p>
+            
+            <h3 id="header-usage">Header Files and Their Purpose</h3>
+            <p>Header files (.h) serve as interfaces between different parts of your code. They allow you to:</p>
+            
+            <ul>
+                <li>Share declarations across multiple source files</li>
+                <li>Hide implementation details while exposing necessary interfaces</li>
+                <li>Prevent circular dependencies through forward declarations</li>
+            </ul>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* math_library.h - The interface */</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">MATH_LIBRARY_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">MATH_LIBRARY_H</span>
+
+<span class="comment">/* Public function declarations */</span>
+<span class="datatype">double</span> <span class="function">calculate_area</span>(<span class="datatype">double</span> radius);
+<span class="datatype">double</span> <span class="function">calculate_volume</span>(<span class="datatype">double</span> radius);
+
+<span class="preprocessor">#endif</span> <span class="comment">/* MATH_LIBRARY_H */</span></pre>
+            </div>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* math_library.c - The implementation */</span>
+<span class="preprocessor">#include</span> <span class="string">"math_library.h"</span>
+<span class="preprocessor">#include</span> <span class="string">&lt;math.h&gt;</span>
+
+<span class="comment">/* Private constant - not exposed in header */</span>
+<span class="datatype">static const double</span> PI = 3.14159265358979323846;
+
+<span class="comment">/* Public function implementations */</span>
+<span class="datatype">double</span> <span class="function">calculate_area</span>(<span class="datatype">double</span> radius) {
+    <span class="keyword">return</span> PI * radius * radius;
+}
+
+<span class="datatype">double</span> <span class="function">calculate_volume</span>(<span class="datatype">double</span> radius) {
+    <span class="keyword">return</span> (4.0/3.0) * PI * radius * radius * radius;
+}</pre>
+            </div>
+            
+            <h3 id="header-implementation-scope">Header and Implementation Scope</h3>
+            <p>Understanding scope in multi-file projects is crucial:</p>
+            
+            <div class="definition">
+                <h4>Header File (.h) Scope</h4>
+                <ul>
+                    <li><strong>Function Declarations:</strong> Prototypes without function bodies</li>
+                    <li><strong>Type Definitions:</strong> Using <code>typedef</code> for custom types</li>
+                    <li><strong>Structure Declarations:</strong> Defining data structures</li>
+                    <li><strong>Constant Declarations:</strong> Using <code>#define</code> or <code>extern const</code></li>
+                    <li><strong>Include Guards:</strong> Preventing multiple inclusion</li>
+                </ul>
+            </div>
+            
+            <div class="definition">
+                <h4>Implementation File (.c) Scope</h4>
+                <ul>
+                    <li><strong>Function Definitions:</strong> Full implementations of functions</li>
+                    <li><strong>Private Functions:</strong> Using <code>static</code> keyword for internal functions</li>
+                    <li><strong>Private Variables:</strong> Using <code>static</code> for file-scope variables</li>
+                    <li><strong>Constants:</strong> Defining constants used only within the file</li>
+                </ul>
+            </div>
+            
+            <h3 id="typedef-in-headers">Using typedef in Header Files</h3>
+            <p><code>typedef</code> is particularly valuable in header files for creating portable, maintainable code:</p>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* types.h */</span>
+<span class="preprocessor">#ifndef</span> <span class="preprocessor">TYPES_H</span>
+<span class="preprocessor">#define</span> <span class="preprocessor">TYPES_H</span>
+
+<span class="comment">/* Basic type aliases for portability */</span>
+<span class="keyword">typedef</span> <span class="datatype">unsigned char</span>  <span class="datatype">uint8_t</span>;   <span class="comment">/* 8-bit unsigned integer */</span>
+<span class="keyword">typedef</span> <span class="datatype">unsigned short</span> <span class="datatype">uint16_t</span>;  <span class="comment">/* 16-bit unsigned integer */</span>
+
+<span class="comment">/* Complex data structures */</span>
+<span class="keyword">typedef</span> <span class="keyword">struct</span> {
+    <span class="datatype">double</span> x;
+    <span class="datatype">double</span> y;
+    <span class="datatype">double</span> z;
+} Point3D;
+
+<span class="comment">/* Function pointer types */</span>
+<span class="keyword">typedef</span> <span class="datatype">int</span> (*<span class="datatype">CompareFunc</span>)(<span class="datatype">const void*</span>, <span class="datatype">const void*</span>);
+
+<span class="preprocessor">#endif</span> <span class="comment">/* TYPES_H */</span></pre>
+            </div>
+            
+            <div class="tip">
+                <p>Using <code>typedef</code> in headers creates a clean interface that hides implementation details. If you later need to change the underlying type, you only need to update it in one place.</p>
+            </div>
+            
+            <h3 id="main-function">The Main Function and Main.c</h3>
+            <p>The <code>main()</code> function is special in C programs:</p>
+            
+            <ul>
+                <li>It serves as the entry point for program execution</li>
+                <li>There can be only one <code>main()</code> function in a program</li>
+                <li>It's typically placed in a file named <code>main.c</code></li>
+            </ul>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* main.c */</span>
+<span class="preprocessor">#include</span> <span class="string">"config.h"</span>
+<span class="preprocessor">#include</span> <span class="string">"utils.h"</span>
+<span class="preprocessor">#include</span> <span class="string">"math_library.h"</span>
+
+<span class="datatype">int</span> <span class="function">main</span>(<span class="datatype">int</span> argc, <span class="datatype">char*</span> argv[]) {
+    <span class="comment">/* Initialize program */</span>
+    <span class="function">init_config</span>();
+    
+    <span class="comment">/* Process command line arguments */</span>
+    <span class="keyword">if</span> (argc > 1) {
+        <span class="function">process_arguments</span>(argc, argv);
+    }
+    
+    <span class="comment">/* Main program logic */</span>
+    <span class="function">run_application</span>();
+    
+    <span class="comment">/* Cleanup and exit */</span>
+    <span class="function">cleanup_resources</span>();
+    <span class="keyword">return</span> 0;
+}</pre>
+            </div>
+            
+            <div class="definition">
+                <h4>Best Practices for main.c</h4>
+                <ul>
+                    <li>Keep <code>main.c</code> small and focused on program flow</li>
+                    <li>Delegate specific functionality to appropriate modules</li>
+                    <li>Handle command-line arguments and initialization</li>
+                    <li>Manage high-level error handling and program exit</li>
+                </ul>
+            </div>
+            
+            <h3 id="compilation-process">Multi-File Compilation Process</h3>
+            <p>Understanding how multi-file projects are compiled helps in organizing code effectively:</p>
+            
+            <ol>
+                <li><strong>Preprocessing:</strong> Each .c file is preprocessed separately (include files, macros)</li>
+                <li><strong>Compilation:</strong> Each preprocessed file is compiled into an object file (.o)</li>
+                <li><strong>Linking:</strong> All object files are linked together to create the executable</li>
+            </ol>
+            
+            <div class="code-block">
+                <pre><span class="comment">/* Example compilation commands */</span>
+# Compile individual source files into object files
+gcc -c src/main.c -o build/main.o
+gcc -c src/utils.c -o build/utils.o
+gcc -c src/math_library.c -o build/math_library.o
+
+# Link object files into executable
+gcc build/main.o build/utils.o build/math_library.o -o build/program</pre>
+            </div>
+            
+            <div class="tip">
+                <p>Using a Makefile or build system automates this process and ensures that only modified files are recompiled.</p>
+            </div>
+        </div>
+        
         <div class="section" id="modular-design">
             <h2>Modular Design</h2>
             <p>Breaking your code into logical modules improves maintainability and reusability.</p>

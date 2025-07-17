@@ -284,3 +284,26 @@ code {
 body {
     padding-top: 70px;
 }
+
+/* Term Link Styles - High specificity to override default link styles */
+html body a.term-link,
+html .container a.term-link,
+html .section a.term-link,
+html .toc a.term-link,
+body a.term-link {
+    color: #00cccc !important;
+    text-decoration: none !important;
+    border-bottom: 1px dotted #00cccc !important;
+    font-style: italic !important;
+    cursor: help !important;
+}
+
+html body a.term-link:hover,
+html .container a.term-link:hover,
+html .section a.term-link:hover,
+html .toc a.term-link:hover,
+body a.term-link:hover {
+    color: #009999 !important;
+    border-bottom: 1px solid #009999 !important;
+    font-style: italic !important;
+}
