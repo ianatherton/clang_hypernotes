@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advanced Topics - C Programming Hyper-Notes</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <!-- Header Bar -->
+    <div class="header-bar">
+        <div class="search-container">
+            <input type="text" id="search-input" placeholder="Search...">
+            <button id="search-prev">↑</button>
+            <button id="search-next">↓</button>
+        </div>
+        <div class="highlight-controls">
+            <div class="highlight-option">
+                <input type="text" id="highlight-yellow" placeholder="Neon Yellow Highlight">
+            </div>
+            <div class="highlight-option">
+                <input type="text" id="highlight-green" placeholder="Neon Green Highlight">
+            </div>
+        </div>
+        <div class="flagged-sections">
+            <label for="flagged-select">Jump to:</label>
+            <select id="flagged-select">
+                <option value="">-- Flagged Sections --</option>
+            </select>
+        </div>
+    </div>
+    
+    <div class="container">
+        <h1>Advanced Topics in C</h1>
+        <p><a href="index.html" class="toc">Back to Main Page</a></p>
+        
+        <div class="section" id="bit-fields">
+            <h2>Bit Fields</h2>
+            <p>Bit fields allow you to specify the exact number of bits for structure members, which is useful for saving memory when you know the value range of a variable.</p>
+            
+            <div class="note">
+                <p>Bit fields are already covered in detail in the <a href="structures.html#bit-fields">Structures</a> section.</p>
+            </div>
+            
+            <h3>Additional Bit Field Examples</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Bit fields for hardware register manipulation</span>
+<span class="keyword">struct</span> StatusRegister {
+    <span class="datatype">unsigned int</span> ready       : 1;  <span class="comment">// 1 bit for ready flag</span>
+    <span class="datatype">unsigned int</span> error       : 1;  <span class="comment">// 1 bit for error flag</span>
+    <span class="datatype">unsigned int</span> busy        : 1;  <span class="comment">// 1 bit for busy flag</span>
+    <span class="datatype">unsigned int</span> mode        : 2;  <span class="comment">// 2 bits for mode (0-3)</span>
+    <span class="datatype">unsigned int</span> reserved    : 3;  <span class="comment">// 3 bits reserved</span>
+    <span class="datatype">unsigned int</span> priority    : 8;  <span class="comment">// 8 bits for priority level</span>
+};
+
+<span class="comment">// Using bit fields for network protocol headers</span>
+<span class="keyword">struct</span> IPv4Header {
+    <span class="datatype">unsigned int</span> version     : 4;  <span class="comment">// IP version (4)</span>
+    <span class="datatype">unsigned int</span> ihl         : 4;  <span class="comment">// Internet Header Length</span>
+    <span class="datatype">unsigned int</span> dscp        : 6;  <span class="comment">// Differentiated Services Code Point</span>
+    <span class="datatype">unsigned int</span> ecn         : 2;  <span class="comment">// Explicit Congestion Notification</span>
+    <span class="datatype">unsigned int</span> totalLength : 16; <span class="comment">// Total Length</span>
+};</pre>
+            </div>
+            
+            <h3>Bit Field Limitations</h3>
+            <ul>
+                <li><strong>Portability:</strong> The order of bit allocation within a word is implementation-defined</li>
+                <li><strong>Access:</strong> You cannot take the address of a bit field using the address-of operator (&)</li>
+                <li><strong>Arrays:</strong> You cannot create arrays of bit fields</li>
+                <li><strong>Type restrictions:</strong> Bit fields must be of type int, signed int, or unsigned int (C99 also allows _Bool)</li>
+            </ul>
+            
+            <div class="warning">
+                <p>Bit fields can make code less portable across different architectures and compilers. Use them with caution when portability is a concern.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="typedef">
+            <h2>typedef</h2>
+            <p>The <code>typedef</code> keyword is used to create aliases for existing data types, making code more readable and maintainable.</p>
+            
+            <div class="note">
+                <p><code>typedef</code> is covered in multiple sections throughout this guide:</p>
+                <ul>
+                    <li><a href="structures.html#typedef-with-structures">Typedef with Structures</a></li>
+                    <li><a href="code_organization.html#typedef-in-headers">Using typedef in Header Files</a></li>
+                    <li><a href="naming_conventions.html">Naming Conventions for typedef</a></li>
+                </ul>
+            </div>
+            
+            <h3>Advanced typedef Examples</h3>
+            <div class="code-block">
+                <pre><span class="comment">// Function pointer typedefs</span>
+<span class="keyword">typedef</span> <span class="datatype">void</span> (*<span class="datatype">SignalHandler</span>)(<span class="datatype">int</span>);
+<span class="keyword">typedef</span> <span class="datatype">int</span> (*<span class="datatype">Comparator</span>)(<span class="datatype">const void*</span>, <span class="datatype">const void*</span>);
+
+<span class="comment">// Using function pointer typedefs</span>
+<span class="datatype">SignalHandler</span> oldHandler = <span class="function">signal</span>(SIGINT, newHandler);
+<span class="datatype">Comparator</span> compareFunc = <span class="function">strcmp</span>;
+<span class="function">qsort</span>(array, size, <span class="keyword">sizeof</span>(<span class="datatype">char*</span>), compareFunc);
+
+<span class="comment">// Complex type definitions</span>
+<span class="keyword">typedef</span> <span class="keyword">struct</span> Node* <span class="datatype">NodePtr</span>;
+<span class="keyword">typedef</span> <span class="datatype">NodePtr</span> (*<span class="datatype">NodeTransformer</span>)(<span class="datatype">NodePtr</span>);
+<span class="keyword">typedef</span> <span class="keyword">struct</span> {
+    <span class="datatype">NodePtr</span> root;
+    <span class="datatype">NodeTransformer</span> transform;
+} <span class="datatype">Tree</span>;</pre>
+            </div>
+            
+            <h3>Best Practices for typedef</h3>
+            <ul>
+                <li>Use <code>typedef</code> to create platform-independent types</li>
+                <li>Use <code>typedef</code> to simplify complex declarations, especially function pointers</li>
+                <li>Follow consistent naming conventions for your typedefs</li>
+                <li>Avoid creating typedefs that obscure the underlying type without good reason</li>
+                <li>Document the purpose and usage of your typedefs, especially for complex types</li>
+            </ul>
+        </div>
+        
+        <div class="section" id="command-line-args">
+            <h2>Command Line Arguments</h2>
+            <p>Command line arguments allow users to pass information to a program when it is launched from the command line.</p>
+            
+            <h3>Accessing Command Line Arguments</h3>
+            <div class="code-block">
+                <pre><span class="datatype">int</span> <span class="function">main</span>(<span class="datatype">int</span> argc, <span class="datatype">char*</span> argv[]) {
+    <span class="comment">// argc = argument count (number of arguments including program name)</span>
+    <span class="comment">// argv = argument vector (array of strings)</span>
+    
+    <span class="function">printf</span>(<span class="string">"Program name: %s\n"</span>, argv[0]);
+    
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = 1; i < argc; i++) {
+        <span class="function">printf</span>(<span class="string">"Argument %d: %s\n"</span>, i, argv[i]);
+    }
+    
+    <span class="keyword">return</span> 0;
+}</pre>
+            </div>
+            
+            <h3>Parsing Command Line Options</h3>
+            <p>For more complex command line parsing, you can use the <code>getopt</code> function from the <code>&lt;unistd.h&gt;</code> header (POSIX systems).</p>
+            
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;unistd.h&gt;</span>
+
+<span class="datatype">int</span> <span class="function">main</span>(<span class="datatype">int</span> argc, <span class="datatype">char*</span> argv[]) {
+    <span class="datatype">int</span> opt;
+    <span class="datatype">int</span> verbose = 0;
+    <span class="datatype">char*</span> filename = NULL;
+    <span class="datatype">int</span> number = -1;
+    
+    <span class="comment">// Options:</span>
+    <span class="comment">// -v: verbose mode</span>
+    <span class="comment">// -f filename: specify a filename</span>
+    <span class="comment">// -n number: specify a number</span>
+    <span class="keyword">while</span> ((opt = <span class="function">getopt</span>(argc, argv, <span class="string">"vf:n:"</span>)) != -1) {
+        <span class="keyword">switch</span> (opt) {
+            <span class="keyword">case</span> 'v':
+                verbose = 1;
+                <span class="keyword">break</span>;
+            <span class="keyword">case</span> 'f':
+                filename = optarg;
+                <span class="keyword">break</span>;
+            <span class="keyword">case</span> 'n':
+                number = <span class="function">atoi</span>(optarg);
+                <span class="keyword">break</span>;
+            <span class="keyword">default</span>:
+                <span class="function">fprintf</span>(stderr, <span class="string">"Usage: %s [-v] [-f filename] [-n number]\n"</span>, argv[0]);
+                <span class="keyword">return</span> 1;
+        }
+    }
+    
+    <span class="comment">// Process non-option arguments</span>
+    <span class="keyword">for</span> (<span class="datatype">int</span> i = optind; i < argc; i++) {
+        <span class="function">printf</span>(<span class="string">"Non-option argument: %s\n"</span>, argv[i]);
+    }
+    
+    <span class="keyword">return</span> 0;
+}</pre>
+            </div>
+            
+            <div class="note">
+                <p>For Windows-specific command line parsing, you can use <code>CommandLineToArgvW</code> from the <code>shell32.dll</code> library.</p>
+            </div>
+            
+            <h3>Best Practices for Command Line Arguments</h3>
+            <ul>
+                <li>Always validate user input from command line arguments</li>
+                <li>Provide clear usage instructions when invalid arguments are provided</li>
+                <li>Follow platform conventions for argument syntax (e.g., single dash for short options, double dash for long options)</li>
+                <li>Consider using a third-party library for complex command line parsing needs</li>
+            </ul>
+        </div>
+        
+        <div class="section" id="variable-arguments">
+            <h2>Variable Arguments</h2>
+            <p>Variable arguments allow functions to accept a varying number of arguments.</p>
+            
+            <div class="note">
+                <p>Variable arguments are covered in the <a href="functions.html#variable-arguments">Functions</a> section.</p>
+            </div>
+            
+            <h3>Advanced Variable Arguments Examples</h3>
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;stdarg.h&gt;</span>
+
+<span class="comment">// A custom printf-like function that formats and prints strings</span>
+<span class="datatype">void</span> <span class="function">custom_printf</span>(<span class="datatype">const char*</span> format, ...) {
+    <span class="datatype">va_list</span> args;
+    <span class="function">va_start</span>(args, format);
+    
+    <span class="keyword">while</span> (*format != '\0') {
+        <span class="keyword">if</span> (*format == '%') {
+            format++;
+            <span class="keyword">switch</span> (*format) {
+                <span class="keyword">case</span> 'd': {
+                    <span class="datatype">int</span> val = <span class="function">va_arg</span>(args, <span class="datatype">int</span>);
+                    <span class="function">printf</span>(<span class="string">"%d"</span>, val);
+                    <span class="keyword">break</span>;
+                }
+                <span class="keyword">case</span> 's': {
+                    <span class="datatype">char*</span> val = <span class="function">va_arg</span>(args, <span class="datatype">char*</span>);
+                    <span class="function">printf</span>(<span class="string">"%s"</span>, val);
+                    <span class="keyword">break</span>;
+                }
+                <span class="keyword">case</span> 'f': {
+                    <span class="comment">// Note: float arguments are promoted to double when passed through ...</span>
+                    <span class="datatype">double</span> val = <span class="function">va_arg</span>(args, <span class="datatype">double</span>);
+                    <span class="function">printf</span>(<span class="string">"%f"</span>, val);
+                    <span class="keyword">break</span>;
+                }
+                <span class="keyword">default</span>:
+                    <span class="function">putchar</span>(*format);
+            }
+        } <span class="keyword">else</span> {
+            <span class="function">putchar</span>(*format);
+        }
+        format++;
+    }
+    
+    <span class="function">va_end</span>(args);
+}</pre>
+            </div>
+            
+            <h3>Forwarding Variable Arguments</h3>
+            <div class="code-block">
+                <pre><span class="preprocessor">#include &lt;stdio.h&gt;</span>
+<span class="preprocessor">#include &lt;stdarg.h&gt;</span>
+
+<span class="comment">// A wrapper function that adds a prefix and then forwards arguments to printf</span>
+<span class="datatype">int</span> <span class="function">log_message</span>(<span class="datatype">const char*</span> level, <span class="datatype">const char*</span> format, ...) {
+    <span class="datatype">va_list</span> args;
+    <span class="datatype">int</span> result;
+    
+    <span class="function">printf</span>(<span class="string">"[%s] "</span>, level);
+    
+    <span class="function">va_start</span>(args, format);
+    result = <span class="function">vprintf</span>(format, args);
+    <span class="function">va_end</span>(args);
+    
+    <span class="function">printf</span>(<span class="string">"\n"</span>);
+    
+    <span class="keyword">return</span> result;
+}
+
+<span class="datatype">int</span> <span class="function">main</span>() {
+    <span class="function">log_message</span>(<span class="string">"INFO"</span>, <span class="string">"Application started, version: %d.%d"</span>, 1, 0);
+    <span class="function">log_message</span>(<span class="string">"ERROR"</span>, <span class="string">"Failed to open file: %s"</span>, <span class="string">"config.ini"</span>);
+    
+    <span class="keyword">return</span> 0;
+}</pre>
+            </div>
+            
+            <div class="warning">
+                <p>Variable arguments in C are type-unsafe. The function has no way to verify that the type of each argument matches what is expected based on the format string. This can lead to undefined behavior and security vulnerabilities.</p>
+            </div>
+        </div>
+        
+        <div class="section" id="multi-file-programs">
+            <h2>Multi-file Programs</h2>
+            <p>As C programs grow in size and complexity, organizing code across multiple files becomes essential for maintainability.</p>
+            
+            <div class="note">
+                <p>Multi-file program organization is covered in detail in the <a href="code_organization.html#multi-file-projects">Code Organization</a> section.</p>
+            </div>
+            
+            <h3>Advanced Multi-file Techniques</h3>
+            
+            <h4>Using Include Guards vs. #pragma once</h4>
+            <div class="code-block">
+                <pre><span class="comment">// Traditional include guards</span>
+<span class="preprocessor">#ifndef MY_HEADER_H</span>
+<span class="preprocessor">#define MY_HEADER_H</span>
+
+<span class="comment">// Header content here</span>
+
+<span class="preprocessor">#endif /* MY_HEADER_H */</span>
+
+<span class="comment">// Alternative: #pragma once (non-standard but widely supported)</span>
+<span class="preprocessor">#pragma once</span>
+
+<span class="comment">// Header content here</span></pre>
+            </div>
+            
+            <h4>Inline Functions in Headers</h4>
+            <div class="code-block">
+                <pre><span class="comment">// math_utils.h</span>
+<span class="preprocessor">#ifndef MATH_UTILS_H</span>
+<span class="preprocessor">#define MATH_UTILS_H</span>
+
+<span class="keyword">static</span> <span class="keyword">inline</span> <span class="datatype">int</span> <span class="function">max</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> (a > b) ? a : b;
+}
+
+<span class="keyword">static</span> <span class="keyword">inline</span> <span class="datatype">int</span> <span class="function">min</span>(<span class="datatype">int</span> a, <span class="datatype">int</span> b) {
+    <span class="keyword">return</span> (a < b) ? a : b;
+}
+
+<span class="preprocessor">#endif /* MATH_UTILS_H */</span></pre>
+            </div>
+            
+            <h4>Using External Variables Across Files</h4>
+            <div class="code-block">
+                <pre><span class="comment">// config.h</span>
+<span class="preprocessor">#ifndef CONFIG_H</span>
+<span class="preprocessor">#define CONFIG_H</span>
+
+<span class="keyword">extern</span> <span class="datatype">int</span> debug_level;  <span class="comment">// Declaration</span>
+<span class="keyword">extern</span> <span class="datatype">const char*</span> app_name;
+
+<span class="preprocessor">#endif /* CONFIG_H */</span>
+
+<span class="comment">// config.c</span>
+<span class="preprocessor">#include "config.h"</span>
+
+<span class="datatype">int</span> debug_level = 0;  <span class="comment">// Definition</span>
+<span class="datatype">const char*</span> app_name = <span class="string">"MyApp"</span>;</pre>
+            </div>
+            
+            <h3>Advanced Build Systems</h3>
+            <p>For complex multi-file projects, consider using build systems like:</p>
+            <ul>
+                <li><strong>Make:</strong> Traditional build system for C/C++ projects</li>
+                <li><strong>CMake:</strong> Cross-platform build system generator</li>
+                <li><strong>Ninja:</strong> Fast, small build system focused on speed</li>
+                <li><strong>Meson:</strong> Modern build system with a focus on user-friendliness</li>
+            </ul>
+            
+            <div class="code-block">
+                <pre><span class="comment"># Example Makefile for a multi-file project</span>
+CC = gcc
+CFLAGS = -Wall -Wextra -std=c11 -O2
+LDFLAGS = -lm
+
+SRCS = main.c utils.c config.c
+OBJS = $(SRCS:.c=.o)
+TARGET = myapp
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LDFLAGS)
+
+%.o: %.c
+	$(CC) $(CFLAGS) -c $< -o $@
+
+clean:
+	rm -f $(OBJS) $(TARGET)</pre>
+            </div>
+        </div>
+        
+        <p><a href="index.html#advanced">Back to Advanced Topics</a> | <a href="index.html#table-of-contents">Back to Table of Contents</a></p>
+    </div>
+    
+    <div class="back-to-top" onclick="window.scrollTo({top: 0, behavior: 'smooth'})">↑</div>
+    
+    <script>
+        // Add functionality to open links in new tabs when holding Ctrl/Cmd
+        document.addEventListener('click', function(e) {
+            if (e.target.tagName === 'A' && e.target.getAttribute('href').startsWith('#') && (e.ctrlKey || e.metaKey)) {
+                e.preventDefault();
+                const href = e.target.getAttribute('href');
+                const url = window.location.href.split('#')[0] + href;
+                window.open(url, '_blank');
+            }
+        });
+
+        // Show/hide back-to-top button based on scroll position
+        window.addEventListener('scroll', function() {
+            const backToTop = document.querySelector('.back-to-top');
+            if (window.pageYOffset > 300) {
+                backToTop.style.display = 'block';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+    </script>
+    <script src="c_terms_mapping.js"></script>
+    <script src="hypernotes.js"></script>
+</body>
+</html>
